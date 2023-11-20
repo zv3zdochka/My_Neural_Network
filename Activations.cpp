@@ -32,5 +32,7 @@ public:
         return (pow(e,x) - pow(e, -x))/(pow(e,x) + pow(e, -x));
 
     }
-    static float softmax(float x);
+    static float softmax(float x){
+        return x;
+    }
 };
