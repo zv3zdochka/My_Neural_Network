@@ -8,9 +8,9 @@ public:
 
     float computeActivation(float input);
 
-    float get_weight();
+    float getWeight();
 
-    int get_layer();
+    int getLayer();
 
 private:
     const int layer_num;
