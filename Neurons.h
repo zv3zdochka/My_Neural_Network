@@ -2,13 +2,9 @@
 #include <functional>
 #include <utility>
 
-
 class Neuron {
 public:
-    Neuron(int layer_number, float weight, std::function<float(float)> activationFunc)
-            : layer_num(layer_number), weight(weight), activationFunction(std::move(activationFunc)) {
-
-    }
+    Neuron(int layer_number, float weight, std::function<float(float)> activationFunc);
 
     float computeActivation(float input);
 
@@ -20,6 +16,4 @@ private:
     const int layer_num;
     float weight;
     const std::function<float(float)> activationFunction;
-
-
 };

@@ -5,4 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(My_own_Neural_Network
         try.cpp
-        Neurons.cpp)
+        Neurons.cpp
+        Neurons.h
+        Activations.h
+        Activations.cpp)
