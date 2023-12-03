@@ -3,5 +3,6 @@
 
 
 class Layer{
-
+public:
+    Layer()
 };

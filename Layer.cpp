@@ -2,5 +2,5 @@
 
 
 class Layer{
-
+    Layer(int quan)
 };

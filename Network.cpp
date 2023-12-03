@@ -5,10 +5,6 @@
 #include "Neurons.h"
 #include "Activations.h"
 
+class Network {
 
-
-int main(){
-
-    std::vector<Layer> layers;
-
-}
+};

@@ -1,40 +1,25 @@
 #pragma once
 #include <functional>
+#include <utility>
 
-class Neurons {
+
+class Neuron {
 public:
-    class Input_Neuron {
-    public:
-        Input_Neuron(float weight, std::function<float(float)> activationFunc);
+    Neuron(int layer_number, float weight, std::function<float(float)> activationFunc)
+            : layer_num(layer_number), weight(weight), activationFunction(std::move(activationFunc)) {
 
-        float computeActivation(float input);
+    }
 
-        float weight;
-        int layer_number = 0;
-        std::function<float(float)> activationFunction;
-    };
+    float computeActivation(float input);
 
-    class Hidden_Neuron {
-    public:
-        Hidden_Neuron(int layer_num, float weight, std::function<float(float)> activationFunc);
+    float get_weight();
 
-        float computeActivation(float input);
+    int get_layer();
 
-        float weight;
-        int layer_number;
-        std::function<float(float)> activationFunction;
-    };
+private:
+    const int layer_num;
+    float weight;
+    const std::function<float(float)> activationFunction;
 
-    class Output_Neuron {
-    public:
-        Output_Neuron(int layer_num, float weight, std::function<float(float)> activationFunc);
 
-        float computeActivation(float input);
-
-        float weight;
-        int layer_number;
-        std::function<float(float)> activationFunction;
-    };
 };
-
-
