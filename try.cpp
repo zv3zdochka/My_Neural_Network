@@ -2,6 +2,7 @@
 #include <vector>
 #include "Activations.h"
 #include <iostream>
+#include <random>
 
 int main() {
     Activation act;
@@ -17,6 +18,17 @@ int main() {
 
         }
     }
+
+    for (int i = 0; i < layer_num - 1; i++){
+        for (int j = 0; i < neurons_num; j++){
+            weights[i].push_back()
+        }
+    }
+
+
+
+
+
     // print
     for (int i = 0; i < layer_num; i++) {
         std::cout << "Layer " << i + 1 << ":\n";

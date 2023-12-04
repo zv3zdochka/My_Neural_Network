@@ -8,4 +8,6 @@ add_executable(My_own_Neural_Network
         Neurons.cpp
         Neurons.h
         Activations.h
-        Activations.cpp)
+        Activations.cpp
+)
+
