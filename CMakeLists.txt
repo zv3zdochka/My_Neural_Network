@@ -9,5 +9,10 @@ add_executable(My_own_Neural_Network
         Neurons.h
         Activations.h
         Activations.cpp
+        Network.h
+        Network.cpp
+        main.cpp
 )
 
+
+add_executable(train train.cpp)

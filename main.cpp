@@ -1,10 +1,12 @@
 #include <iostream>
 #include <cmath>
-#include "Activations.h"
+#include "Network.h"
 
 
 
 int main() {
-    std::cout << Activation::sigmoid(0.1) << std::endl;
+    Network net;
+    net.base()
+
     return 0;
 }
