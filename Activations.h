@@ -44,29 +44,7 @@ public:
      * @param a The slope of the function for x < 0 (typically a small positive value).
      * @return Function value.
      */
-    static float leaky_relu(float x, float a);
 
-    /**
-     * @brief Exponential Linear Unit (ELU) function.
-     *
-     * This function computes the ELU function for the given number.
-     * Returns 'x' if input is greater than or equal to 0, otherwise returns 'a * (exp(x) - 1)'.
-     *
-     * @param x Your number.
-     * @param a The alpha value for x < 0 (typically a small positive value).
-     * @return Function value.
-     */
-    static float elu(float x, float a);
-
-    /**
-     * @brief Sigmoid Linear Unit (SiLU or Swish) function.
-     *
-     * This function computes the SiLU function for the given number.
-     * Returns 'x * sigmoid(x)'.
-     *
-     * @param x Your number.
-     * @return Function value.
-     */
     static float silu(float x);
 
     /**

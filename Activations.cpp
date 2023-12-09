@@ -18,22 +18,6 @@ float Activation::relu(float x) {
     }
 }
 
-float Activation::leaky_relu(float x, float a) {
-    if (a * x > x) {
-        return a * x;
-    } else {
-        return x;
-    }
-}
-
-float Activation::elu(float x, float a) {
-    const float e = 2.7182818284;
-    if (x > 0) {
-        return x;
-    } else {
-        return (a * ((pow(e, x)) - 1));
-    }
-}
 
 float Activation::silu(float x) {
     const float e = 2.7182818284;
