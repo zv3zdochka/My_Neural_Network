@@ -88,23 +88,47 @@ void Network::show_synapse() {
 }
 
 void Network::show_weights() {
-    // Определение максимального количества нейронов в слое
+    std::cout << "Neuron Weights" << std::endl;
     size_t max_neurons = 0;
-    for (size_t i = 0; i < network.size(); ++i) {
-        max_neurons = std::max(max_neurons, network[i].size());
+    for (const auto & i : network) {
+        max_neurons = std::max(max_neurons, i.size());
     }
 
-    // Вывод весов всех нейронов поочередно в каждом слое
+
     for (size_t i = 0; i < max_neurons; ++i) {
-        // Вывод весов для нейронов из разных слоев
-        for (size_t j = 0; j < network.size(); ++j) {
-            if (i < network[j].size()) {
-                std::cout << std::fixed << std::setprecision(1) << network[j][i].getWeight() << " ";
+
+        for (auto & j : network) {
+            if (i < j.size()) {
+                std::cout << std::fixed << std::setprecision(1) << j[i].getWeight() << " ";
             } else {
-                std::cout << "    "; // Для случаев, когда слой содержит меньше нейронов
+                std::cout << "    ";
             }
         }
         std::cout << std::endl;
     }
+}
+
+void Network::train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data) {
+    for (int epoch = 0; epoch < epochs; ++epoch) {
+
+
+
+        //for (int i = 0; i < input_data.size(); ++i) {
+        // Прямое распространение (получение предсказания)
+        // Реализуйте функцию, которая передает входные данные через сеть и получает предсказание
+
+        // Обратное распространение (вычисление ошибки и обновление весов)
+        // Реализуйте алгоритм обратного распространения для вычисления ошибки и обновления весов
+        // Используйте функцию потерь (например, MSE для задачи регрессии)
+
+        // Вычисление ошибки
+        // Обновление весов (градиентный спуск)
+        // Реализуйте обновление весов в соответствии с градиентным спуском и скоростью обучения
+    }
+
+    // Вывод ошибки на каждой итерации (опционально)
+    //std::cout << "Epoch: " << epoch + 1 << ", Error: " << total_error << std::endl;
+
+
 }
 

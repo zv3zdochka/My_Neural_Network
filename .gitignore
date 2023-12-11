@@ -447,3 +447,6 @@ cython_debug/
 /Networks
 /Neurons
 !/matrix_test.cpp
+/ffor make
+/create_dataset.cpp
+/fruits_dataset.txt

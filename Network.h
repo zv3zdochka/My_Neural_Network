@@ -20,6 +20,7 @@ public:
 
     void show_network();
 
+    void train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data);
 
 private:
     void create_synapse();

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "matrix.h"
+#include "Matrix.h"
 
 int main() {
     // Примеры матриц для перемножения
