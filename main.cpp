@@ -8,6 +8,7 @@ int main() {
     net.add_hidden_layer(4, Activation::tanh, 0.0f);
     net.add_hidden_layer(6, Activation::fast_sigmoid, 0.0f);
     net.add_output_layer(3, Activation::tanh, 0.0f);
+    net.build();
     net.show_network();
 
 

@@ -2,10 +2,9 @@ add softmax functions to activations
 
 //////////////////////////////////////////
 
-add chain weights
 
 add training
 
-add random for weights and mass of neuron
+add recreating synapse
 
 
