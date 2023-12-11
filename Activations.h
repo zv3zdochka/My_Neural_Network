@@ -1,7 +1,6 @@
 #pragma once
 
-class Activation {
-public:
+namespace activation {
     /**
      * @brief Sigmoid function.
      *
@@ -10,7 +9,7 @@ public:
      * @param x Your number.
      * @return Function value.
      */
-    static float sigmoid(float x);
+    float sigmoid(float x);
 
     /**
      * @brief Fast sigmoid approximation.
@@ -21,7 +20,7 @@ public:
      * @param x Your number.
      * @return Approximated function value.
      */
-    static float fast_sigmoid(float x);
+    float fast_sigmoid(float x);
 
     /**
      * @brief Rectified Linear Unit (ReLU) function.
@@ -32,7 +31,7 @@ public:
      * @param x Your number.
      * @return Function value.
      */
-    static float relu(float x);
+    float relu(float x);
 
     /**
      * @brief Leaky Rectified Linear Unit (Leaky ReLU) function.
@@ -45,7 +44,7 @@ public:
      * @return Function value.
      */
 
-    static float silu(float x);
+    float silu(float x);
 
     /**
      * @brief Hyperbolic Tangent (Tanh) function.
@@ -55,7 +54,7 @@ public:
      * @param x Your number.
      * @return Function value.
      */
-    static float tanh(float x);
+    float tanh(float x);
 
     /**
      * @brief Softmax function.
@@ -68,4 +67,4 @@ public:
      */
 
 
-};
+}
