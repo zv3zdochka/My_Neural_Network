@@ -17,7 +17,7 @@ std::uniform_real_distribution<float> dis2(0.1f, 10.0f);
 
 
 void Network::add_input_layer(int number_of_neurons, const std::function<float(float)>& activation_func, float b) {
-
+    network.emplace_back();
     for (int neuron = 0; neuron < number_of_neurons; neuron++){
         network[0].emplace_back(1, dis1(gen1), activation_func);
     }
@@ -29,6 +29,7 @@ void Network::add_input_layer(int number_of_neurons, const std::function<float(f
 
 
 void Network::add_hidden_layer(int number_of_neurons, const std::function<float(float)>& activation_func, float b) {
+    network.emplace_back();
     for (int neuron = 0; neuron < number_of_neurons; neuron++) {
         network[layers].emplace_back(layers + 1, dis1(gen1), activation_func);
     }
@@ -37,8 +38,10 @@ void Network::add_hidden_layer(int number_of_neurons, const std::function<float(
 
 
 void Network::add_output_layer(int number_of_neurons, const std::function<float(float)>& activation_func, float b) {
+    network.emplace_back();
+
     for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[-1].emplace_back(layers + 1, dis1(gen1), activation_func);
+        network[network.size()-1].emplace_back(layers + 1, dis1(gen1), activation_func);
     }
 
     layers += 1;
