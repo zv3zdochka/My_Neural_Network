@@ -11,7 +11,11 @@ add_executable(My_own_Neural_Network
         Network.h
         Network.cpp
         main.cpp
+        Matrix.h
+        Matrix.cpp
+        Matrix.cpp
 )
 
 
 add_executable(train train.cpp)
+add_executable(matrix_test matrix_test.cpp Matrix.cpp Matrix.h)
