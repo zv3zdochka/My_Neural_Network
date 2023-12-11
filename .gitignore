@@ -446,3 +446,4 @@ cython_debug/
 
 /Networks
 /Neurons
+!/matrix_test.cpp

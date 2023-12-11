@@ -1,5 +1,6 @@
 #include <random>
 #include <iostream>
+#include <iomanip>
 #include "Network.h"
 #include "Neurons.h"
 
@@ -52,8 +53,8 @@ void Network::create_synapse() {
         synapse.emplace_back();
         for (size_t j = 0; j < network[i].size(); ++j) {
             for (size_t k = 0; k < network[i + 1].size(); ++k) {
-                float weight = dis2(gen2);
-                synapse[i].push_back(weight);
+                float c_weight = dis2(gen2);
+                synapse[i].push_back(c_weight);
             }
         }
     }
@@ -70,24 +71,40 @@ void Network::show_network() {
 }
 
 void Network::show_synapse() {
-    for (size_t i = 0; i < synapse.size(); ++i) {
-        std::cout << "Layer " << i + 1 << " to Layer " << i + 2 << " synapse weights:\n";
-        for (size_t j = 0; j < synapse[i].size(); ++j) {
-            std::cout << "Synapse weight " << j + 1 << ": " << synapse[i][j] << std::endl;
+    for (int i = 0; i < layers - 1; i++) {
+        std::cout << "Synapse weights from Layer " << i + 1 << " to Layer " << i + 2 << ":\n";
+
+        for (size_t j = 0; j < network[i].size(); j++) {
+            for (size_t k = 0; k < network[i + 1].size(); k++) {
+
+                float cur_weight = synapse[i][(j * network[i + 1].size()) + k];
+
+                std::cout << std::fixed << std::setprecision(1) << std::setw(5) << cur_weight;
+            }
+            std::cout << std::endl;
         }
         std::cout << std::endl;
     }
 }
 
 void Network::show_weights() {
-    for (int i = 0; i < layers; i++) {
-        std::cout << "Layer " << i + 1 << ":\n";
-        for (int j = 0; j < network[i].size(); j++) {
-            Neuron current_neuron = network[i][j];
-            std::cout << "Neuron " << j + 1 << " in Layer " << i + 1 << ":\n";
-            std::cout << "Weight: " << current_neuron.getWeight() << "\n";
-            std::cout << "----------------\n";
+    // Определение максимального количества нейронов в слое
+    size_t max_neurons = 0;
+    for (size_t i = 0; i < network.size(); ++i) {
+        max_neurons = std::max(max_neurons, network[i].size());
+    }
+
+    // Вывод весов всех нейронов поочередно в каждом слое
+    for (size_t i = 0; i < max_neurons; ++i) {
+        // Вывод весов для нейронов из разных слоев
+        for (size_t j = 0; j < network.size(); ++j) {
+            if (i < network[j].size()) {
+                std::cout << std::fixed << std::setprecision(1) << network[j][i].getWeight() << " ";
+            } else {
+                std::cout << "    "; // Для случаев, когда слой содержит меньше нейронов
+            }
         }
-        std::cout << "\n";
+        std::cout << std::endl;
     }
 }
+

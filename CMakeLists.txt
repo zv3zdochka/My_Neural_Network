@@ -6,16 +6,19 @@ set(CMAKE_CXX_STANDARD 23)
 add_executable(My_own_Neural_Network
         Neurons.cpp
         Neurons.h
+
         Activations.h
         Activations.cpp
+
         Network.h
         Network.cpp
-        main.cpp
+
         Matrix.h
         Matrix.cpp
-        Matrix.cpp
+
+        main.cpp
+
 )
 
-
-add_executable(train train.cpp)
-add_executable(matrix_test matrix_test.cpp Matrix.cpp Matrix.h)
+add_executable(matrix_test matrix_test.cpp)
+add_executable(try try.cpp)
