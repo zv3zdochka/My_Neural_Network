@@ -8,7 +8,7 @@ public:
 
     int layers = 0;
     std::vector<std::vector<Neuron>> network;
-    std::vector<std::vector<float>> synapse;
+    std::vector<std::vector<std::vector<float>>> synapse;
 
     void add_input_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b);
 
