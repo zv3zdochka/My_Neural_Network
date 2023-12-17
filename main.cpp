@@ -13,8 +13,8 @@ int main() {
 
 
     // (->)
-    std::vector<std::vector<float>> input_data = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
-    std::vector<std::vector<float>> output_data = {{1.0}, {1.0}, {0.0}, {1.0}};
+    std::vector<std::vector<std::vector<float>>> input_data = {{{0.0f}, {0.0f}}, {{0.0f}, {1.0f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
+    std::vector<std::vector<float>> output_data = {{1.0f}, {1.0f}, {0.0f}, {1.0f}};
 
 
     const int epochs = 100;

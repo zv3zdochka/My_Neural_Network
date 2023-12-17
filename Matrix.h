@@ -1,5 +1,4 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#pragma once
 
 #include <vector>
 
@@ -45,4 +44,3 @@ public:
     bool operator!=(const Matrix &other) const;
 };
 
-#endif // MATRIX_H

@@ -11,4 +11,5 @@ public:
     const int layer_num;
     float weight;
     const std::function<float(float)> activationFunction;
+
 };

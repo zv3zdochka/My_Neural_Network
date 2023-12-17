@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Neurons.h"
+#include "Matrix.h"
 
 class Network {
 public:
@@ -21,8 +22,8 @@ public:
     void show_network();
 
 
-    std::vector<float> through(std::vector<float> inp);
-    void train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data_per);
+    Matrix through_layer(Matrix weights, Matrix inp) ;
+    void train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs, float test_data_per);
 private:
     void create_synapse();
     void show_weights();
