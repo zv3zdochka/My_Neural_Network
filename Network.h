@@ -21,9 +21,8 @@ public:
     void show_network();
 
 
-    void through(std::vector<std::vector<float>> weights, std::vector<float> inp);
-    void train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, int epochs, float test_data);
-
+    std::vector<float> through(std::vector<float> inp);
+    void train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data_per);
 private:
     void create_synapse();
     void show_weights();

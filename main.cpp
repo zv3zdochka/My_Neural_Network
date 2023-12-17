@@ -20,8 +20,9 @@ int main() {
     const int epochs = 100;
 
 
-    net.train(input_data, output_data, epochs, 0.1);
+    net.train(input_data, output_data, epochs, 1);
 
 
     return 0;
+
 }

@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "Network.h"
 #include "Neurons.h"
+#include "Matrix.h"
 
 std::random_device weight;
 std::mt19937 gen1(weight());
@@ -109,9 +110,12 @@ void Network::show_weights() {
 }
 
 
-void Network::train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data) {
+void Network::train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data_per) {
     for (int epoch = 0; epoch < epochs; ++epoch) {
+        for (const auto & parameter : parameters) {
+            std::vector<float> defi = through(parameter);
 
+        }
 
 
         //for (int i = 0; i < input_data.size(); ++i) {
@@ -133,9 +137,35 @@ void Network::train(std::vector<std::vector<float>> parameters, std::vector<std:
 
 }
 
-void Network::through(std::vector<std::vector<float>> weights, std::vector<float> inp) {
-    for (int i = 0; i < inp.size(); i++){
-        network[0][i].weight = inp[i]
+std::vector<float> Network::through(std::vector<float> inp) {
+    for (int i = 0; i < inp.size(); ++i) {
+        network[0][i].weight = inp[i];
     }
+
+    for (int i = 0; i < layers - 1; ++i) {
+        std::vector<float> outputs;
+        for (size_t j = 0; j < network[i + 1].size(); ++j) {
+            float input_sum = 0.0f;
+            for (size_t k = 0; k < network[i].size(); ++k) {
+                input_sum += network[i][k].weight * synapse[i][(k * network[i + 1].size()) + j];
+            }
+            float output = network[i + 1][j].activationFunction(input_sum);
+            // Запись выхода нейрона
+            network[i + 1][j].weight = output;
+            outputs.push_back(output);
+        }
+
+        for (size_t j = 0; j < outputs.size(); ++j) {
+            inp[j] = outputs[j];
+        }
+    }
+
+    std::vector<float> final_output;
+    for (size_t i = 0; i < network[layers - 1].size(); ++i) {
+        final_output.push_back(network[layers - 1][i].weight);
+    }
+
+    return final_output;
 }
+
 
