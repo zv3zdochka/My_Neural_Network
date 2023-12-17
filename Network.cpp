@@ -19,7 +19,7 @@ std::uniform_real_distribution<float> dis2(0.1f, 10.0f);
 void Network::add_input_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
     network.emplace_back();
     for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[0].emplace_back(1, dis1(gen1), activation_func);
+        network[0].emplace_back(1, 0, activation_func);
     }
     layers += 1;
 
@@ -30,7 +30,7 @@ void Network::add_input_layer(int number_of_neurons, const std::function<float(f
 void Network::add_hidden_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
     network.emplace_back();
     for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[layers].emplace_back(layers + 1, dis1(gen1), activation_func);
+        network[layers].emplace_back(layers + 1, 0, activation_func);
     }
     layers += 1;
 }
@@ -40,7 +40,7 @@ void Network::add_output_layer(int number_of_neurons, const std::function<float(
     network.emplace_back();
 
     for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[network.size() - 1].emplace_back(layers + 1, dis1(gen1), activation_func);
+        network[network.size() - 1].emplace_back(layers + 1, 0, activation_func);
     }
 
     layers += 1;
@@ -66,7 +66,7 @@ void Network::build() {
 }
 
 void Network::show_network() {
-    show_weights();
+    //show_weights();
     show_synapse();
 }
 
@@ -99,7 +99,7 @@ void Network::show_weights() {
 
         for (auto & j : network) {
             if (i < j.size()) {
-                std::cout << std::fixed << std::setprecision(1) << j[i].getWeight() << " ";
+                std::cout << std::fixed << std::setprecision(1) << j[i].weight << " ";
             } else {
                 std::cout << "    ";
             }
@@ -107,6 +107,7 @@ void Network::show_weights() {
         std::cout << std::endl;
     }
 }
+
 
 void Network::train(std::vector<std::vector<float>> parameters, std::vector<std::vector<float>> answer, const int epochs, float test_data) {
     for (int epoch = 0; epoch < epochs; ++epoch) {
@@ -130,5 +131,11 @@ void Network::train(std::vector<std::vector<float>> parameters, std::vector<std:
     //std::cout << "Epoch: " << epoch + 1 << ", Error: " << total_error << std::endl;
 
 
+}
+
+void Network::through(std::vector<std::vector<float>> weights, std::vector<float> inp) {
+    for (int i = 0; i < inp.size(); i++){
+        network[0][i].weight = inp[i]
+    }
 }
 

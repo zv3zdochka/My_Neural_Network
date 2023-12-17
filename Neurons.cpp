@@ -7,10 +7,4 @@ float Neuron::computeActivation(float input) {
     return activationFunction(input);
 }
 
-float Neuron::getWeight() {
-    return weight;
-}
 
-int Neuron::getLayer() {
-    return layer_num;
-}

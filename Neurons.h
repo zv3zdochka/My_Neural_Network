@@ -8,11 +8,6 @@ public:
 
     float computeActivation(float input);
 
-    float getWeight();
-
-    int getLayer();
-
-private:
     const int layer_num;
     float weight;
     const std::function<float(float)> activationFunction;
