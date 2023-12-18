@@ -17,11 +17,21 @@ int main() {
 
     // Создаем новый объект сети
     Network loadedNetwork;
+    auto loadedData = loadedNetwork.read("D:\\Code\\Network\\test.txt");
+    int loadedLayers;
+    std::vector<std::vector<Neuron>> loadedNetworkData;
+    std::vector<std::vector<std::vector<float>>> loadedSynapseData;
 
-    // Загружаем сеть из файла
-    loadedNetwork.read("test.txt");
+    std::tie(loadedLayers, loadedNetworkData, loadedSynapseData) = loadedData;
 
-    loadedNetwork.show_network();
+    // Create a new network and assign the loaded data
+    Network newNetwork;
+    newNetwork.layers = loadedLayers;
+    newNetwork.network = loadedNetworkData;
+    newNetwork.synapse = loadedSynapseData;
+
+    // Display the loaded network
+    newNetwork.show_network();
 
 
     //// (->)

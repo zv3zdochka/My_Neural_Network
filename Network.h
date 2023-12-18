@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include "Neurons.h"
 #include "Matrix.h"
@@ -27,7 +26,8 @@ public:
 
 
     void save(const std::string &filename);
-    void read(const std::string &filename);
+    std::tuple<int, std::vector<std::vector<Neuron>>, std::vector<std::vector<std::vector<float>>>> read(const std::string &filename);
+
 
 private:
     void create_synapse();

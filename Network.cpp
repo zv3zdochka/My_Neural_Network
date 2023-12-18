@@ -110,25 +110,12 @@ void Network::show_synapse() {
 
 void Network::show_weights() {
     std::cout << "Neuron Weights" << std::endl;
-    size_t max_neurons = 0;
-    for (const auto &i: network) {
-        max_neurons = std::max(max_neurons, i.size());
-    }
-
-
-    for (size_t i = 0; i < max_neurons; ++i) {
-
-        for (auto &j: network) {
-            if (i < j.size()) {
-                std::cout << std::fixed << std::setprecision(1) << j[i].weight << " ";
-            } else {
-                std::cout << "    ";
-            }
+    for (const auto& layer : network) {
+        for (const auto& neuron : layer) {
+            std::cout << std::fixed << std::setprecision(1) << neuron.weight << " ";
         }
         std::cout << std::endl;
     }
-
-
 }
 
 
@@ -200,11 +187,11 @@ void Network::save(const std::string& filename){
         return;
     }
 
-    // Запись общего числа слоев
+    // Запись числа слоев
     file << "num of layers " << layers << '\n';
     file << "-----------------\n";
 
-    // Запись информации о каждом слое и весах синапсов
+    // Запись синапсов
     for (int i = 0; i < layers - 1; ++i) {
         file << "layer num: neurons " << network[i].size() << "; activation func\n";
         file << "-----------------\n";
@@ -219,21 +206,20 @@ void Network::save(const std::string& filename){
         file << "-----------------\n";
     }
 
-    // Запись дополнительных данных (если есть)
+
     file << "extra data\n";
 
-    // Close the file after writing
     file.close();
 }
 
 
-void Network::read(const std::string& filename) {
+std::tuple<int, std::vector<std::vector<Neuron>>, std::vector<std::vector<std::vector<float>>>> Network::read(const std::string& filename) {
     std::ifstream file;
     file.open(filename.c_str());
 
     if (!file.is_open()) {
         std::cerr << "Error: Unable to open file " << filename << '\n';
-        return;
+        return std::make_tuple(0, std::vector<std::vector<Neuron>>(), std::vector<std::vector<std::vector<float>>>());
     }
 
     // Чтение общего числа слоев
@@ -265,6 +251,7 @@ void Network::read(const std::string& filename) {
     // Обработка дополнительных данных
 
     file.close();
+    return std::make_tuple(layers, network, synapse);
 }
 
 

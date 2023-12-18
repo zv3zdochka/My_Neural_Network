@@ -8,8 +8,17 @@ public:
 
     float computeActivation(float input);
 
-    const int layer_num;
+    int layer_num;
     float weight;
-    const std::function<float(float)> activationFunction;
+    std::function<float(float)> activationFunction;
+
+    Neuron& operator=(const Neuron& other) {
+        if (this != &other) {
+            layer_num = other.layer_num;
+            weight = other.weight;
+            activationFunction = other.activationFunction;  // Copy the function
+        }
+        return *this;
+    }
 
 };
