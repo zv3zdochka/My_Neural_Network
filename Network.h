@@ -3,7 +3,7 @@
 #include <vector>
 #include "Neurons.h"
 #include "Matrix.h"
-
+#include <string>
 class Network {
 public:
 
@@ -24,11 +24,14 @@ public:
 
     Matrix through_layer(Matrix weights, std::vector<std::vector<float>> input) ;
     void train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs, float test_data_per);
+
+
+    void save(const std::string &filename);
+    void read(const std::string &filename);
+
 private:
     void create_synapse();
     void show_weights();
     void show_synapse();
-    void save();
-    void read();
 };
 

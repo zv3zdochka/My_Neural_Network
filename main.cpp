@@ -2,6 +2,7 @@
 #include "Activations.h"
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 int main() {
     Network net;
@@ -12,15 +13,23 @@ int main() {
     net.show_network();
 
 
-    // (->)
-    std::vector<std::vector<std::vector<float>>> input_data = {{{7.6f}, {9.4f}}, {{7.8f}, {9.8f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
-    std::vector<std::vector<float>> output_data = {{1.0f}, {1.0f}, {0.0f}, {1.0f}};
+    net.save("D:\\Code\\Network\\test.txt");
 
+    // Создаем новый объект сети
+    Network loadedNetwork;
 
-    const int epochs = 100;
+    // Загружаем сеть из файла
+    loadedNetwork.read("test.txt");
 
-
-    net.train(input_data, output_data, epochs, 1);
+    //// (->)
+    //std::vector<std::vector<std::vector<float>>> input_data = {{{7.6f}, {9.4f}}, {{7.8f}, {9.8f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
+    //std::vector<std::vector<float>> output_data = {{1.0f}, {1.0f}, {0.0f}, {1.0f}};
+//
+//
+    //const int epochs = 1;
+//
+//
+    //net.train(input_data, output_data, epochs, 1);
 
 
     return 0;

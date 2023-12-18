@@ -1,0 +1,15 @@
+Num of layers 3
+-----------------
+Layer num: neurons 2; activation func
+-----------------
+weights: 9.0948 2.63056 
+weights: 0.797802 6.45571 
+weights: 9.41799 9.28824 
+-----------------
+Layer num: neurons 3; activation func
+-----------------
+weights: 6.59741 
+weights: 5.01624 
+weights: 1.86949 
+-----------------
+extra data
