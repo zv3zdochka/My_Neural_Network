@@ -1,5 +1,5 @@
 #include "Matrix.h"
-
+#include <iostream>
 
 Matrix::Matrix() : rows(0), cols(0) {}
 
@@ -51,25 +51,30 @@ Matrix Matrix::transpose() const {
 }
 
 Matrix Matrix::operator*(const Matrix &other) const {
-    if (cols != other.rows) {
-        return {};
-    }
-
-    Matrix result(rows, other.cols);
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < other.cols; ++j) {
-            float sum = 0.0f;
-            for (size_t k = 0; k < cols; ++k) {
-                sum += data[i][k] * other[k][j];
+    if (cols == other.getRows()) {
+        Matrix result(rows, other.getCols());
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < other.getCols(); ++j) {
+                float sum = 0.0f;
+                for (size_t k = 0; k < cols; ++k) {
+                    sum += data[i][k] * other[k][j];
+                }
+                result[i][j] = sum;
             }
-            result[i][j] = sum;
         }
+        return result;
     }
-    return result;
+    // Выводите сообщение об ошибке, чтобы увидеть, происходит ли проблема с размерами матриц
+    std::cout << "Unable to perform matrix multiplication due to incompatible sizes." << std::endl;
+    return {}; // Возвращайте пустую матрицу только при несовместимых размерах для умножения
 }
+
+
+
 
 Matrix Matrix::operator-(const Matrix &other) const {
     if (rows != other.rows || cols != other.cols) {
+
         return {};
     }
 

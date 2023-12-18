@@ -149,15 +149,29 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
 
                 show_weights();
                 std::cout << '\n';
-                demi_res = through_layer(Matrix(synapse[lay]), data[j]).get_data();
-                for (int i = 0; i < demi_res.size(); i++){
+                demi_res = through_layer(Matrix(synapse[lay]), data[j], network[lay][0].activationFunction).get_data();
+
+
+                for (int ise = 0; ise < demi_res.size(); ise++){
+
+                    for (int k = 0; k < network[lay].size(); k++){
+                        if (lay == 0){
+                            network[lay][k].weight = demi_res[ise][0];
+                        }
+                        else{
+                            network[lay][k].weight = demi_res[ise][0];
+                        }
+
+                    }
 
                 }
+
 
 
             }
 
         }
+        std::cout << "FINISH_DATA";
 
     }
 
@@ -182,9 +196,13 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
 
 
 
-Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input) {
+Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input, std::function<float(float)> activationFunc) {
     Matrix inp(input);
     Matrix res = weights * inp;
+    std::vector<std::vector<float>> out = res.get_data();
+    for (int i = 0; i < res.get_data().size(); i ++){
+        out[i][0] = activationFunc(res.get_data()[i][0]);
+    }
     return res;
 }
 
