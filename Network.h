@@ -22,7 +22,7 @@ public:
     void show_network();
 
 
-    Matrix through_layer(Matrix weights, Matrix inp) ;
+    Matrix through_layer(Matrix weights, std::vector<std::vector<float>> input) ;
     void train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs, float test_data_per);
 private:
     void create_synapse();

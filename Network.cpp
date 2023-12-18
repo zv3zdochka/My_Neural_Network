@@ -133,15 +133,27 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
     for (int epoch = 0; epoch < epochs; ++epoch) {
 
         for (int j = 0; j < data.size(); j++) {
-            Matrix demi_res;
+            std::vector<std::vector<float>> demi_res;
 
             for (int lay = 0; lay < layers - 1; lay++) {
 
                 for (int k = 0; k < network[lay].size(); k++){
-                    network[lay][k].weight = data[j][0][0];
+                    if (lay == 0){
+                        network[lay][k].weight = data[j][k][0];
+                    }
+                    else{
+                        network[lay][k].weight = demi_res[k][0];
+                    }
+
                 }
+
                 show_weights();
-                demi_res = through_layer(Matrix(synapse[lay]), Matrix(data[j]));
+                std::cout << '\n';
+                demi_res = through_layer(Matrix(synapse[lay]), data[j]).get_data();
+                for (int i = 0; i < demi_res.size(); i++){
+
+                }
+
 
             }
 
@@ -170,7 +182,8 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
 
 
 
-Matrix Network::through_layer(Matrix weights, Matrix inp) {
+Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input) {
+    Matrix inp(input);
     Matrix res = weights * inp;
     return res;
 }
