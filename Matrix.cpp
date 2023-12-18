@@ -115,3 +115,7 @@ bool Matrix::operator==(const Matrix &other) const {
 bool Matrix::operator!=(const Matrix &other) const {
     return !(*this == other);
 }
+
+std::vector<std::vector<float>> Matrix::get_data() {
+    return data;
+}

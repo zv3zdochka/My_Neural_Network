@@ -13,7 +13,7 @@ int main() {
 
 
     // (->)
-    std::vector<std::vector<std::vector<float>>> input_data = {{{0.0f}, {0.0f}}, {{0.0f}, {1.0f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
+    std::vector<std::vector<std::vector<float>>> input_data = {{{7.6f}, {9.4f}}, {{7.8f}, {9.8f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
     std::vector<std::vector<float>> output_data = {{1.0f}, {1.0f}, {0.0f}, {1.0f}};
 
 

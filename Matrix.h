@@ -42,5 +42,6 @@ public:
     bool operator==(const Matrix &other) const;
 
     bool operator!=(const Matrix &other) const;
+    std::vector<std::vector<float>> get_data();
 };
 

@@ -3,7 +3,7 @@
 
 int main() {
     // Примеры матриц для перемножения
-    std::vector<std::vector<float>> data1 = {{0.3, 0.7, 0.5},
+    Matrix data1 = {{0.3, 0.7, 0.5},
                                              {0.6, 0.5, 0.2},
                                              {0.8, 0.1, 0.9}};
     std::vector<std::vector<float>> data2 = {{0.761}, {0.603}, {0.650}};
