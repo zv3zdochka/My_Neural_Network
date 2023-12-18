@@ -1,9 +1,12 @@
 #include <random>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include <string>
 #include "Network.h"
 #include "Neurons.h"
 #include "Matrix.h"
+
 
 
 std::random_device sepsis;
@@ -188,13 +191,82 @@ Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> in
     return res;
 }
 
-void Network::save() {
 
+void Network::save(const std::string& filename){
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file " << filename << '\n';
+        return;
+    }
+
+    // Запись общего числа слоев
+    file << "num of layers " << layers << '\n';
+    file << "-----------------\n";
+
+    // Запись информации о каждом слое и весах синапсов
+    for (int i = 0; i < layers - 1; ++i) {
+        file << "layer num: neurons " << network[i].size() << "; activation func\n";
+        file << "-----------------\n";
+
+        for (const auto & j : synapse[i]) {
+            file << "weights: ";
+            for (float k : j) {
+                file << k << ' ';
+            }
+            file << '\n';
+        }
+        file << "-----------------\n";
+    }
+
+    // Запись дополнительных данных (если есть)
+    file << "extra data\n";
+
+    // Close the file after writing
+    file.close();
 }
 
-void Network::read() {
 
+void Network::read(const std::string& filename) {
+    std::ifstream file;
+    file.open(filename.c_str());
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file " << filename << '\n';
+        return;
+    }
+
+    // Чтение общего числа слоев
+    std::string line;
+    std::getline(file, line);
+    size_t pos = line.find("num of layers ");
+    if (pos != std::string::npos) {
+        layers = std::stoi(line.substr(pos + 14));
+    }
+
+    // Пропустить разделитель
+    std::getline(file, line);
+
+    // Чтение информации о каждом слое и весах синапсов
+    for (int i = 0; i < layers; ++i) {
+        std::getline(file, line);  // Пропустить "layer num: neurons n; activation func"
+        std::getline(file, line);  // Пропустить "-----------------"
+
+        for (size_t j = 0; j < synapse[i].size(); ++j) {
+            std::getline(file, line);  // Пропустить "weights: w11 w21 ..."
+            // Обработка строки и заполнение synapse[i][j]
+        }
+
+        std::getline(file, line);  // Пропустить "-----------------"
+    }
+
+    // Пропустить "extra data" и читать дополнительные данные (если есть)
+    std::getline(file, line);
+    // Обработка дополнительных данных
+
+    file.close();
 }
+
 
 
 
