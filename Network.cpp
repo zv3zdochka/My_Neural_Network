@@ -8,7 +8,7 @@
 
 std::random_device sepsis;
 std::default_random_engine gen2(sepsis());
-std::uniform_real_distribution<float> dis2(0.1f, 10.0f);
+std::uniform_real_distribution<float> dis2(0.0f, 1.0f);
 
 
 void Network::add_input_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
@@ -92,9 +92,9 @@ void Network::show_synapse() {
     for (int i = 0; i < layers - 1; i++) {
         std::cout << "Synapse weights from Layer " << i + 1 << " to Layer " << i + 2 << ":\n";
 
-        for (auto & j : synapse[i]) {
+        for (auto &j: synapse[i]) {
 
-            for (float k : j) {
+            for (float k: j) {
                 std::cout << k << ' ';
             }
             std::cout << '\n';
@@ -129,7 +129,9 @@ void Network::show_weights() {
 }
 
 
-void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs, float test_data_per) {
+void
+Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs,
+               float test_data_per) {
     for (int epoch = 0; epoch < epochs; ++epoch) {
 
         for (int j = 0; j < data.size(); j++) {
@@ -137,11 +139,10 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
 
             for (int lay = 0; lay < layers - 1; lay++) {
 
-                for (int k = 0; k < network[lay].size(); k++){
-                    if (lay == 0){
+                for (int k = 0; k < network[lay].size(); k++) {
+                    if (lay == 0) {
                         network[lay][k].weight = data[j][k][0];
-                    }
-                    else{
+                    } else {
                         network[lay][k].weight = demi_res[k][0];
                     }
 
@@ -149,23 +150,31 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
 
                 show_weights();
                 std::cout << '\n';
-                demi_res = through_layer(Matrix(synapse[lay]), data[j], network[lay][0].activationFunction).get_data();
+                int k = network[lay+1].size();
+                if (k == 1) {
+                    std::vector<std::vector<float>> semi = {{}};
+                    for (int h = 0; h < synapse[lay].size(); h++)
+                        semi[0].push_back(synapse[lay][h][0]);
+                    demi_res = through_layer(Matrix(semi), data[j], network[lay][0].activationFunction).get_data();
+                } else {
+                    demi_res = through_layer(Matrix(synapse[lay]), data[j],
+                                             network[lay][0].activationFunction).get_data();
+
+                }
 
 
-                for (int ise = 0; ise < demi_res.size(); ise++){
+                for (int ise = 0; ise < demi_res.size(); ise++) {
 
-                    for (int k = 0; k < network[lay].size(); k++){
-                        if (lay == 0){
+                    for (int k = 0; k < network[lay].size(); k++) {
+                        if (lay == 0) {
                             network[lay][k].weight = demi_res[ise][0];
-                        }
-                        else{
+                        } else {
                             network[lay][k].weight = demi_res[ise][0];
                         }
 
                     }
 
                 }
-
 
 
             }
@@ -196,11 +205,12 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vect
 
 
 
-Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input, std::function<float(float)> activationFunc) {
+Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input,
+                              std::function<float(float)> activationFunc) {
     Matrix inp(input);
     Matrix res = weights * inp;
     std::vector<std::vector<float>> out = res.get_data();
-    for (int i = 0; i < res.get_data().size(); i ++){
+    for (int i = 0; i < res.get_data().size(); i++) {
         out[i][0] = activationFunc(res.get_data()[i][0]);
     }
     return res;

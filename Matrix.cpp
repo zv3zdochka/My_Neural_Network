@@ -64,27 +64,10 @@ Matrix Matrix::operator*(const Matrix &other) const {
         }
         return result;
     }
-    // Выводите сообщение об ошибке, чтобы увидеть, происходит ли проблема с размерами матриц
+
     std::cout << "Unable to perform matrix multiplication due to incompatible sizes." << std::endl;
-    return {}; // Возвращайте пустую матрицу только при несовместимых размерах для умножения
-}
+    return {};
 
-
-
-
-Matrix Matrix::operator-(const Matrix &other) const {
-    if (rows != other.rows || cols != other.cols) {
-
-        return {};
-    }
-
-    Matrix result(rows, cols);
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < cols; ++j) {
-            result[i][j] = data[i][j] - other[i][j];
-        }
-    }
-    return result;
 }
 
 Matrix Matrix::operator+(const Matrix &other) const {
@@ -99,6 +82,13 @@ Matrix Matrix::operator+(const Matrix &other) const {
         }
     }
     return result;
+}
+
+Matrix Matrix::operator-(const Matrix &other) const {
+    if (rows != other.rows || cols != other.cols) {
+
+        return {};
+    }
 }
 
 
@@ -124,3 +114,20 @@ bool Matrix::operator!=(const Matrix &other) const {
 std::vector<std::vector<float>> Matrix::get_data() {
     return data;
 }
+
+void Matrix::show_matrix(Matrix m) {
+    std::cout << "Result Matrix:" << std::endl;
+    for (size_t i = 0; i < m.getRows(); ++i) {
+        for (size_t j = 0; j < m.getCols(); ++j) {
+            std::cout << m[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+
+
+
+
+
+

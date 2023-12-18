@@ -33,6 +33,7 @@ public:
 
     [[nodiscard]] Matrix transpose() const;
 
+
     Matrix operator+(const Matrix &other) const;
 
     Matrix operator-(const Matrix &other) const;
@@ -42,6 +43,9 @@ public:
     bool operator==(const Matrix &other) const;
 
     bool operator!=(const Matrix &other) const;
+
     std::vector<std::vector<float>> get_data();
+
+    void show_matrix(Matrix m);
 };
 
