@@ -28,5 +28,7 @@ private:
     void create_synapse();
     void show_weights();
     void show_synapse();
+    void save();
+    void read();
 };
 

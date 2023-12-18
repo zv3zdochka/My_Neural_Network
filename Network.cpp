@@ -175,6 +175,14 @@ Matrix Network::through_layer(Matrix weights, Matrix inp) {
     return res;
 }
 
+void Network::save() {
+
+}
+
+void Network::read() {
+
+}
+
 
 
 
