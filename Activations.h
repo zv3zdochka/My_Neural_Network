@@ -55,16 +55,4 @@ namespace activation {
      * @return Function value.
      */
     float tanh(float x);
-
-    /**
-     * @brief Softmax function.
-     *
-     * This function computes the softmax function for the given number.
-     * It is used to normalize the input into a probability distribution.
-     *
-     * @param x Your number.
-     * @return Function value.
-     */
-
-
 }
