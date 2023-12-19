@@ -2,11 +2,11 @@
 #include "Matrix.h"
 
 int main() {
-    std::vector<std::vector<float>> data1 = {{0.9,
-                                             0.2,
-                                             0.1}};
+    std::vector<std::vector<float>> data1 = {{0.4,
+                                             1.0,
+                                             0.3}};
 
-    std::vector<std::vector<float>> data2 = {{0.9}, {0.1}, {0.8}};
+    std::vector<std::vector<float>> data2 = {{1.0}, {2.0}};
 
 
 
@@ -15,7 +15,7 @@ int main() {
 
     Matrix result = matrix1 * matrix2;
 
-    result.show_matrix(result);
+    result.showMatrix();
 
     return 0;
 }

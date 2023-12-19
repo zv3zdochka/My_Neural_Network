@@ -155,10 +155,10 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
                     std::vector<std::vector<float>> semi = {{}};
                     for (int h = 0; h < synapse[lay].size(); h++)
                         semi[0].push_back(synapse[lay][h][0]);
-                    demi_res = through_layer(Matrix(semi), data[j], network[lay][0].activationFunction).get_data();
+                    demi_res = through_layer(Matrix(semi), data[j], network[lay][0].activationFunction).getData();
                 } else {
                     demi_res = through_layer(Matrix(synapse[lay]), data[j],
-                                             network[lay][0].activationFunction).get_data();
+                                             network[lay][0].activationFunction).getData();
 
                 }
 
@@ -208,10 +208,12 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
 Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input,
                               std::function<float(float)> activationFunc) {
     Matrix inp(input);
+    weights.showMatrix();
+    inp.showMatrix();
     Matrix res = weights * inp;
-    std::vector<std::vector<float>> out = res.get_data();
-    for (int i = 0; i < res.get_data().size(); i++) {
-        out[i][0] = activationFunc(res.get_data()[i][0]);
+    std::vector<std::vector<float>> out = res.getData();
+    for (int i = 0; i < res.getData().size(); i++) {
+        out[i][0] = activationFunc(res.getData()[i][0]);
     }
     return res;
 }

@@ -44,8 +44,8 @@ public:
 
     bool operator!=(const Matrix &other) const;
 
-    std::vector<std::vector<float>> get_data();
+    std::vector<std::vector<float>> getData();
 
-    void show_matrix(Matrix m);
+    void showMatrix();
 };
 

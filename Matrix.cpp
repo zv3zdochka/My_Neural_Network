@@ -66,6 +66,7 @@ Matrix Matrix::operator*(const Matrix &other) const {
     }
 
     std::cout << "Unable to perform matrix multiplication due to incompatible sizes." << std::endl;
+
     return {};
 
 }
@@ -111,18 +112,21 @@ bool Matrix::operator!=(const Matrix &other) const {
     return !(*this == other);
 }
 
-std::vector<std::vector<float>> Matrix::get_data() {
+std::vector<std::vector<float>> Matrix::getData() {
     return data;
 }
 
-void Matrix::show_matrix(Matrix m) {
+void Matrix::showMatrix() {
     std::cout << "Result Matrix:" << std::endl;
-    for (size_t i = 0; i < m.getRows(); ++i) {
-        for (size_t j = 0; j < m.getCols(); ++j) {
-            std::cout << m[i][j] << " ";
+    std::cout << "-----------------------" << std::endl;
+    for (int i = 0; i < data.size(); i ++){
+        for (int j = 0; j < data[i].size(); j++){
+            std::cout << data[i][j] << ' ';
         }
         std::cout << std::endl;
     }
+    std::cout << "-----------------------" << std::endl;
+
 }
 
 
