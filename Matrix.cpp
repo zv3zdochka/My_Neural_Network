@@ -116,8 +116,8 @@ std::vector<std::vector<float>> Matrix::getData() {
     return data;
 }
 
-void Matrix::showMatrix() {
-    std::cout << "Result Matrix:" << std::endl;
+void Matrix::showMatrix(std::string name) {
+    std::cout << "Result Matrix" << name << ":" << std::endl;
     std::cout << "-----------------------" << std::endl;
     for (int i = 0; i < data.size(); i ++){
         for (int j = 0; j < data[i].size(); j++){

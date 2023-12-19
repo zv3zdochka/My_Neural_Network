@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 class Matrix {
 private:
@@ -46,6 +47,6 @@ public:
 
     std::vector<std::vector<float>> getData();
 
-    void showMatrix();
+    void showMatrix(std::string name = "");
 };
 
