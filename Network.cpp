@@ -91,7 +91,7 @@ void Network::show_network() {
 void Network::show_synapse() {
     for (int i = 0; i < layers - 1; i++) {
         std::cout << "Synapse weights from Layer " << i + 1 << " to Layer " << i + 2 << ":\n";
-
+        std::cout << "-----------------------" << std::endl;
         for (auto &j: synapse[i]) {
 
             for (float k: j) {
@@ -99,7 +99,7 @@ void Network::show_synapse() {
             }
             std::cout << '\n';
         }
-        std::cout << '\n';
+        std::cout << "-----------------------" << std::endl;
     }
 
 }
@@ -107,11 +107,11 @@ void Network::show_synapse() {
 
 void Network::show_weights() {
     std::cout << "Neuron Weights" << std::endl;
+    std::cout << "-----------------------" << std::endl;
     size_t max_neurons = 0;
     for (const auto &i: network) {
         max_neurons = std::max(max_neurons, i.size());
     }
-
 
     for (size_t i = 0; i < max_neurons; ++i) {
 
@@ -124,6 +124,7 @@ void Network::show_weights() {
         }
         std::cout << std::endl;
     }
+    std::cout << "-----------------------" << std::endl;
 
 
 }
@@ -132,8 +133,15 @@ void Network::show_weights() {
 void
 Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs,
                float test_data_per) {
+    //training message
     for (int epoch = 0; epoch < epochs; ++epoch) {
+        std::cout << "-----------------------" << std::endl;
+        std::cout << "NEW EPOCH" << std::endl;
+        std::cout << "-----------------------" << std::endl;
         for (int j = 0; j < data.size(); j++) {
+            std::cout << "-----------------------" << std::endl;
+            std::cout << "NEW KNOWLEDGE" << std::endl;
+            std::cout << "-----------------------" << std::endl;
             std::vector<std::vector<float>> demi_res;
 
             for (int lay = 0; lay < layers - 1; lay++) {
@@ -148,10 +156,9 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
 
                 show_weights();
 
-                std::cout << '\n';
                 int k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
-                for (int d = 0; d < network[lay].size(); d++){
+                for (int d = 0; d < network[lay].size(); d++) {
                     local_inp.push_back({network[lay][d].weight});
                 }
                 if (k == 1) {
@@ -164,21 +171,26 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
                     demi_res = through_layer(Matrix(synapse[lay]), local_inp,
                                              network[lay][0].activationFunction).getData();
                 }
-
+                std::cout << 1 << std::endl;
+                Matrix(demi_res).showMatrix();
                 for (int ise = 0; ise < demi_res.size(); ise++) {
 
                     for (int k = 0; k < network[lay].size(); k++) {
 
                         if (lay == 0) {
                             network[lay][k].weight = demi_res[ise][0];
+                        } else if (lay == network.size() - 1) {
+                            network[lay][k].weight = demi_res[ise][0];
+
                         } else {
                             network[lay][k].weight = demi_res[ise][0];
                         }
                     }
                 }
+                show_weights();
             }
         }
-        std::cout << "FINISH_DATA";
+        std::cout << "FINISH TRAINING";
 
     }
 
