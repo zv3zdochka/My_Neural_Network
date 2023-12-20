@@ -4,18 +4,21 @@
 #include <vector>
 #include <fstream>
 
+#include <filesystem>
+
 int main() {
+    std::filesystem::current_path("..");
+
     Network net;
-    net.add_input_layer(2, activation::sigmoid, 0.0f);
+    net.add_layer(LayerType::input, 2, activation::sigmoid);
     net.add_hidden_layer(3, activation::tanh, 0.0f);
     net.add_output_layer(1, activation::tanh, 0.0f);
     net.build();
     net.show_network();
 
-
     net.save("D:\\Code\\Network\\test.txt");
 
-    // ‘®§¤ ¥¬ ­®¢ë© ®¡ê¥ªâ á¥â¨
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ê¥ªï¿½ ï¿½ï¿½
     Network loadedNetwork;
     auto loadedData = loadedNetwork.read("D:\\Code\\Network\\test.txt");
     int loadedLayers;
