@@ -19,7 +19,3 @@ add_executable(My_own_Neural_Network
         main.cpp
 
 )
-
-add_executable(matrix_test matrix_test.cpp)
-add_executable(try try.cpp)
-add_executable(create_dataset create_dataset.cpp)

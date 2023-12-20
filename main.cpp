@@ -18,6 +18,8 @@ int main() {
 
     net.save("base.json");
 
+    std::cout << "--------------------------------" << std::endl;
+
 
     Network loadedNetwork("base.json");
 

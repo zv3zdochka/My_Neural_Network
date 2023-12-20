@@ -1,6 +1,5 @@
 #include <fstream>
 #include "Network.h"
-#include "Neurons.h"
 #include "Matrix.h"
 #include "json.h"
 
@@ -35,17 +34,12 @@
 //     return std::make_tuple(layers, network, synapse);
 // }
 
-std::random_device sepsis;
-std::default_random_engine gen2(sepsis());
-std::uniform_real_distribution<float> dis2(0.1f, 10.0f);
-
 #define NETWORK_NUM_NEURONS_NAME    "num of neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "activation function"
 #define NETWORK_SYNAPSE_NAME        "synapse"
 
 
-Network::Network() {
-}
+Network::Network() = default;
 
 Network::Network(const char *filename) {
     nlohmann::json input;
@@ -66,21 +60,40 @@ Network::Network(const char *filename) {
         float b = 0.0f; // sam nastroi
 
         // Add input layer
-        if (i == 0){
+        if (network.empty()) {
             add_layer(LayerType::input, num_neurons, activation_func, b);
         }
 
         // Add hidden layer
-        add_layer(LayerType::hidden, num_neurons, activation_func, b);
+        else {
+            add_layer(LayerType::hidden, num_neurons, activation_func, b);
+        }
 
         // dodelay wywod
         auto& synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
-        for (size_t j = 0; j < synapse_data.size(); ++j) {
-            synapse[layers - 1][j] = synapse_data[j].get<std::vector<float>>();
-        }
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // In short, with this input, synopses seem to be entered correctly, but the neuron itself is not output
+
+        //for (const auto& synapse_row : synapse_data) {
+        //    synapse[i].emplace_back(synapse_row.get<std::vector<float>>());
+        //}
+        ///////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // And with this conclusion, the number of connections increases by 2 times
+
+        // synapse.push_back(synapse_data.get<std::vector<std::vector<float>>>());
+        ///////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////////
+        //Fix it if you can
+        ///////////////////////////////////////////////////////////////////////////////
+
         i++;
     }
 
+    // Add output layer
     add_layer(LayerType::output, 1, activation::sigmoid, 0.0f);
 
     build();
@@ -188,13 +201,13 @@ void Network::show_weights() {
 
 void Network::train(const std::vector<std::vector<std::vector<float>>>& data, const std::vector<std::vector<float>>& answer, int epochs, float test_data_per) {
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        for (int j = 0; j < data.size(); j++) {
+        for (const auto & j : data) {
             std::vector<std::vector<float>> demi_res;
 
             for (int lay = 0; lay < layers - 1; lay++) {
                 for (int k = 0; k < network[lay].size(); k++){
                     if (lay == 0){
-                        network[lay][k].weight = data[j][k][0];
+                        network[lay][k].weight = j[k][0];
                     }
                     else{
                         network[lay][k].weight = demi_res[k][0];
@@ -203,7 +216,7 @@ void Network::train(const std::vector<std::vector<std::vector<float>>>& data, co
 
                 show_weights();
                 std::cout << '\n';
-                demi_res = through_layer(Matrix(synapse[lay]), data[j]).get_data();
+                demi_res = through_layer(Matrix(synapse[lay]), j).get_data();
                 for (int i = 0; i < demi_res.size(); i++){
 
                 }
