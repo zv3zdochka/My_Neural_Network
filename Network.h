@@ -1,13 +1,13 @@
 #pragma once
 
-#include <vector>
-#include <random>
-#include <iostream>
-#include <fstream>
-#include <string_view>
-
 #include "Neurons.h"
 #include "Matrix.h"
+#include "Activations.h"
+#include <vector>
+#include <string>
+#include <random>
+#include <iostream>
+#include <iomanip>
 
 enum class LayerType {
     input,
@@ -15,33 +15,31 @@ enum class LayerType {
     output
 };
 
+
 class Network {
 public:
-    Network(std::string_view filename);
 
-    Network() = default;
-    ~Network() = default;
+    explicit Network(const char *filename);
+    Network();
 
-public:
+    int layers = 0;
+    std::vector<std::vector<Neuron>> network;
+    std::vector<std::vector<std::vector<float>>> synapse;
+
+    void add_layer(LayerType type, int number_of_neurons, const std::function<float(float)> &activation_func, float b);
     void build();
     void show_network();
+    void save(const char *filename) const;
 
-    void add_layer(LayerType type, int number_of_neurons, const std::function<float(float)> &activation_func, float b = 0.0f);
+    static Matrix through_layer(const Matrix& weights, const std::vector<std::vector<float>>& input);
 
-    using vec3 = std::vector<std::vector<std::vector<float>>>;
-    using vec2 = std::vector<std::vector<float>>;
-    Matrix through_layer(const Matrix& weights, const vec2& input) ;
+    void train(const std::vector<std::vector<std::vector<float>>>& data, const std::vector<std::vector<float>>& answer, int epochs, float test_data_per);
 
-    void train(const vec3& data, const vec2& answer, int epochs, float test_data_per);
 
-    void save(std::string_view filename) const;
 
 private:
     void create_synapse();
     void show_weights();
     void show_synapse();
-
-    int layers;
-    std::vector<std::vector<Neuron>> network;
-    std::vector<std::vector<std::vector<float>>> synapse;
 };
+

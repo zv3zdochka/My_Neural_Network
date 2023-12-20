@@ -1,3 +1,4 @@
+#include <fstream>
 #include "Network.h"
 #include "Neurons.h"
 #include "Matrix.h"
@@ -34,7 +35,19 @@
 //     return std::make_tuple(layers, network, synapse);
 // }
 
-Network::Network(std::string_view filename) {
+std::random_device sepsis;
+std::default_random_engine gen2(sepsis());
+std::uniform_real_distribution<float> dis2(0.1f, 10.0f);
+
+#define NETWORK_NUM_NEURONS_NAME    "num of neurons"
+#define NETWORK_ACTIVATION_FN_NAME  "activation function"
+#define NETWORK_SYNAPSE_NAME        "synapse"
+
+
+Network::Network() {
+}
+
+Network::Network(const char *filename) {
     nlohmann::json input;
 
     {
@@ -46,9 +59,31 @@ Network::Network(std::string_view filename) {
         file >> input;
     }
 
-    
+    int i = 0;
+    for (const auto& layer_data : input) {
+        int num_neurons = layer_data.at(NETWORK_NUM_NEURONS_NAME);
+        std::function<float(float)> activation_func = activation::sigmoid; // sam nastroi
+        float b = 0.0f; // sam nastroi
 
+        // Add input layer
+        if (i == 0){
+            add_layer(LayerType::input, num_neurons, activation_func, b);
+        }
 
+        // Add hidden layer
+        add_layer(LayerType::hidden, num_neurons, activation_func, b);
+
+        // dodelay wywod
+        auto& synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
+        for (size_t j = 0; j < synapse_data.size(); ++j) {
+            synapse[layers - 1][j] = synapse_data[j].get<std::vector<float>>();
+        }
+        i++;
+    }
+
+    add_layer(LayerType::output, 1, activation::sigmoid, 0.0f);
+
+    build();
 
     
 
@@ -185,11 +220,8 @@ Matrix Network::through_layer(const Matrix& weights, const std::vector<std::vect
     return res;
 }
 
-#define NETWORK_NUM_NEURONS_NAME    "num of neurons"
-#define NETWORK_ACTIVATION_FN_NAME  "activation function"
-#define NETWORK_SYNAPSE_NAME        "synapse"
 
-void Network::save(std::string_view filename) const {
+void Network::save(const char *filename) const {
     nlohmann::json output;
 
     for (int i = 0; i < layers - 1; ++i) {

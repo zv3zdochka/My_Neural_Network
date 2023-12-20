@@ -10,31 +10,19 @@ int main() {
     std::filesystem::current_path("..");
 
     Network net;
-    net.add_layer(LayerType::input, 2, activation::sigmoid);
-    net.add_hidden_layer(3, activation::tanh, 0.0f);
-    net.add_output_layer(1, activation::tanh, 0.0f);
+    net.add_layer(LayerType::input, 2, activation::sigmoid, 0.0f);
+    net.add_layer(LayerType::hidden, 3, activation::sigmoid, 0.0f);
+    net.add_layer(LayerType::output, 1, activation::sigmoid, 0.0f);
     net.build();
     net.show_network();
 
-    net.save("D:\\Code\\Network\\test.txt");
+    net.save("base.json");
 
-    // ������� ���� ��ꥪ� ��
-    Network loadedNetwork;
-    auto loadedData = loadedNetwork.read("D:\\Code\\Network\\test.txt");
-    int loadedLayers;
-    std::vector<std::vector<Neuron>> loadedNetworkData;
-    std::vector<std::vector<std::vector<float>>> loadedSynapseData;
 
-    std::tie(loadedLayers, loadedNetworkData, loadedSynapseData) = loadedData;
-
-    // Create a new network and assign the loaded data
-    Network newNetwork;
-    newNetwork.layers = loadedLayers;
-    newNetwork.network = loadedNetworkData;
-    newNetwork.synapse = loadedSynapseData;
+    Network loadedNetwork("base.json");
 
     // Display the loaded network
-    newNetwork.show_network();
+    loadedNetwork.show_network();
 
 
     //// (->)
