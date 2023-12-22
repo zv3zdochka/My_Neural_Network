@@ -136,11 +136,11 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
     //training message
     for (int epoch = 0; epoch < epochs; ++epoch) {
         std::cout << "-----------------------" << std::endl;
-        std::cout << "NEW EPOCH" << std::endl;
+        std::cout << "       NEW EPOCH" << std::endl;
         std::cout << "-----------------------" << std::endl;
         for (int j = 0; j < data.size(); j++) {
             std::cout << "-----------------------" << std::endl;
-            std::cout << "NEW KNOWLEDGE" << std::endl;
+            std::cout << "     NEW KNOWLEDGE" << std::endl;
             std::cout << "-----------------------" << std::endl;
             std::vector<std::vector<float>> demi_res;
 
@@ -171,24 +171,23 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
                     demi_res = through_layer(Matrix(synapse[lay]), local_inp,
                                              network[lay][0].activationFunction).getData();
                 }
-                std::cout << 1 << std::endl;
+
                 Matrix(demi_res).showMatrix();
-                for (int ise = 0; ise < demi_res.size(); ise++) {
-
-                    for (int k = 0; k < network[lay].size(); k++) {
-
-                        if (lay == 0) {
-                            network[lay][k].weight = demi_res[ise][0];
-                        } else if (lay == network.size() - 1) {
-                            network[lay][k].weight = demi_res[ise][0];
-
-                        } else {
-                            network[lay][k].weight = demi_res[ise][0];
-                        }
-                    }
+            for (int neu = 0; neu < network[lay].size(); neu++){
+                for (int dat = 0; dat < demi_res.size()-1; dat++){
+                    network[lay][neu].weight = demi_res[dat][0];
                 }
-                show_weights();
             }
+
+            show_weights();
+            for (int i = 0; i < network[lay].size(); i++){
+                std::cout << network[lay][i].weight << "//" << std::endl;
+            }
+
+
+
+            }
+
         }
         std::cout << "FINISH TRAINING";
 
