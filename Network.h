@@ -22,13 +22,14 @@ public:
     void show_network();
 
 
-    Matrix through_layer(Matrix weights, std::vector<std::vector<float>> input, std::function<float(float)> activationFunc) ;
-    void train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs, float test_data_per);
+    static Matrix through_layer(Matrix weights, const std::vector<std::vector<float>>& input, const std::function<float(float)>& activationFunc) ;
+    void train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>>& answer, int epochs, float test_data_per);
 private:
     void create_synapse();
     void show_weights();
     void show_synapse();
     void save();
     void read();
+    void clear_weights();
 };
 

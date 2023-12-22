@@ -8,7 +8,7 @@
 
 std::random_device sepsis;
 std::default_random_engine gen2(sepsis());
-std::uniform_real_distribution<float> dis2(0.0f, 1.0f);
+std::uniform_real_distribution<float> dis2(0.1f, 1.0f);
 
 
 void Network::add_input_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
@@ -131,24 +131,25 @@ void Network::show_weights() {
 
 
 void
-Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs,
+Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>>& answer, int epochs,
                float test_data_per) {
     //training message
     for (int epoch = 0; epoch < epochs; ++epoch) {
         std::cout << "-----------------------" << std::endl;
         std::cout << "       NEW EPOCH" << std::endl;
         std::cout << "-----------------------" << std::endl;
-        for (int j = 0; j < data.size(); j++) {
+        for (auto & j : data) {
+            clear_weights();
             std::cout << "-----------------------" << std::endl;
             std::cout << "     NEW KNOWLEDGE" << std::endl;
             std::cout << "-----------------------" << std::endl;
             std::vector<std::vector<float>> demi_res;
 
-            for (int lay = 0; lay < layers - 1; lay++) {
+            for (int lay = 0; lay < layers-1; lay++) {
 
                 for (int k = 0; k < network[lay].size(); k++) {
                     if (lay == 0) {
-                        network[lay][k].weight = data[j][k][0];
+                        network[lay][k].weight = j[k][0];
                     } else {
                         network[lay][k].weight = demi_res[k][0];
                     }
@@ -158,13 +159,13 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
 
                 int k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
-                for (int d = 0; d < network[lay].size(); d++) {
-                    local_inp.push_back({network[lay][d].weight});
+                for (auto & d : network[lay]) {
+                    local_inp.push_back({d.weight});
                 }
                 if (k == 1) {
                     std::vector<std::vector<float>> semi = {{}};
-                    for (int h = 0; h < synapse[lay].size(); h++)
-                        semi[0].push_back(synapse[lay][h][0]);
+                    for (auto & h : synapse[lay])
+                        semi[0].push_back(h[0]);
 
                     demi_res = through_layer(Matrix(semi), local_inp, network[lay][0].activationFunction).getData();
                 } else {
@@ -172,16 +173,16 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
                                              network[lay][0].activationFunction).getData();
                 }
 
-                Matrix(demi_res).showMatrix();
-            for (int neu = 0; neu < network[lay].size(); neu++){
-                for (int dat = 0; dat < demi_res.size()-1; dat++){
-                    network[lay][neu].weight = demi_res[dat][0];
-                }
+            Matrix(demi_res).showMatrix();
+
+
+            for (int neu = 0; neu < network[lay+1].size(); neu++){
+                network[lay+1][neu].weight = demi_res[neu][0];
             }
 
             show_weights();
-            for (int i = 0; i < network[lay].size(); i++){
-                std::cout << network[lay][i].weight << "//" << std::endl;
+            for (auto & i : network[lay+1]){
+                std::cout << i.weight << "//" << std::endl;
             }
 
 
@@ -214,8 +215,8 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<st
 
 
 
-Matrix Network::through_layer(Matrix weights, std::vector<std::vector<float>> input,
-                              std::function<float(float)> activationFunc) {
+Matrix Network::through_layer(Matrix weights, const std::vector<std::vector<float>>& input,
+                              const std::function<float(float)>& activationFunc) {
     Matrix inp(input);
     weights.showMatrix("WEIGHTS");
     inp.showMatrix("INP_DATA");
@@ -234,6 +235,14 @@ void Network::save() {
 
 void Network::read() {
 
+}
+
+void Network::clear_weights() {
+    for(auto & lay : network){
+        for (auto & neu : lay){
+            neu.weight = 0.0f;
+        }
+    }
 }
 
 
