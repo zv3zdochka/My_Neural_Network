@@ -450,3 +450,6 @@ cython_debug/
 /ffor make
 /create_dataset.cpp
 /fruits_dataset.txt
+!/.gitignore
+!/.gitignore
+!/base.json

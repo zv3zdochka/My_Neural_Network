@@ -1,5 +1,4 @@
 #include "Matrix.h"
-#include <iostream>
 
 Matrix::Matrix() : rows(0), cols(0) {}
 
@@ -116,12 +115,12 @@ std::vector<std::vector<float>> Matrix::getData() {
     return data;
 }
 
-void Matrix::showMatrix(std::string name) {
+void Matrix::showMatrix(const std::string& name) {
     std::cout << "Result Matrix " << name << ": " << std::endl;
     std::cout << "-----------------------" << std::endl;
-    for (int i = 0; i < data.size(); i ++){
-        for (int j = 0; j < data[i].size(); j++){
-            std::cout << data[i][j] << ' ';
+    for (auto & i : data){
+        for (float j : i){
+            std::cout << j << ' ';
         }
         std::cout << std::endl;
     }

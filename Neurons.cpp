@@ -6,6 +6,3 @@ Neuron::Neuron(int layer_number, float weight, std::function<float(float)> activ
 float Neuron::computeActivation(float input) {
     return activationFunction(input);
 }
-
-
-

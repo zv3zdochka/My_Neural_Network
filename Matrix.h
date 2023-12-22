@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 class Matrix {
 private:
@@ -44,9 +45,8 @@ public:
     bool operator==(const Matrix &other) const;
 
     bool operator!=(const Matrix &other) const;
-
     std::vector<std::vector<float>> getData();
 
-    void showMatrix(std::string name = "");
+    void showMatrix(const std::string& name = "");
 };
 

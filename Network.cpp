@@ -1,66 +1,116 @@
-#include <random>
-#include <iostream>
-#include <iomanip>
 #include "Network.h"
-#include "Neurons.h"
 #include "Matrix.h"
+#include "json.h"
+
+#define NETWORK_NUM_NEURONS_NAME    "num of neurons"
+#define NETWORK_ACTIVATION_FN_NAME  "activation function"
+#define NETWORK_SYNAPSE_NAME        "synapse"
 
 
-std::random_device sepsis;
-std::default_random_engine gen2(sepsis());
-std::uniform_real_distribution<float> dis2(0.1f, 1.0f);
 
+Network::Network() = default;
 
-void Network::add_input_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
-    network.emplace_back();
-    for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[0].emplace_back(1, 0, activation_func);
+Network::Network(const char *filename) {
+    nlohmann::json input;
+
+    {
+        std::ifstream file(filename, std::ios::in | std::ios::binary);
+
+        if (!file.is_open())
+            throw std::runtime_error("unable to open file");
+
+        file >> input;
     }
-    layers += 1;
+
+    int i = 0;
+    for (const auto& layer_data : input) {
+        int num_neurons = layer_data.at(NETWORK_NUM_NEURONS_NAME);
+        std::function<float(float)> activation_func = activation::sigmoid; // sam nastroi
+        float b = 0.0f; // sam nastroi
+
+        // Add input layer
+        if (network.empty()) {
+            add_layer(LayerType::input, num_neurons, activation_func, b);
+        }
+
+            // Add hidden layer
+        else {
+            add_layer(LayerType::hidden, num_neurons, activation_func, b);
+        }
+
+        // dodelay wywod
+        auto& synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // In short, with this input, synopses seem to be entered correctly, but the neuron itself is not output
+
+        //for (const auto& synapse_row : synapse_data) {
+        //    synapse[i].emplace_back(synapse_row.get<std::vector<float>>());
+        //}
+        ///////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // And with this conclusion, the number of connections increases by 2 times
+
+        synapse.push_back(synapse_data.get<std::vector<std::vector<float>>>());
+        ///////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////////////////////////////////////
+        //Fix it if you can
+        ///////////////////////////////////////////////////////////////////////////////
+
+        i++;
+    }
+
+    // Add output layer
+    add_layer(LayerType::output, 1, activation::sigmoid, 0.0f);
+
 
 
 }
 
-
-void Network::add_hidden_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
-    network.emplace_back();
-    for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[layers].emplace_back(layers + 1, 0, activation_func);
-    }
-    layers += 1;
-}
-
-
-void Network::add_output_layer(int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
+void Network::add_layer(LayerType type, int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
     network.emplace_back();
 
-    for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-        network[network.size() - 1].emplace_back(layers + 1, 0, activation_func);
+    switch (type) {
+        case LayerType::input:
+            for (int neuron = 0; neuron < number_of_neurons; neuron++) {
+                network[0].emplace_back(1, 0, activation_func);
+            }
+            break;
+        case LayerType::hidden:
+            for (int neuron = 0; neuron < number_of_neurons; neuron++) {
+                network[layers].emplace_back(layers + 1, 0, activation_func);
+            }
+            break;
+        case LayerType::output:
+            for (int neuron = 0; neuron < number_of_neurons; neuron++) {
+                network[network.size() - 1].emplace_back(layers + 1, 0, activation_func);
+            }
+            break;
     }
 
     layers += 1;
 }
 
 void Network::create_synapse() {
-
+    static std::random_device sepsis;
+    static std::default_random_engine gen2(sepsis());
+    std::uniform_real_distribution<float> dis2(0.1f, 10.0f);
 
     for (size_t i = 0; i < network.size() - 1; ++i) {
         synapse.emplace_back();
 
-
         if (network[i + 1].size() != 1) {
-
-
             for (size_t j = 0; j < network[i + 1].size(); ++j) {
                 std::vector<float> demi_synapse;
-
 
                 for (size_t k = 0; k < network[i].size(); ++k) {
                     float c_weight = dis2(gen2);
                     demi_synapse.push_back(c_weight);
                 }
-                synapse[i].push_back(demi_synapse);
-                demi_synapse.clear();
+
+                synapse[i].emplace_back(std::move(demi_synapse));
             }
         } else {
             for (size_t j = 0; j < network[i].size(); ++j) {
@@ -70,8 +120,8 @@ void Network::create_synapse() {
                     float c_weight = dis2(gen2);
                     demi_synapse.push_back(c_weight);
                 }
-                synapse[i].push_back(demi_synapse);
-                demi_synapse.clear();
+
+                synapse[i].emplace_back(std::move(demi_synapse));
             }
         }
     }
@@ -91,15 +141,15 @@ void Network::show_network() {
 void Network::show_synapse() {
     for (int i = 0; i < layers - 1; i++) {
         std::cout << "Synapse weights from Layer " << i + 1 << " to Layer " << i + 2 << ":\n";
-        std::cout << "-----------------------" << std::endl;
-        for (auto &j: synapse[i]) {
 
-            for (float k: j) {
+        for (auto & j : synapse[i]) {
+
+            for (float k : j) {
                 std::cout << k << ' ';
             }
             std::cout << '\n';
         }
-        std::cout << "-----------------------" << std::endl;
+        std::cout << '\n';
     }
 
 }
@@ -107,42 +157,27 @@ void Network::show_synapse() {
 
 void Network::show_weights() {
     std::cout << "Neuron Weights" << std::endl;
-    std::cout << "-----------------------" << std::endl;
-    size_t max_neurons = 0;
-    for (const auto &i: network) {
-        max_neurons = std::max(max_neurons, i.size());
-    }
-
-    for (size_t i = 0; i < max_neurons; ++i) {
-
-        for (auto &j: network) {
-            if (i < j.size()) {
-                std::cout << std::fixed << std::setprecision(1) << j[i].weight << " ";
-            } else {
-                std::cout << "    ";
-            }
+    for (const auto& layer : network) {
+        for (const auto& neuron : layer) {
+            std::cout << std::fixed << std::setprecision(1) << neuron.weight << " ";
         }
         std::cout << std::endl;
     }
-    std::cout << "-----------------------" << std::endl;
-
-
 }
 
 
-void
-Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>>& answer, int epochs,
-               float test_data_per) {
-    //training message
+void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>>& answer, int epochs, float test_data_per) {
+
+    std::cout << "-----------------------" << std::endl;
+    std::cout << "    START TRAINING" << std::endl;
+    std::cout << "-----------------------" << std::endl;
+
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        std::cout << "-----------------------" << std::endl;
-        std::cout << "       NEW EPOCH" << std::endl;
-        std::cout << "-----------------------" << std::endl;
+        //std::cout << "-----------------------" << std::endl;
+        //std::cout << "       NEW EPOCH" << std::endl;
+        //std::cout << "-----------------------" << std::endl;
         for (auto & j : data) {
             clear_weights();
-            std::cout << "-----------------------" << std::endl;
-            std::cout << "     NEW KNOWLEDGE" << std::endl;
-            std::cout << "-----------------------" << std::endl;
             std::vector<std::vector<float>> demi_res;
 
             for (int lay = 0; lay < layers-1; lay++) {
@@ -155,9 +190,9 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vec
                     }
                 }
 
-                show_weights();
+                //show_weights();
 
-                int k = network[lay + 1].size();
+                size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
                 for (auto & d : network[lay]) {
                     local_inp.push_back({d.weight});
@@ -190,7 +225,9 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vec
             }
 
         }
-        std::cout << "FINISH TRAINING";
+        std::cout << "-----------------------" << std::endl;
+        std::cout << "    FINISH TRAINING" << std::endl;
+        std::cout << "-----------------------" << std::endl;
 
     }
 
@@ -218,23 +255,30 @@ Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vec
 Matrix Network::through_layer(Matrix weights, const std::vector<std::vector<float>>& input,
                               const std::function<float(float)>& activationFunc) {
     Matrix inp(input);
-    weights.showMatrix("WEIGHTS");
-    inp.showMatrix("INP_DATA");
+    //weights.showMatrix("WEIGHTS");
+    //inp.showMatrix("INP_DATA");
     Matrix res = weights * inp;
     std::vector<std::vector<float>> out = res.getData();
     for (int i = 0; i < res.getData().size(); i++) {
         out[i][0] = activationFunc(res.getData()[i][0]);
     }
-    res.showMatrix("RES");
+    //res.showMatrix("RES");
     return res;
 }
 
-void Network::save() {
+void Network::save(const char *filename) const {
+    nlohmann::json output;
 
-}
+    for (int i = 0; i < layers - 1; ++i) {
+        nlohmann::json& layer_data = output.emplace_back();
 
-void Network::read() {
+        layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
+        layer_data[NETWORK_ACTIVATION_FN_NAME] = "activation func";
+        layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
+    }
 
+    std::ofstream file(filename, std::ios::out | std::ios::binary);
+    file << output.dump(/* indent= */ 4) << std::endl;
 }
 
 void Network::clear_weights() {
