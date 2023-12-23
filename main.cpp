@@ -9,9 +9,9 @@ int main() {
     std::filesystem::current_path("..");
 
     Network net;
-    net.add_layer(LayerType::input, 2, activation::sigmoid, 0.0f);
+    net.add_layer(LayerType::input, 2, activation::relu, 0.0f);
     net.add_layer(LayerType::hidden, 3, activation::sigmoid, 0.0f);
-    net.add_layer(LayerType::output, 2, activation::sigmoid, 0.0f);
+    net.add_layer(LayerType::output, 2, activation::tanh, 0.0f);
 
     net.build();
     net.show_network();
@@ -23,7 +23,7 @@ int main() {
 
     net.train(input_data, output_data, epochs, 1);
 
-    //net.save("base.json");
+    net.save("base.json");
 
     //std::cout << "--------------------------------" << std::endl;
 

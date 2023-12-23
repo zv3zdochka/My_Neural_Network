@@ -1,7 +1,7 @@
 #include "Network.h"
 #include "Matrix.h"
 #include "json.h"
-
+#include <map>
 #define NETWORK_NUM_NEURONS_NAME    "num of neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "activation function"
 #define NETWORK_SYNAPSE_NAME        "synapse"
@@ -12,7 +12,14 @@ Network::Network() = default;
 
 Network::Network(const char *filename) {
     nlohmann::json input;
+    std::map<int, std::function<float(float)>> activators = {
+            {1, activation::sigmoid},
+            {2, activation::fast_sigmoid},
+            {3, activation::tanh},
+            {4, activation::relu},
+            {5, activation::silu},
 
+    };
     {
         std::ifstream file(filename, std::ios::in | std::ios::binary);
 
@@ -282,7 +289,7 @@ void Network::save(const char *filename) const {
         nlohmann::json& layer_data = output.emplace_back();
 
         layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
-        layer_data[NETWORK_ACTIVATION_FN_NAME] = "activation func";
+        layer_data[NETWORK_ACTIVATION_FN_NAME] = network[i][0].activationFunction(-100000.0f);
         layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
     }
 

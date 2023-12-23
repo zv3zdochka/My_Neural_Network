@@ -10,6 +10,7 @@ namespace activation {
      * @return Function value.
      */
     float sigmoid(float x);
+    
 
     /**
      * @brief Fast sigmoid approximation.
@@ -54,5 +55,7 @@ namespace activation {
      * @param x Your number.
      * @return Function value.
      */
+     
+     
     float tanh(float x);
 }
