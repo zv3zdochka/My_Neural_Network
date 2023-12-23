@@ -40,7 +40,7 @@ const std::vector<float> &Matrix::operator[](size_t index) const {
 }
 
 Matrix Matrix::transpose() const {
-    Matrix result(rows, cols);
+    Matrix result(cols, rows);
     for (size_t i = 0; i < rows; ++i) {
         for (size_t j = 0; j < cols; ++j) {
             result[j][i] = data[i][j];
@@ -48,6 +48,7 @@ Matrix Matrix::transpose() const {
     }
     return result;
 }
+
 
 Matrix Matrix::operator*(const Matrix &other) const {
     if (cols == other.getRows()) {

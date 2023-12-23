@@ -182,7 +182,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                //show_weights();
+                show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -207,30 +207,32 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             }
 
 
-            //show_weights();
+            show_weights();
 
             }
 
 
-            std::vector<std::vector<float>> errors;
 
             //errors
+            std::vector<std::vector<float>> errors;
 
             if (answer[data_ind].size() >= 2) {
                 for (int len = 0; len < network[network.size() - 1].size(); len++) {
                     errors.push_back({answer[data_ind][len] - network[network.size()-1][len].weight});
-                    std::cout << answer[data_ind][len] - network[network.size()-1][len].weight << std::endl;
                 }
             }
             else{
                 for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
                     errors.push_back({answer[data_ind][len] - network[network.size()-1][len].weight});
-                    std::cout << answer[data_ind][len] - network[network.size()-1][len].weight << std::endl;
 
                 }
             }
-            Matrix(errors).showMatrix("errors");
 
+
+            //Matrix(errors).showMatrix("errors");
+            for (int lay = 0; lay < layers-1; lay++){
+                Matrix(synapse[lay]).showMatrix("Synapse");
+            }
         }
         std::cout << "-----------------------" << std::endl;
         std::cout << "    FINISH TRAINING" << std::endl;
