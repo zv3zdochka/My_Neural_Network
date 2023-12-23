@@ -36,7 +36,7 @@ int main() {
             // Используйте функцию потерь (например, MSE для задачи регрессии)
 
             // Вычисление ошибки
-            float predicted = /* ваше предсказание */;
+            float predicted =5.0f /* ваше предсказание */;
             float error = predicted - target_output[i];
             total_error += error * error;
 
