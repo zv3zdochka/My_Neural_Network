@@ -73,6 +73,7 @@ Matrix Matrix::operator*(const Matrix &other) const {
 
 Matrix Matrix::operator+(const Matrix &other) const {
     if (rows != other.rows || cols != other.cols) {
+        std::cout << "Unable to perform matrix multiplication due to incompatible sizes." << std::endl;
         return {};
     }
 
@@ -85,14 +86,7 @@ Matrix Matrix::operator+(const Matrix &other) const {
     return result;
 }
 
-Matrix Matrix::operator-(const Matrix &other) const {
-    if (rows != other.rows || cols != other.cols) {
 
-        return {};
-    }
-
-    return {};
-}
 
 
 bool Matrix::operator==(const Matrix &other) const {

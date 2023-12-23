@@ -10,10 +10,11 @@ enum class FunctionType {
     tanh
 };
 
-// TODO: move to namespace activation
+
 float call(FunctionType type, float arg);
 
-const char* function_type_to_string(FunctionType type);
+const char *function_type_to_string(FunctionType type);
+
 FunctionType function_type_from_string(std::string_view name);
 
 namespace activation {
@@ -26,7 +27,7 @@ namespace activation {
      * @return Function value.
      */
     float sigmoid(float x);
-    
+
     /**
      * @brief Fast sigmoid approximation.
      *

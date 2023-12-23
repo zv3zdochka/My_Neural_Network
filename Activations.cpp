@@ -1,39 +1,40 @@
-#include "Activations.h"
 #include <cmath>
+#include <stdexcept>
+#include "Activations.h"
 
 float call(FunctionType type, float arg) {
     switch (type) {
-    case FunctionType::sigmoid:
-        return activation::sigmoid(arg);
-    case FunctionType::fast_sigmoid:
-        return activation::fast_sigmoid(arg);
-    case FunctionType::relu:
-        return activation::relu(arg);
-    case FunctionType::silu:
-        return activation::silu(arg);
-    case FunctionType::tanh:
-        return activation::tanh(arg);
+        case FunctionType::sigmoid:
+            return activation::sigmoid(arg);
+        case FunctionType::fast_sigmoid:
+            return activation::fast_sigmoid(arg);
+        case FunctionType::relu:
+            return activation::relu(arg);
+        case FunctionType::silu:
+            return activation::silu(arg);
+        case FunctionType::tanh:
+            return activation::tanh(arg);
     }
 }
 
-#define SIGMOID_NAME "pizdec sigmoid xyi"
-#define FAST_SIGMOID_NAME "pizdec fast sigmoid xyi"
-#define RELU_NAME "pizdec relu xyi"
-#define SILU_NAME "pizdec silu xyi"
-#define TANH_NAME "pizdec tanh xyi"
+#define SIGMOID_NAME "sigmoid"
+#define FAST_SIGMOID_NAME "fast_sigmoid"
+#define RELU_NAME "relu"
+#define SILU_NAME "silu"
+#define TANH_NAME "tanh"
 
-const char* function_type_to_string(FunctionType type) {
+const char *function_type_to_string(FunctionType type) {
     switch (type) {
-    case FunctionType::sigmoid:
-        return SIGMOID_NAME;
-    case FunctionType::fast_sigmoid:
-        return FAST_SIGMOID_NAME;
-    case FunctionType::relu:
-        return RELU_NAME;
-    case FunctionType::silu:
-        return SILU_NAME;
-    case FunctionType::tanh:
-        return TANH_NAME;
+        case FunctionType::sigmoid:
+            return SIGMOID_NAME;
+        case FunctionType::fast_sigmoid:
+            return FAST_SIGMOID_NAME;
+        case FunctionType::relu:
+            return RELU_NAME;
+        case FunctionType::silu:
+            return SILU_NAME;
+        case FunctionType::tanh:
+            return TANH_NAME;
     }
 }
 
@@ -46,10 +47,10 @@ FunctionType function_type_from_string(std::string_view name) {
 
     if (name == RELU_NAME)
         return FunctionType::relu;
-    
+
     if (name == SILU_NAME)
         return FunctionType::silu;
-    
+
     if (name == TANH_NAME)
         return FunctionType::tanh;
 
@@ -57,7 +58,7 @@ FunctionType function_type_from_string(std::string_view name) {
 }
 
 namespace activation {
-    float sigmoid (float x) {
+    float sigmoid(float x) {
         return 1 / (1 + std::exp(-x));
     }
 

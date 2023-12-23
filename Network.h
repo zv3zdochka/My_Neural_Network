@@ -18,7 +18,8 @@ enum class LayerType {
 
 class Network {
 public:
-    explicit Network(const char* filename);
+    explicit Network(const char *filename);
+
     Network();
 
     int layers = 0;
@@ -26,19 +27,28 @@ public:
     std::vector<std::vector<std::vector<float>>> synapse;
 
     void add_layer(LayerType type, int number_of_neurons, FunctionType af, float b);
+
     void build();
+
     void show_network();
+
     void save(const char *filename) const;
 
 
-    static Matrix through_layer(const Matrix& weights, const std::vector<std::vector<float>>& input, FunctionType af);
-    void train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>>& answer, int epochs, float test_data_per);
+    static Matrix through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af);
+
+    void
+    train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer, int epochs,
+          float test_data_per);
 
 
 private:
     void create_synapse();
+
     void show_weights();
+
     void show_synapse();
+
     void clear_weights();
 };
 

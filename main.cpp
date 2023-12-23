@@ -28,10 +28,10 @@ int main() {
     //std::cout << "--------------------------------" << std::endl;
 
 
-    Network loadedNetwork("base.json");
-
-    // Display the loaded network
-    loadedNetwork.show_network();
+//    Network loadedNetwork("base.json");
+//
+//    // Display the loaded network
+//    loadedNetwork.show_network();
     
     // (->)
 //    std::vector<std::vector<std::vector<float>>> input_data = {{{0.0f}, {0.0f}}, {{0.0f}, {1.0f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};

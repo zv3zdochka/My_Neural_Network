@@ -1,9 +1,10 @@
 #include "Network.h"
 #include "Matrix.h"
 #include "json.h"
-#define NETWORK_NUM_NEURONS_NAME    "num of neurons"
-#define NETWORK_ACTIVATION_FN_NAME  "activation function"
-#define NETWORK_SYNAPSE_NAME        "synapse"
+
+#define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
+#define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
+#define NETWORK_SYNAPSE_NAME        "Synapse"
 
 Network::Network() = default;
 
@@ -20,10 +21,10 @@ Network::Network(const char *filename) {
     }
 
     int i = 0;
-    for (const auto& layer_data : input) {
+    for (const auto &layer_data: input) {
         int num_neurons = layer_data.at(NETWORK_NUM_NEURONS_NAME);
-        
-        const std::string& fn_name = layer_data.at(NETWORK_ACTIVATION_FN_NAME).get_ref<const std::string&>();
+
+        const std::string &fn_name = layer_data.at(NETWORK_ACTIVATION_FN_NAME).get_ref<const std::string &>();
         FunctionType ft = function_type_from_string(fn_name);
 
         float b = 0.0f;
@@ -34,7 +35,7 @@ Network::Network(const char *filename) {
             add_layer(LayerType::hidden, num_neurons, ft, b);
         }
 
-        auto& synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
+        auto &synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
         synapse.push_back(synapse_data.get<std::vector<std::vector<float>>>());
         i++;
     }
@@ -127,6 +128,7 @@ void Network::show_synapse() {
         std::cout << "-----------------------" << std::endl;
     }
 }
+
 void Network::show_weights() {
     std::cout << "Neuron Weights" << std::endl;
     std::cout << "-----------------------" << std::endl;
@@ -148,7 +150,8 @@ void Network::show_weights() {
 }
 
 
-void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>>& answer, int epochs, float test_data_per) {
+void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer,
+                    int epochs, float test_data_per) {
 
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
@@ -159,12 +162,12 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         //std::cout << "       NEW EPOCH" << std::endl;
         //std::cout << "-----------------------" << std::endl;
         int data_ind = -1;
-        for (auto & j : data) {
+        for (auto &j: data) {
             data_ind += 1;
             clear_weights();
             std::vector<std::vector<float>> demi_res;
 
-            for (int lay = 0; lay < layers-1; lay++) {
+            for (int lay = 0; lay < layers - 1; lay++) {
 
                 for (int k = 0; k < network[lay].size(); k++) {
                     if (lay == 0) {
@@ -178,12 +181,12 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
-                for (auto & d : network[lay]) {
+                for (auto &d: network[lay]) {
                     local_inp.push_back({d.weight});
                 }
                 if (k == 1) {
                     std::vector<std::vector<float>> semi = {{}};
-                    for (auto & h : synapse[lay])
+                    for (auto &h: synapse[lay])
                         semi[0].push_back(h[0]);
 
                     demi_res = through_layer(Matrix(semi), local_inp, network[lay][0].fn_type).getData();
@@ -193,13 +196,12 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
 
 
+                for (int neu = 0; neu < network[lay + 1].size(); neu++) {
+                    network[lay + 1][neu].weight = demi_res[neu][0];
+                }
 
-            for (int neu = 0; neu < network[lay+1].size(); neu++){
-                network[lay+1][neu].weight = demi_res[neu][0];
-            }
 
-
-            show_weights();
+                show_weights();
 
             }
 
@@ -210,19 +212,18 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             if (answer[data_ind].size() >= 2) {
                 for (int len = 0; len < network[network.size() - 1].size(); len++) {
-                    errors.push_back({answer[data_ind][len] - network[network.size()-1][len].weight});
+                    errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
                 }
-            }
-            else{
+            } else {
                 for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
-                    errors.push_back({answer[data_ind][len] - network[network.size()-1][len].weight});
+                    errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
 
                 }
             }
 
 
             //Matrix(errors).showMatrix("errors");
-            for (int lay = 0; lay < layers-1; lay++){
+            for (int lay = 0; lay < layers - 1; lay++) {
                 Matrix(synapse[lay]).showMatrix("Synapse");
             }
         }
@@ -233,27 +234,10 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
     }
 
 
-    //for (int i = 0; i < input_data.size(); ++i) {
-    // ��אַ� �����࠭���� (����祭�� �।᪠�����)
-    // �������� �㭪��, ����� ��।��� �室�� ����� �१ ��� � ����砥� �।᪠�����
-
-    // ���⭮� �����࠭���� (���᫥��� �訡�� � ���������� ��ᮢ)
-    // �������� ������ ���⭮�� �����࠭���� ��� ���᫥��� �訡�� � ���������� ��ᮢ
-    // �ᯮ���� �㭪�� ����� (���ਬ��, MSE ��� ����� ॣ��ᨨ)
-
-    // ���᫥��� �訡��
-    // ���������� ��ᮢ (�ࠤ����� ���)
-    // �������� ���������� ��ᮢ � ᮮ⢥��⢨� � �ࠤ����� ��᪮� � ᪮����� ���祭��
 }
 
 
-
-// �뢮� �訡�� �� ������ ���樨 (��樮���쭮)
-//std::cout << "Epoch: " << epoch + 1 << ", Error: " << total_error << std::endl;
-
-
-
-Matrix Network::through_layer(const Matrix& weights, const std::vector<std::vector<float>>& input,
+Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input,
                               FunctionType af) {
     Matrix inp(input);
     //weights.showMatrix("WEIGHTS");
@@ -271,7 +255,7 @@ void Network::save(const char *filename) const {
     nlohmann::json output;
 
     for (int i = 0; i < layers - 1; ++i) {
-        nlohmann::json& layer_data = output.emplace_back();
+        nlohmann::json &layer_data = output.emplace_back();
 
         layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
         layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
@@ -283,8 +267,8 @@ void Network::save(const char *filename) const {
 }
 
 void Network::clear_weights() {
-    for(auto & lay : network){
-        for (auto & neu : lay){
+    for (auto &lay: network) {
+        for (auto &neu: lay) {
             neu.weight = 0.0f;
         }
     }
