@@ -1,12 +1,7 @@
-add softmax functions to activations
-
-//////////////////////////////////////////
-
-
-add training
-
-add recreating synapse
+add training time 
 
 add randoming dataset
-
+add normalising weights
 fuck oleg
+короче добавить историю чтобы из файлика читалась не только сигмоида
+добавить тему с тем что датасет должен разбиваться на части на трейне и после трейна его часть должна тестироваться 

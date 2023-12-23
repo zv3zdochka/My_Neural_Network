@@ -17,7 +17,7 @@ Network::Network(const char *filename) {
         std::ifstream file(filename, std::ios::in | std::ios::binary);
 
         if (!file.is_open())
-            throw std::runtime_error("unable to open file");
+            throw std::runtime_error("Unable to open file");
 
         file >> input;
     }
@@ -166,7 +166,9 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         //std::cout << "-----------------------" << std::endl;
         //std::cout << "       NEW EPOCH" << std::endl;
         //std::cout << "-----------------------" << std::endl;
+        int data_ind = -1;
         for (auto & j : data) {
+            data_ind += 1;
             clear_weights();
             std::vector<std::vector<float>> demi_res;
 
@@ -180,7 +182,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                show_weights();
+                //show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -205,9 +207,29 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             }
 
 
-            show_weights();
+            //show_weights();
 
             }
+
+
+            std::vector<std::vector<float>> errors;
+
+            //errors
+
+            if (answer[data_ind].size() >= 2) {
+                for (int len = 0; len < network[network.size() - 1].size(); len++) {
+                    errors.push_back({answer[data_ind][len] - network[network.size()-1][len].weight});
+                    std::cout << answer[data_ind][len] - network[network.size()-1][len].weight << std::endl;
+                }
+            }
+            else{
+                for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
+                    errors.push_back({answer[data_ind][len] - network[network.size()-1][len].weight});
+                    std::cout << answer[data_ind][len] - network[network.size()-1][len].weight << std::endl;
+
+                }
+            }
+            Matrix(errors).showMatrix("errors");
 
         }
         std::cout << "-----------------------" << std::endl;
