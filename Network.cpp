@@ -1,6 +1,7 @@
 #include "Network.h"
 #include "Matrix.h"
 #include "json.h"
+#include <chrono>
 
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
@@ -153,6 +154,8 @@ void Network::show_weights() {
 void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer,
                     int epochs, float test_data_per) {
 
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
@@ -227,11 +230,14 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 Matrix(synapse[lay]).showMatrix("Synapse");
             }
         }
-        std::cout << "-----------------------" << std::endl;
-        std::cout << "    FINISH TRAINING" << std::endl;
-        std::cout << "-----------------------" << std::endl;
+        //std::cout << "-----------------------" << std::endl;
+        //std::cout << "    FINISH TRAINING" << std::endl;
+        //std::cout << "-----------------------" << std::endl;
 
     }
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "Execution Time: " << duration.count() << " ms" << std::endl;
 
 
 }
