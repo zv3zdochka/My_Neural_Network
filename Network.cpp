@@ -1,25 +1,15 @@
 #include "Network.h"
 #include "Matrix.h"
 #include "json.h"
-#include <map>
 #define NETWORK_NUM_NEURONS_NAME    "num of neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "activation function"
 #define NETWORK_SYNAPSE_NAME        "synapse"
-
-
 
 Network::Network() = default;
 
 Network::Network(const char *filename) {
     nlohmann::json input;
-    std::map<int, std::function<float(float)>> activators = {
-            {1, activation::sigmoid},
-            {2, activation::fast_sigmoid},
-            {3, activation::tanh},
-            {4, activation::relu},
-            {5, activation::silu},
 
-    };
     {
         std::ifstream file(filename, std::ios::in | std::ios::binary);
 
@@ -32,48 +22,43 @@ Network::Network(const char *filename) {
     int i = 0;
     for (const auto& layer_data : input) {
         int num_neurons = layer_data.at(NETWORK_NUM_NEURONS_NAME);
-        std::function<float(float)> activation_func = activation::sigmoid;
+        
+        const std::string& fn_name = layer_data.at(NETWORK_ACTIVATION_FN_NAME).get_ref<const std::string&>();
+        FunctionType ft = function_type_from_string(fn_name);
+
         float b = 0.0f;
 
-
         if (network.empty()) {
-            add_layer(LayerType::input, num_neurons, activation_func, b);
+            add_layer(LayerType::input, num_neurons, ft, b);
+        } else {
+            add_layer(LayerType::hidden, num_neurons, ft, b);
         }
-
-
-        else {
-            add_layer(LayerType::hidden, num_neurons, activation_func, b);
-        }
-
 
         auto& synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
         synapse.push_back(synapse_data.get<std::vector<std::vector<float>>>());
         i++;
     }
 
-    add_layer(LayerType::output, 1, activation::sigmoid, 0.0f);
-
-
-
+    add_layer(LayerType::output, 1, FunctionType::sigmoid, 0.0f);
 }
 
-void Network::add_layer(LayerType type, int number_of_neurons, const std::function<float(float)> &activation_func, float b) {
+void Network::add_layer(LayerType type, int number_of_neurons, FunctionType af, float b) {
     network.emplace_back();
 
     switch (type) {
         case LayerType::input:
             for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-                network[0].emplace_back(1, 0, activation_func);
+                network[0].emplace_back(1, 0, af);
             }
             break;
         case LayerType::hidden:
             for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-                network[layers].emplace_back(layers + 1, 0, activation_func);
+                network[layers].emplace_back(layers + 1, 0, af);
             }
             break;
         case LayerType::output:
             for (int neuron = 0; neuron < number_of_neurons; neuron++) {
-                network[network.size() - 1].emplace_back(layers + 1, 0, activation_func);
+                network[network.size() - 1].emplace_back(layers + 1, 0, af);
             }
             break;
     }
@@ -201,10 +186,10 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     for (auto & h : synapse[lay])
                         semi[0].push_back(h[0]);
 
-                    demi_res = through_layer(Matrix(semi), local_inp, network[lay][0].activationFunction).getData();
+                    demi_res = through_layer(Matrix(semi), local_inp, network[lay][0].fn_type).getData();
                 } else {
                     demi_res = through_layer(Matrix(synapse[lay]), local_inp,
-                                             network[lay][0].activationFunction).getData();
+                                             network[lay][0].fn_type).getData();
                 }
 
 
@@ -249,34 +234,34 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
 
     //for (int i = 0; i < input_data.size(); ++i) {
-    // àï¬®¥ à á¯à®áâà ­¥­¨¥ (¯®«ãç¥­¨¥ ¯à¥¤áª § ­¨ï)
-    // ¥ «¨§ã©â¥ äã­ªæ¨î, ª®â®à ï ¯¥à¥¤ ¥â ¢å®¤­ë¥ ¤ ­­ë¥ ç¥à¥§ á¥âì ¨ ¯®«ãç ¥â ¯à¥¤áª § ­¨¥
+    // ï¿½ï¿½ï¬®ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½à ­ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ç¥­ï¿½ï¿½ ï¿½à¥¤áª ï¿½ï¿½ï¿½ï¿½ï¿½)
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ã­ªï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½à¥¤ï¿½ï¿½ï¿½ ï¿½å®¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½à¥§ ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ç ¥ï¿½ ï¿½à¥¤áª ï¿½ï¿½ï¿½ï¿½ï¿½
 
-    // Ž¡à â­®¥ à á¯à®áâà ­¥­¨¥ (¢ëç¨á«¥­¨¥ ®è¨¡ª¨ ¨ ®¡­®¢«¥­¨¥ ¢¥á®¢)
-    // ¥ «¨§ã©â¥  «£®à¨â¬ ®¡à â­®£® à á¯à®áâà ­¥­¨ï ¤«ï ¢ëç¨á«¥­¨ï ®è¨¡ª¨ ¨ ®¡­®¢«¥­¨ï ¢¥á®¢
-    // ˆá¯®«ì§ã©â¥ äã­ªæ¨î ¯®â¥àì (­ ¯à¨¬¥à, MSE ¤«ï § ¤ ç¨ à¥£à¥áá¨¨)
+    // ï¿½ï¿½ï¿½â­®ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½à ­ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½á«¥ï¿½ï¿½ï¿½ ï¿½è¨¡ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½á®¢)
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â­®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½à ­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½á«¥ï¿½ï¿½ï¿½ ï¿½è¨¡ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½á®¢
+    // ï¿½á¯®ï¿½ï¿½ï¿½ï¿½ ï¿½ã­ªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½à¨¬ï¿½ï¿½, MSE ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ à¥£ï¿½ï¿½á¨¨)
 
-    // ‚ëç¨á«¥­¨¥ ®è¨¡ª¨
-    // Ž¡­®¢«¥­¨¥ ¢¥á®¢ (£à ¤¨¥­â­ë© á¯ãáª)
-    // ¥ «¨§ã©â¥ ®¡­®¢«¥­¨¥ ¢¥á®¢ ¢ á®®â¢¥âáâ¢¨¨ á £à ¤¨¥­â­ë¬ á¯ãáª®¬ ¨ áª®à®áâìî ®¡ãç¥­¨ï
+    // ï¿½ï¿½ï¿½á«¥ï¿½ï¿½ï¿½ ï¿½è¨¡ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½á®¢ (ï¿½à ¤ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½á®¢ ï¿½ á®®â¢¥ï¿½ï¿½â¢¨ï¿½ ï¿½ ï¿½à ¤ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½áª®ï¿½ ï¿½ áª®ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç¥­ï¿½ï¿½
 }
 
 
 
-// ‚ë¢®¤ ®è¨¡ª¨ ­  ª ¦¤®© ¨â¥à æ¨¨ (®¯æ¨®­ «ì­®)
+// ï¿½ë¢®ï¿½ ï¿½è¨¡ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½æ¨¨ (ï¿½ï¿½æ¨®ï¿½ï¿½ï¿½ì­®)
 //std::cout << "Epoch: " << epoch + 1 << ", Error: " << total_error << std::endl;
 
 
 
 Matrix Network::through_layer(const Matrix& weights, const std::vector<std::vector<float>>& input,
-                              const std::function<float(float)>& activationFunc) {
+                              FunctionType af) {
     Matrix inp(input);
     //weights.showMatrix("WEIGHTS");
     //inp.showMatrix("INP_DATA");
     Matrix res = weights * inp;
     std::vector<std::vector<float>> out = res.getData();
     for (int i = 0; i < res.getData().size(); i++) {
-        out[i][0] = activationFunc(res.getData()[i][0]);
+        out[i][0] = call(af, res.getData()[i][0]);
     }
     //res.showMatrix("RES");
     return res;
@@ -289,7 +274,7 @@ void Network::save(const char *filename) const {
         nlohmann::json& layer_data = output.emplace_back();
 
         layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
-        layer_data[NETWORK_ACTIVATION_FN_NAME] = network[i][0].activationFunction(-100000.0f);
+        layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
         layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
     }
 
@@ -304,7 +289,3 @@ void Network::clear_weights() {
         }
     }
 }
-
-
-
-

@@ -1,5 +1,21 @@
 #pragma once
 
+#include <string_view>
+
+enum class FunctionType {
+    sigmoid,
+    fast_sigmoid,
+    relu,
+    silu,
+    tanh
+};
+
+// TODO: move to namespace activation
+float call(FunctionType type, float arg);
+
+const char* function_type_to_string(FunctionType type);
+FunctionType function_type_from_string(std::string_view name);
+
 namespace activation {
     /**
      * @brief Sigmoid function.
@@ -11,7 +27,6 @@ namespace activation {
      */
     float sigmoid(float x);
     
-
     /**
      * @brief Fast sigmoid approximation.
      *
@@ -55,7 +70,5 @@ namespace activation {
      * @param x Your number.
      * @return Function value.
      */
-     
-     
     float tanh(float x);
 }

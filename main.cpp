@@ -9,9 +9,9 @@ int main() {
     std::filesystem::current_path("..");
 
     Network net;
-    net.add_layer(LayerType::input, 2, activation::relu, 0.0f);
-    net.add_layer(LayerType::hidden, 3, activation::sigmoid, 0.0f);
-    net.add_layer(LayerType::output, 2, activation::tanh, 0.0f);
+    net.add_layer(LayerType::input, 2, FunctionType::relu, 0.0f);
+    net.add_layer(LayerType::hidden, 3, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::output, 2, FunctionType::tanh, 0.0f);
 
     net.build();
     net.show_network();
@@ -28,10 +28,10 @@ int main() {
     //std::cout << "--------------------------------" << std::endl;
 
 
-    //Network loadedNetwork("base.json");
+    Network loadedNetwork("base.json");
 
     // Display the loaded network
-    //loadedNetwork.show_network();
+    loadedNetwork.show_network();
     
     // (->)
 //    std::vector<std::vector<std::vector<float>>> input_data = {{{0.0f}, {0.0f}}, {{0.0f}, {1.0f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
@@ -40,5 +40,4 @@ int main() {
 
 
     return 0;
-
 }

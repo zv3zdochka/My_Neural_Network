@@ -20,6 +20,3 @@ add_executable(My_own_Neural_Network
         json.h
 
 )
-
-add_executable(matrix_test matrix_test.cpp Matrix.cpp Matrix.h)
-add_executable(try try.cpp)

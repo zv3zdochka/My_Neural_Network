@@ -90,6 +90,8 @@ Matrix Matrix::operator-(const Matrix &other) const {
 
         return {};
     }
+
+    return {};
 }
 
 

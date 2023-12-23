@@ -1,24 +1,15 @@
 #pragma once
 #include <functional>
 #include <utility>
+#include "Activations.h"
 
 class Neuron {
 public:
-    Neuron(int layer_number, float weight, std::function<float(float)> activationFunc);
+    Neuron(int layer_number, float weight, FunctionType type);
 
     float computeActivation(float input);
 
     int layer_num;
     float weight;
-    std::function<float(float)> activationFunction;
-
-    Neuron& operator=(const Neuron& other) {
-        if (this != &other) {
-            layer_num = other.layer_num;
-            weight = other.weight;
-            activationFunction = other.activationFunction;  // Copy the function
-        }
-        return *this;
-    }
-
+    FunctionType fn_type;
 };
