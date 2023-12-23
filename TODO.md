@@ -1,7 +1,7 @@
-add randoming dataset(shuffle)
+add training time 
+
+add randoming dataset
 
 add normalising weights by 1
 
 add dataset spliting
-
-add the method of error back propagation
