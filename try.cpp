@@ -1,19 +1,26 @@
 #include "CrazyMath.h"
 #include <iostream>
+#include <numbers>
+using namespace CrazyMath;
+using namespace std::numbers;
+float fast_sigmoid(float x) {
+    auto f_sigmoid_1 = Divide(Const(1), Pow(Add(Const(1), (X)), 2));
+    auto f_sigmoid_2 = Divide(Const(1), Pow(Add(Const(1), Multiply(X, Const(-1))), 2));
+    if (x >= 0) {
+        Derivative<decltype(f_sigmoid_1)> sigmoid_derivative(f_sigmoid_1);
+        double result = sigmoid_derivative(x);
+        return (float) result;
+    } else {
+
+        Derivative<decltype(f_sigmoid_2)> sigmoid_derivative(f_sigmoid_2);
+        double result = sigmoid_derivative(x);
+
+        return (float) result;
+    }
+}
 
 int main() {
-    using namespace CrazyMath;
 
-    // Define the sigmoid function: f(x) = 1 / (1 + exp(-x))
-    auto sigmoid = Divide(Const(1), Add(Const(1), Exp(2.71828, Multiply(Const(-1), X))));
+    std::cout << fast_sigmoid(0.1);
 
-    // Calculate the derivative of the sigmoid function
-    Derivative<decltype(sigmoid)> sigmoid_derivative(sigmoid);
-
-    // Calculate the derivative at x = 0.5
-    double result = sigmoid_derivative(0.5);
-
-    std::cout << "The derivative of the sigmoid function at x = 0.5 is: " << result << std::endl;
-
-    return 0;
 }
