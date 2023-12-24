@@ -9,3 +9,9 @@ add the method of error back propagation
 add changing weights
 
 пофиксить баг с тем что не записывается последний слой у которого нет весов 
+
+add clock to count strings 
+
+add readme
+
+add function description as in activations 
