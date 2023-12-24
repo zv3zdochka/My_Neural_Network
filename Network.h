@@ -54,6 +54,6 @@ private:
 
     Matrix convert(std::vector<float> inp);
 
-    Matrix collect_with_derivatives(Matrix input, Matrix errors);
+    Matrix collect_with_derivatives(int cur_lay, Matrix input, Matrix errors);
 };
 

@@ -33,11 +33,10 @@ Network::Network(const char *filename) {
 
         if (network.empty()) {
             add_layer(LayerType::input, num_neurons, ft, b);
-        }
-        else if (i == input.size() - 1) {
-                    add_layer(LayerType::output, num_neurons, ft, b);
-                    continue;
-        }else {
+        } else if (i == input.size() - 1) {
+            add_layer(LayerType::output, num_neurons, ft, b);
+            continue;
+        } else {
             add_layer(LayerType::hidden, num_neurons, ft, b);
         }
 
@@ -227,8 +226,6 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             errors_by_lay.push_back(errors);
 
 
-
-
             Matrix(errors).showMatrix("err");
 
 
@@ -238,7 +235,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
                 if (k == 1) {
                     std::vector<std::vector<float>> semi = {{}};
-                    for (auto &h: synapse[lay-1])
+                    for (auto &h: synapse[lay - 1])
                         semi[0].push_back(h[0]);
 
                     demi_res = multiply(Matrix(semi).transpose(), Matrix(errors)).getData();
@@ -256,7 +253,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             std::vector<Matrix> d_synapse;
 
             Matrix(neu_out).showMatrix("NEU");
-            for (int i = 0; i < errors_by_lay.size(); i++){
+            for (int i = 0; i < errors_by_lay.size(); i++) {
                 Matrix(errors_by_lay[i]).showMatrix("ERR");
             }
 
@@ -271,14 +268,12 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
                 demi_mat.showMatrix("HUI");
                 se_de.push_back(demi_mat);
-                alpha = multiply(collect_with_derivatives(demi_mat, ));//разобраться с ошибкамииии
+                alpha = multiply(collect_with_derivatives(lay, demi_mat,));//разобраться с ошибкамииии
 
             }
 
 
-
-
-        neu_out.clear();
+            neu_out.clear();
         }
         std::cout << "-----------------------" << std::endl;
         std::cout << "    FINISH TRAINING" << std::endl;
@@ -302,7 +297,7 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     std::vector<std::vector<float>> updatedData = res.getData();
 
     std::vector<float> edge = {};
-    for (auto & i : updatedData) {
+    for (auto &i: updatedData) {
         edge.push_back(i[0]);
         i[0] = call(af, i[0]);
     }
@@ -325,7 +320,7 @@ void Network::save(const char *filename) const {
             layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
             layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
             layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
-        }else{
+        } else {
             nlohmann::json &layer_data = output.emplace_back();
 
             layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
@@ -352,21 +347,36 @@ Matrix Network::multiply(const Matrix &weights, const Matrix &input) {
     return res;
 }
 
-Matrix Network::convert(std::vector<float> inp ) {
+Matrix Network::convert(std::vector<float> inp) {
     std::vector<std::vector<float>> out;
-    for (float & lene : inp){
+    for (float &lene: inp) {
         out.push_back({lene});
     }
 //    Matrix(out).showMatrix("LENA");
     return Matrix(out);
 }
 
-Matrix Network::collect_with_derivatives(Matrix input, Matrix errors) {
+Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, Matrix errors) {
     //return Matrix();
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
-    for (int layer = 0; layer < input.getData().size(); layer++){
-        out.push_back({errors[layer][0] * Derivatives::sigmoid_derivative(input[layer][0])});
+    std::function<float(float)> using_func;
+    network[cur_lay][0].fn_type;
+    switch (network[cur_lay][0].fn_type) {
+        case FunctionType::sigmoid:
+            using_func = Derivatives::sigmoid_derivative;
+        case FunctionType::fast_sigmoid:
+            using_func = Derivatives::fast_sigmoid_derivative;
+        case FunctionType::silu:
+            using_func = Derivatives::silu_derivative;
+        case FunctionType::tanh:
+            using_func = Derivatives::tanh_derivative;
+    }
+
+
+    for (int layer = 0; layer < input.getData().size(); layer++) {
+        out.push_back({errors[layer][0] * using_func(input[layer][0])});
+
     }
 
 
