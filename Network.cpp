@@ -249,14 +249,14 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
 
             }
-            std::reverse(errors_by_lay.begin(), errors_by_lay.end());
+            //std::reverse(errors_by_lay.begin(), errors_by_lay.end());
             std::vector<Matrix> d_synapse;
 
             Matrix(neu_out).showMatrix("NEU");
             for (int i = 0; i < errors_by_lay.size(); i++) {
                 Matrix(errors_by_lay[i]).showMatrix("ERR");
             }
-
+            std::cout << "----------------------------------------------" << std::endl;
             std::reverse(neu_out.begin(), neu_out.end());
             std::vector<Matrix> se_de;
             for (int lay = layers - 1; lay > 0; lay--) {
@@ -268,8 +268,10 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
                 demi_mat.showMatrix("HUI");
                 se_de.push_back(demi_mat);
-                alpha = multiply(collect_with_derivatives(lay, demi_mat,));//разобраться с ошибкамииии
-
+                collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("AGUGA1");
+                Matrix(convert(neu_out[lay - 1])).transpose().showMatrix("AGUGAGAGAGGAAG");
+                alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed), Matrix(convert(neu_out[lay - 1])).transpose());
+                alpha.showMatrix("ALPHA");
             }
 
 
@@ -356,8 +358,7 @@ Matrix Network::convert(std::vector<float> inp) {
     return Matrix(out);
 }
 
-Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, Matrix errors) {
-    //return Matrix();
+Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
     std::function<float(float)> using_func;
@@ -373,9 +374,12 @@ Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, Matrix error
             using_func = Derivatives::tanh_derivative;
     }
 
+    std::cout << speed << "speed" << std::endl;
 
     for (int layer = 0; layer < input.getData().size(); layer++) {
-        out.push_back({errors[layer][0] * using_func(input[layer][0])});
+        std::cout << errors[layer][0] << "errros_layer" << std::endl;
+        std::cout << using_func(input[layer][0]) << "func_dermo" << std::endl;
+        out.push_back({speed * errors[layer][0] * using_func(input[layer][0])});
 
     }
 
