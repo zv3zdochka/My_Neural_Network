@@ -270,7 +270,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
                 demi_mat.showMatrix("HUI");
                 se_de.push_back(demi_mat);
-                //alpha = multiply();
+                alpha = multiply();
             }
 
 
@@ -357,4 +357,8 @@ Matrix Network::convert(std::vector<float> inp ) {
     }
 //    Matrix(out).showMatrix("LENA");
     return Matrix(out);
+}
+
+Matrix Network::collect_with_derivatives(Matrix) {
+    return Matrix();
 }
