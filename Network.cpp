@@ -229,8 +229,6 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             errors_by_lay.push_back(errors);
 
 
-
-
             for (int lay = layers - 1; lay > 0; lay--) {
 
                 size_t k = network[lay - 1].size();
@@ -268,6 +266,11 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             }
             // Updating of weights
+            for (int si = 0; si < d_synapse.size(); si++){
+                upd matr
+            }
+
+
 
 
             neu_out.clear();

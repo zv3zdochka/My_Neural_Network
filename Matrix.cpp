@@ -1,7 +1,6 @@
 #include "Matrix.h"
 #include <iomanip>
 
-
 Matrix::Matrix() : rows(0), cols(0) {}
 
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
@@ -14,9 +13,7 @@ Matrix::Matrix(const std::vector<std::vector<float>> &values) {
     data = values;
 }
 
-
 Matrix::~Matrix() = default;
-
 
 size_t Matrix::getRows() const {
     return rows;
@@ -25,7 +22,6 @@ size_t Matrix::getRows() const {
 size_t Matrix::getCols() const {
     return cols;
 }
-
 
 void Matrix::resize(size_t vert, size_t gor) {
     this->rows = vert;
@@ -51,7 +47,6 @@ Matrix Matrix::transpose() const {
     return result;
 }
 
-
 Matrix Matrix::operator*(const Matrix &other) const {
     if (cols == other.getRows()) {
         Matrix result(rows, other.getCols());
@@ -70,12 +65,11 @@ Matrix Matrix::operator*(const Matrix &other) const {
     std::cout << "Unable to perform matrix multiplication due to incompatible sizes." << std::endl;
 
     return {};
-
 }
 
 Matrix Matrix::operator+(const Matrix &other) const {
     if (rows != other.rows || cols != other.cols) {
-        std::cout << "Unable to perform matrix multiplication due to incompatible sizes." << std::endl;
+        std::cout << "Unable to perform matrix addition due to incompatible sizes." << std::endl;
         return {};
     }
 
@@ -88,8 +82,20 @@ Matrix Matrix::operator+(const Matrix &other) const {
     return result;
 }
 
+Matrix Matrix::operator-(const Matrix &other) const {
+    if (rows != other.rows || cols != other.cols) {
+        std::cout << "Unable to perform matrix subtraction due to incompatible sizes." << std::endl;
+        return {};
+    }
 
-
+    Matrix result(rows, cols);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result[i][j] = data[i][j] - other[i][j];
+        }
+    }
+    return result;
+}
 
 bool Matrix::operator==(const Matrix &other) const {
     if (rows != other.rows || cols != other.cols) {
@@ -124,12 +130,4 @@ void Matrix::showMatrix(const std::string& name) {
         std::cout << std::endl;
     }
     std::cout << "-----------------------" << std::endl;
-
 }
-
-
-
-
-
-
-
