@@ -11,13 +11,13 @@ int main() {
 
 
     Matrix matrix1(data1);
-    //Matrix matrix2(data2);
+    Matrix matrix2(data2);
 
 
     matrix1.showMatrix();
-    //matrix2.showMatrix();
+    matrix2.showMatrix();
     matrix1.transpose().showMatrix();
-    //matrix2.transpose().showMatrix();
+    Matrix res = matrix1.transpose() * matrix2;
 
     return 0;
 }

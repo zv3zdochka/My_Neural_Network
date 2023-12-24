@@ -181,7 +181,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                show_weights();
+                //show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -205,7 +205,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
 
 
-                show_weights();
+                //show_weights();
 
             }
 
@@ -229,7 +229,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             std::reverse(synapse.begin(), synapse.end());
 
             std::vector<std::vector<float>> back_weights;
-
+            std::vector<std::vector<float>> demi_er;
             for (int lay = network.size() - 1; lay > 0; lay++) {
                 size_t k = network[lay - 1].size();
                 if (k == 1) {
@@ -237,31 +237,33 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     for (auto &h: synapse[lay])
                         semi[0].push_back(h[0]);
 
-                    demi_res = divide(Matrix(semi).transpose(), errors).getData();
+                    demi_er = divide(Matrix(semi).transpose(), errors).getData();
                 } else {
-                    demi_res = divide(Matrix(synapse[lay]).transpose(), errors).getData();
+                    Matrix(synapse[lay-1]).transpose().showMatrix("fur");
+                    Matrix(errors).showMatrix("huh");
+                    demi_er = divide(Matrix(synapse[lay-1]).transpose(), errors).getData();
                 }
 
-                Matrix(demi_res).showMatrix("gggggg");
+                Matrix(demi_er).showMatrix("gggggg");
             }
 
             //Matrix(errors).showMatrix("errors");
-
+            std::reverse(synapse.begin(), synapse.end());
         }
 
 
     }
 
 
-    std::reverse(synapse.begin(), synapse.end());
-
-
-    std::cout << "-----------------------" << std::endl;
-    std::cout << "    FINISH TRAINING" << std::endl;
-    std::cout << "-----------------------" << std::endl;
-    auto end_time = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
+//    std::reverse(synapse.begin(), synapse.end());
+//
+//
+//    std::cout << "-----------------------" << std::endl;
+//    std::cout << "    FINISH TRAINING" << std::endl;
+//    std::cout << "-----------------------" << std::endl;
+//    auto end_time = std::chrono::high_resolution_clock::now();
+//    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+//    std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
 
 
 }
@@ -282,6 +284,7 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
 }
 
 Matrix Network::divide(const Matrix &weights, const std::vector<std::vector<float>> &input) {
+    std::cout << "1";
     Matrix inp(input);
     Matrix res = weights * inp;
     return res;

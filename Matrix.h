@@ -33,12 +33,8 @@ public:
     const std::vector<float> &operator[](size_t index) const;
 
 
-    [[nodiscard]] Matrix transpose() const;
+    Matrix transpose() const;
 
-
-    Matrix operator+(const Matrix &other) const;
-
-    Matrix operator-(const Matrix &other) const;
 
     Matrix operator*(const Matrix &other) const;
 

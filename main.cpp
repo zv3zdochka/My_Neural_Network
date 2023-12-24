@@ -23,7 +23,7 @@ int main() {
 
     net.train(input_data, output_data, epochs, 1, 0.1);
 
-    net.save("base.json");
+    //net.save("base.json");
 
     //std::cout << "--------------------------------" << std::endl;
 
