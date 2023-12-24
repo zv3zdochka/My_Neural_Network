@@ -253,14 +253,17 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             }
             std::reverse(errors_by_lay.begin(), errors_by_lay.end());
             std::vector<Matrix> d_synapse;
-//            for (int lay = layers - 1; lay > 0; lay--) {
-//
-//            }
+
             Matrix(neu_out).showMatrix("NEU");
             for (int i = 0; i < errors_by_lay.size(); i++){
                 Matrix(errors_by_lay[i]).showMatrix("ERR");
             }
+            convert(neu_out[0]);
 
+//            for (int lay = layers - 1; lay > 0; lay--) {
+//                Matrix demi_mat;
+//                demi_mat = divide(Matrix(synapse[lay-1]), Matrix(neu_out[0]));
+//            }
 
 
 
@@ -289,9 +292,9 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     std::vector<std::vector<float>> updatedData = res.getData();
 
     std::vector<float> edge = {};
-    for (int i = 0; i < updatedData.size(); i++) {
-        edge.push_back(updatedData[i][0]);
-        updatedData[i][0] = call(af, updatedData[i][0]);
+    for (auto & i : updatedData) {
+        edge.push_back(i[0]);
+        i[0] = call(af, i[0]);
     }
 
 
@@ -308,17 +311,17 @@ void Network::save(const char *filename) const {
     for (int i = 0; i <= layers - 1; ++i) {
         if (i != layers - 1) {
             nlohmann::json &layer_data = output.emplace_back();
-            
+
             layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
             layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
             layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
         }else{
             nlohmann::json &layer_data = output.emplace_back();
-            
+
             layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
             layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
         }
-        
+
     }
 
     std::ofstream file(filename, std::ios::out | std::ios::binary);
@@ -336,4 +339,13 @@ void Network::clear_weights() {
 Matrix Network::divide(const Matrix &weights, const Matrix &input) {
     Matrix res = weights * input;
     return res;
+}
+
+Matrix Network::convert(std::vector<float> inp ) {
+    std::vector<std::vector<float>> out;
+    for (float & lene : inp){
+        out.push_back({lene});
+    }
+    Matrix(out).showMatrix("LENA");
+    return Matrix(out);
 }

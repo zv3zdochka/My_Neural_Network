@@ -51,5 +51,7 @@ private:
     void show_synapse();
 
     void clear_weights();
+
+    Matrix convert(std::vector<float> inp);
 };
 
