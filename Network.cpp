@@ -32,7 +32,11 @@ Network::Network(const char *filename) {
 
         if (network.empty()) {
             add_layer(LayerType::input, num_neurons, ft, b);
-        } else {
+        }
+        else if (i == input.size() - 1) {
+                    add_layer(LayerType::output, num_neurons, ft, b);
+                    continue;
+        }else {
             add_layer(LayerType::hidden, num_neurons, ft, b);
         }
 
@@ -40,8 +44,6 @@ Network::Network(const char *filename) {
         synapse.push_back(synapse_data.get<std::vector<std::vector<float>>>());
         i++;
     }
-
-    add_layer(LayerType::output, 1, FunctionType::sigmoid, 0.0f);
 }
 
 void Network::add_layer(LayerType type, int number_of_neurons, FunctionType af, float b) {
@@ -303,12 +305,20 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
 void Network::save(const char *filename) const {
     nlohmann::json output;
 
-    for (int i = 0; i < layers - 1; ++i) {
-        nlohmann::json &layer_data = output.emplace_back();
-
-        layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
-        layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
-        layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
+    for (int i = 0; i <= layers - 1; ++i) {
+        if (i != layers - 1) {
+            nlohmann::json &layer_data = output.emplace_back();
+            
+            layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
+            layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
+            layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
+        }else{
+            nlohmann::json &layer_data = output.emplace_back();
+            
+            layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
+            layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
+        }
+        
     }
 
     std::ofstream file(filename, std::ios::out | std::ios::binary);
