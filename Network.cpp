@@ -240,11 +240,11 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     for (auto &h: synapse[lay-1])
                         semi[0].push_back(h[0]);
 
-                    demi_res = divide(Matrix(semi).transpose(), Matrix(errors)).getData();
+                    demi_res = multiply(Matrix(semi).transpose(), Matrix(errors)).getData();
                 } else {
                     //Matrix(synapse[lay-1]).transpose().showMatrix("map");
                     //Matrix(errors).transpose().showMatrix("lox");
-                    demi_res = divide(Matrix(synapse[lay-1]).transpose(), Matrix(errors)).getData();
+                    demi_res = multiply(Matrix(synapse[lay - 1]).transpose(), Matrix(errors)).getData();
                 }
                 errors = demi_res;
                 errors_by_lay.push_back(demi_res);
@@ -258,12 +258,20 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             for (int i = 0; i < errors_by_lay.size(); i++){
                 Matrix(errors_by_lay[i]).showMatrix("ERR");
             }
-            convert(neu_out[0]);
 
-//            for (int lay = layers - 1; lay > 0; lay--) {
-//                Matrix demi_mat;
-//                demi_mat = divide(Matrix(synapse[lay-1]), Matrix(neu_out[0]));
-//            }
+            std::reverse(neu_out.begin(), neu_out.end());
+            std::vector<Matrix> se_de;
+            for (int lay = layers - 1; lay > 0; lay--) {
+                Matrix demi_mat;
+                Matrix alpha;
+                //Matrix(synapse[lay-1]).showMatrix("MAT1");
+                //Matrix(neu_out).showMatrix("HUHUHHU");
+                //convert(neu_out[lay-1]).showMatrix("MAT2");
+                demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
+                demi_mat.showMatrix("HUI");
+                se_de.push_back(demi_mat);
+                //alpha = multiply();
+            }
 
 
 
@@ -336,7 +344,8 @@ void Network::clear_weights() {
     }
 }
 
-Matrix Network::divide(const Matrix &weights, const Matrix &input) {
+Matrix Network::multiply(const Matrix &weights, const Matrix &input) {
+
     Matrix res = weights * input;
     return res;
 }
@@ -346,6 +355,6 @@ Matrix Network::convert(std::vector<float> inp ) {
     for (float & lene : inp){
         out.push_back({lene});
     }
-    Matrix(out).showMatrix("LENA");
+//    Matrix(out).showMatrix("LENA");
     return Matrix(out);
 }
