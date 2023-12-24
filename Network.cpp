@@ -3,6 +3,7 @@
 #include "Network.h"
 #include <chrono>
 #include "Activ_derivatives.h"
+#include <iomanip>
 
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
@@ -273,6 +274,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
                                  Matrix(convert(neu_out[lay - 1])).transpose());
                 alpha.showMatrix("ALPHA");
+
             }
 
 
@@ -381,8 +383,8 @@ Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::ve
             case FunctionType::tanh:
                 using_func = Derivatives::tanh_derivative(errors[layer][0]);
         }
-        std::cout << std::fix << std;> << using_func << "THE SHIT" << std::endl;
-        std::cout << errors[layer][0] << "BPPPPPPP" << std::endl;
+        std::cout << std::fixed << std::setprecision(20) << using_func << "  THE SHIT" << std::endl;
+        std::cout << std::fixed << std::setprecision(20) << errors[layer][0] << "  BPPPPPPP" << std::endl;
         out.push_back({speed * errors[layer][0] * using_func});
 
     }
