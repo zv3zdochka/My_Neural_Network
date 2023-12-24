@@ -205,7 +205,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             }
 
-            Matrix(neu_out).showMatrix("weig");
+            Matrix(neu_out).showMatrix("weight");
 
             //errors
             std::vector<std::vector<float>> errors;
@@ -250,9 +250,15 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             }
             std::reverse(errors_by_lay.begin(), errors_by_lay.end());
-//            for (int j = 0; j < errors_by_lay.size(); j++){
-//                Matrix(errors_by_lay[j]).showMatrix("Errors");
+            std::vector<Matrix> d_synapse;
+//            for (int lay = layers - 1; lay > 0; lay--) {
+//
 //            }
+            Matrix(neu_out).showMatrix("NEU");
+            for (int i = 0; i < errors_by_lay.size(); i++){
+                Matrix(errors_by_lay[i]).showMatrix("ERR");
+            }
+
 
 
 
@@ -274,19 +280,25 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input,
                               FunctionType af) {
     Matrix inp(input);
-    //weights.showMatrix("WEIGHTS");
-    //inp.showMatrix("INP_DATA");
+
     Matrix res = weights * inp;
+
     std::vector<std::vector<float>> out = res.getData();
+    std::vector<std::vector<float>> updatedData = res.getData();
+
     std::vector<float> edge = {};
-    for (int i = 0; i < res.getData().size(); i++) {
-        edge.push_back(res.getData()[i][0]);
-        out[i][0] = call(af, res.getData()[i][0]);
+    for (int i = 0; i < updatedData.size(); i++) {
+        edge.push_back(updatedData[i][0]);
+        updatedData[i][0] = call(af, updatedData[i][0]);
     }
-    //res.showMatrix("RES");
+
+
+    Matrix updatedRes(updatedData);
+
     neu_out.push_back(edge);
-    return res;
+    return updatedRes;
 }
+
 
 void Network::save(const char *filename) const {
     nlohmann::json output;

@@ -9,8 +9,8 @@ int main() {
     std::filesystem::current_path("..");
 
     Network net;
-    net.add_layer(LayerType::input, 2, FunctionType::relu, 0.0f);
-    net.add_layer(LayerType::hidden, 3, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::input, 2, FunctionType::silu, 0.0f);
+    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
     net.add_layer(LayerType::output, 2, FunctionType::tanh, 0.0f);
 
     net.build();
