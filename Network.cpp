@@ -25,7 +25,7 @@ Network::Network(const char *filename) {
     for (const auto &layer_data: input) {
         int num_neurons = layer_data.at(NETWORK_NUM_NEURONS_NAME);
 
-        const std::string &fn_name = layer_data.at(NETWORK_ACTIVATION_FN_NAME).get_ref<const std::string &>();
+        const auto &fn_name = layer_data.at(NETWORK_ACTIVATION_FN_NAME).get_ref<const std::string &>();
         FunctionType ft = function_type_from_string(fn_name);
 
         float b = 0.0f;
@@ -161,9 +161,6 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
     std::cout << "-----------------------" << std::endl;
 
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        //std::cout << "-----------------------" << std::endl;
-        //std::cout << "       NEW EPOCH" << std::endl;
-        //std::cout << "-----------------------" << std::endl;
         int data_ind = -1;
         for (auto &j: data) {
             data_ind += 1;
@@ -208,7 +205,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             }
 
-
+            Matrix(neu_out).showMatrix("weig");
 
             //errors
             std::vector<std::vector<float>> errors;
@@ -260,7 +257,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
 
 
-
+        neu_out.clear();
         }
         std::cout << "-----------------------" << std::endl;
         std::cout << "    FINISH TRAINING" << std::endl;
@@ -281,10 +278,13 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     //inp.showMatrix("INP_DATA");
     Matrix res = weights * inp;
     std::vector<std::vector<float>> out = res.getData();
+    std::vector<float> edge = {};
     for (int i = 0; i < res.getData().size(); i++) {
+        edge.push_back(res.getData()[i][0]);
         out[i][0] = call(af, res.getData()[i][0]);
     }
     //res.showMatrix("RES");
+    neu_out.push_back(edge);
     return res;
 }
 
