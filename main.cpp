@@ -21,38 +21,30 @@ int main() {
     net.build();
     net.show_network();
 
-    std::fstream input_file("input_data.txt");
-    std::vector<std::vector<std::vector<float>>> input_data;
-    std::vector<std::vector<float>> output_data;
+    //std::fstream data_file("fruits_dataset.txt");
+    //std::vector<std::vector<float>> input_data;
+    //std::vector<float> output_data;
+//
+    //float input1, input2, output;
+    //char separator;
+    //while (data_file >> input1 >> separator >> input2 >> separator >> output){
+    //    input_data.push_back({input1, input2});
+    //    output_data.push_back(output);
+    //}
 
-    float value;
-    while (input_file >> value) {
-        std::vector<std::vector<float>> input_vector;
-        input_vector.emplace_back(1, value);
-        input_file >> value;
-        input_vector.emplace_back(1, value);
+    std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
+    std::vector<float> output_data = {3.0f, 4.09f, 7.0f, 8.07f};
 
-        input_data.push_back(input_vector);
+    std::vector<std::vector<std::vector<float>>> normalized_input_data = normalize_input(input_data);
+    std::vector<std::vector<float>> normalized_output_data = normalize_output(output_data);
 
-        std::vector<float> output_vector;
-        input_file >> value;
-        output_vector.push_back(value);
-        input_file >> value;
-        output_vector.push_back(value);
-
-        output_data.push_back(output_vector);
-
-    }
-    normalize_input(input_data);
-    normalize_output(output_data);
-
-    display_data(input_data, output_data);
+    display_data(normalized_input_data, normalized_output_data);
 
 
     const int epochs = 1;
 
 
-    net.train(input_data, output_data, epochs, 1, 0.1);
+    net.train(normalized_input_data, normalized_output_data, epochs, 1, 0.1);
 
     //net.save("base.json");
 
