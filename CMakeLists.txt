@@ -18,11 +18,12 @@ add_executable(My_own_Neural_Network
 
 
         main.cpp
+
         json.h
+        DataUtils.cpp
+        DataUtils.h
 
 )
-
-
 add_executable(try try.cpp CrazyMath.cpp CrazyMath.h)
 add_executable(matrix_test matrix_test.cpp Matrix.cpp Matrix.h)
 
