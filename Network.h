@@ -51,6 +51,6 @@ private:
 
     void clear_weights();
 
-    Matrix Network::divide(const Matrix &weights, const std::vector<std::vector<float>> &input);
+    Matrix divide(const Matrix &weights, const std::vector<std::vector<float>> &input);
 };
 

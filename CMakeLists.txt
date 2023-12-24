@@ -16,12 +16,8 @@ add_executable(My_own_Neural_Network
         Matrix.h
         Matrix.cpp
 
-        CrazyMath.h
-        CrazyMath.cpp
 
         main.cpp
         json.h
 
 )
-
-add_executable(try try.cpp CrazyMath.cpp CrazyMath.h)
