@@ -41,7 +41,7 @@ public:
     void
     train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer, int epochs,
           float test_data_per, float train_speed);
-    Matrix divide(const Matrix &weights, const Matrix &input);
+    static Matrix divide(const Matrix &weights, const Matrix &input);
 
 private:
     void create_synapse();

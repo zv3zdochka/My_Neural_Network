@@ -1,20 +1,19 @@
-#include <iostream>
 #include "CrazyMath.h"
+#include <iostream>
 
-using namespace std;
-using namespace CrazyMath;
+int main() {
+    using namespace CrazyMath;
 
+    // Define the sigmoid function: f(x) = 1 / (1 + exp(-x))
+    auto sigmoid = Divide(Const(1), Add(Const(1), Exp(2.71828, Multiply(Const(-1), X))));
 
+    // Calculate the derivative of the sigmoid function
+    Derivative<decltype(sigmoid)> sigmoid_derivative(sigmoid);
 
-int main()
-{
-    auto f1 = (Pow(X, 3));
+    // Calculate the derivative at x = 0.5
+    double result = sigmoid_derivative(0.5);
 
-    auto df1 = derivative(f1);
-
-
-    cout << "f(x)\tf'(x)" << endl;
-    cout << f1(0.5) << " \t" << df1(0.5) << endl;
+    std::cout << "The derivative of the sigmoid function at x = 0.5 is: " << result << std::endl;
 
     return 0;
 }

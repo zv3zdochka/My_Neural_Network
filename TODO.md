@@ -8,7 +8,7 @@ add the method of error back propagation
 
 add changing weights
 
-пофиксить баг с тем что не записывается последний слой у которого нет весов 
+
 
 add clock to count strings 
 

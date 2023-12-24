@@ -22,6 +22,9 @@ add_executable(My_own_Neural_Network
         main.cpp
         json.h
 
+        Activ_derivatives.h
+        Activ_derivatives.cpp
+
 )
 
 add_executable(try try.cpp CrazyMath.cpp CrazyMath.h)

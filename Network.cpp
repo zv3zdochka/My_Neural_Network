@@ -177,7 +177,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                //show_weights();
+                show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -201,7 +201,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
 
 
-                //show_weights();
+                show_weights();
 
             }
 
