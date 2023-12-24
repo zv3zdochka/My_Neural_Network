@@ -1,4 +1,6 @@
 #include "Matrix.h"
+#include <iomanip>
+
 
 Matrix::Matrix() : rows(0), cols(0) {}
 
@@ -117,7 +119,7 @@ void Matrix::showMatrix(const std::string& name) {
     std::cout << "-----------------------" << std::endl;
     for (auto & i : data){
         for (float j : i){
-            std::cout << j << ' ';
+            std::cout << j << std::setprecision(20) << ' ';
         }
         std::cout << std::endl;
     }
