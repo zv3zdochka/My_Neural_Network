@@ -2,6 +2,7 @@
 #include "json.h"
 #include "Network.h"
 #include <chrono>
+#include "Activ_derivatives.h"
 
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
@@ -270,7 +271,8 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
                 demi_mat.showMatrix("HUI");
                 se_de.push_back(demi_mat);
-                alpha = multiply();
+                alpha = multiply(collect_with_derivatives(demi_mat, ));//разобраться с ошибкамииии
+
             }
 
 
@@ -359,6 +361,15 @@ Matrix Network::convert(std::vector<float> inp ) {
     return Matrix(out);
 }
 
-Matrix Network::collect_with_derivatives(Matrix) {
-    return Matrix();
+Matrix Network::collect_with_derivatives(Matrix input, Matrix errors) {
+    //return Matrix();
+    using namespace Derivatives;
+    std::vector<std::vector<float>> out;
+    for (int layer = 0; layer < input.getData().size(); layer++){
+        out.push_back({errors[layer][0] * Derivatives::sigmoid_derivative(input[layer][0])});
+    }
+
+
+    std::reverse(out.begin(), out.end());
+    return Matrix(out);
 }

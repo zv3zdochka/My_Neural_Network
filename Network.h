@@ -53,6 +53,7 @@ private:
     void clear_weights();
 
     Matrix convert(std::vector<float> inp);
-    Matrix collect_with_derivatives(Matrix);
+
+    Matrix collect_with_derivatives(Matrix input, Matrix errors);
 };
 
