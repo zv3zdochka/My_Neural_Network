@@ -2,6 +2,7 @@
 #include "json.h"
 #include "Network.h"
 #include <chrono>
+#include "Activ_derivatives.h"
 
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
@@ -34,8 +35,8 @@ Network::Network(const char *filename) {
             add_layer(LayerType::input, num_neurons, ft, b);
         }
         else if (i == input.size() - 1) {
-                    add_layer(LayerType::output, num_neurons, ft, b);
-                    continue;
+            add_layer(LayerType::output, num_neurons, ft, b);
+            continue;
         }else {
             add_layer(LayerType::hidden, num_neurons, ft, b);
         }
@@ -153,19 +154,36 @@ void Network::show_weights() {
 }
 
 
-void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer,
+void Network::train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer,
                     int epochs, float test_data_per, float train_speed) {
 
     auto start_time = std::chrono::high_resolution_clock::now();
+    DataUtils::shuffleData(data, answer);
+
+    std::vector<std::vector<std::vector<float>>> train_data;
+    std::vector<std::vector<std::vector<float>>> test_data;
+    std::vector<std::vector<float>> train_answer;
+    std::vector<std::vector<float>> test_answer;
+
+    auto split_index = static_cast<size_t>(data.size() * test_data_per);
+
+    for (size_t i = 0; i < split_index; ++i){
+        train_data.push_back(data[i]);
+        train_answer.push_back(answer[i]);
+    }
+
+    for (size_t i = split_index; i < train_data.size(); ++i){
+        test_data.push_back(data[i]);
+        test_answer.push_back(answer[i]);
+    }
+
 
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
 
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        int data_ind = -1;
-        for (auto &j: data) {
-            data_ind += 1;
+        for (size_t data_ind = 0; data_ind < train_data.size(); ++data_ind) {
             clear_weights();
             std::vector<std::vector<float>> demi_res;
 
@@ -173,7 +191,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
                 for (int k = 0; k < network[lay].size(); k++) {
                     if (lay == 0) {
-                        network[lay][k].weight = j[k][0];
+                        network[lay][k].weight = train_data[data_ind][k][0];
                     } else {
                         network[lay][k].weight = demi_res[k][0];
                     }
@@ -226,8 +244,6 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             errors_by_lay.push_back(errors);
 
 
-
-
             Matrix(errors).showMatrix("err");
 
 
@@ -237,14 +253,14 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
                 if (k == 1) {
                     std::vector<std::vector<float>> semi = {{}};
-                    for (auto &h: synapse[lay-1])
+                    for (auto &h: synapse[lay - 1])
                         semi[0].push_back(h[0]);
 
-                    demi_res = divide(Matrix(semi).transpose(), Matrix(errors)).getData();
+                    demi_res = multiply(Matrix(semi).transpose(), Matrix(errors)).getData();
                 } else {
                     //Matrix(synapse[lay-1]).transpose().showMatrix("map");
                     //Matrix(errors).transpose().showMatrix("lox");
-                    demi_res = divide(Matrix(synapse[lay-1]).transpose(), Matrix(errors)).getData();
+                    demi_res = multiply(Matrix(synapse[lay - 1]).transpose(), Matrix(errors)).getData();
                 }
                 errors = demi_res;
                 errors_by_lay.push_back(demi_res);
@@ -253,19 +269,29 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             }
             std::reverse(errors_by_lay.begin(), errors_by_lay.end());
             std::vector<Matrix> d_synapse;
-//            for (int lay = layers - 1; lay > 0; lay--) {
-//
-//            }
+
             Matrix(neu_out).showMatrix("NEU");
-            for (int i = 0; i < errors_by_lay.size(); i++){
+            for (int i = 0; i < errors_by_lay.size(); i++) {
                 Matrix(errors_by_lay[i]).showMatrix("ERR");
             }
 
+            std::reverse(neu_out.begin(), neu_out.end());
+            std::vector<Matrix> se_de;
+            for (int lay = layers - 1; lay > 0; lay--) {
+                Matrix demi_mat;
+                Matrix alpha;
+                //Matrix(synapse[lay-1]).showMatrix("MAT1");
+                //Matrix(neu_out).showMatrix("HUHUHHU");
+                //convert(neu_out[lay-1]).showMatrix("MAT2");
+                demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
+                demi_mat.showMatrix("HUI");
+                se_de.push_back(demi_mat);
+                //alpha = multiply(collect_with_derivatives(lay, demi_mat,));//разобраться с ошибкамииии
+
+            }
 
 
-
-
-        neu_out.clear();
+            neu_out.clear();
         }
         std::cout << "-----------------------" << std::endl;
         std::cout << "    FINISH TRAINING" << std::endl;
@@ -289,9 +315,9 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     std::vector<std::vector<float>> updatedData = res.getData();
 
     std::vector<float> edge = {};
-    for (int i = 0; i < updatedData.size(); i++) {
-        edge.push_back(updatedData[i][0]);
-        updatedData[i][0] = call(af, updatedData[i][0]);
+    for (auto & i : updatedData) {
+        edge.push_back(i[0]);
+        i[0] = call(af, i[0]);
     }
 
 
@@ -308,17 +334,17 @@ void Network::save(const char *filename) const {
     for (int i = 0; i <= layers - 1; ++i) {
         if (i != layers - 1) {
             nlohmann::json &layer_data = output.emplace_back();
-            
+
             layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
             layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
             layer_data[NETWORK_SYNAPSE_NAME] = synapse[i];
         }else{
             nlohmann::json &layer_data = output.emplace_back();
-            
+
             layer_data[NETWORK_NUM_NEURONS_NAME] = network[i].size();
             layer_data[NETWORK_ACTIVATION_FN_NAME] = function_type_to_string(network[i][0].fn_type);
         }
-        
+
     }
 
     std::ofstream file(filename, std::ios::out | std::ios::binary);
@@ -333,7 +359,30 @@ void Network::clear_weights() {
     }
 }
 
-Matrix Network::divide(const Matrix &weights, const Matrix &input) {
+Matrix Network::multiply(const Matrix &weights, const Matrix &input) {
+
     Matrix res = weights * input;
     return res;
+}
+
+Matrix Network::convert(std::vector<float> inp ) {
+    std::vector<std::vector<float>> out;
+    for (float & lene : inp){
+        out.push_back({lene});
+    }
+//    Matrix(out).showMatrix("LENA");
+    return Matrix(out);
+}
+
+Matrix Network::collect_with_derivatives(Matrix input, Matrix errors) {
+    //return Matrix();
+    using namespace Derivatives;
+    std::vector<std::vector<float>> out;
+    for (int layer = 0; layer < input.getData().size(); layer++){
+        out.push_back({errors[layer][0] * Derivatives::sigmoid_derivative(input[layer][0])});
+    }
+
+
+    std::reverse(out.begin(), out.end());
+    return Matrix(out);
 }

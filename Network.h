@@ -3,6 +3,8 @@
 #include "Neurons.h"
 #include "Matrix.h"
 #include "Activations.h"
+#include "DataUtils.h"
+
 #include <vector>
 #include <string>
 #include <random>
@@ -39,9 +41,9 @@ public:
     Matrix through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af);
 
     void
-    train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer, int epochs,
+    train(std::vector<std::vector<std::vector<float>>> data, std::vector<std::vector<float>> answer, int epochs,
           float test_data_per, float train_speed);
-    static Matrix divide(const Matrix &weights, const Matrix &input);
+    static Matrix multiply(const Matrix &weights, const Matrix &input);
 
 private:
     void create_synapse();
@@ -51,5 +53,8 @@ private:
     void show_synapse();
 
     void clear_weights();
-};
 
+    Matrix convert(std::vector<float> inp);
+
+    Matrix collect_with_derivatives(Matrix input, Matrix errors);
+};

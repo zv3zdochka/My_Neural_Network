@@ -12,7 +12,6 @@ float call(FunctionType type, float arg) {
             return activation::silu(arg);
         case FunctionType::tanh:
             return activation::tanh(arg);
-
     }
 }
 
