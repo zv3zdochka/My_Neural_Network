@@ -39,7 +39,7 @@ public:
 
     void
     train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer, int epochs,
-          float test_data_per);
+          float test_data_per, float train_speed);
 
 
 private:

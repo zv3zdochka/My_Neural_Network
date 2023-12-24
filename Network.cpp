@@ -152,7 +152,7 @@ void Network::show_weights() {
 
 
 void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer,
-                    int epochs, float test_data_per) {
+                    int epochs, float test_data_per, float train_speed) {
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -180,7 +180,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                show_weights();
+                //show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -204,7 +204,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
 
 
-                show_weights();
+                //show_weights();
 
             }
 
@@ -226,18 +226,19 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
 
             //Matrix(errors).showMatrix("errors");
-            for (int lay = 0; lay < layers - 1; lay++) {
-                Matrix(synapse[lay]).showMatrix("Synapse");
-            }
+//            for (int lay = 0; lay < layers - 1; lay++) {
+//                Matrix(synapse[lay]).showMatrix("Synapse");
+//            }
         }
-        //std::cout << "-----------------------" << std::endl;
-        //std::cout << "    FINISH TRAINING" << std::endl;
-        //std::cout << "-----------------------" << std::endl;
+
 
     }
+    std::cout << "-----------------------" << std::endl;
+    std::cout << "    FINISH TRAINING" << std::endl;
+    std::cout << "-----------------------" << std::endl;
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "Execution Time: " << duration.count() << " ms" << std::endl;
+    std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
 
 
 }

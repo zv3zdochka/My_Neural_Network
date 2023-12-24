@@ -21,7 +21,7 @@ int main() {
     const int epochs = 100;
 
 
-    net.train(input_data, output_data, epochs, 1);
+    net.train(input_data, output_data, epochs, 1, 0.02);
 
     net.save("base.json");
 
