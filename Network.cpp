@@ -166,6 +166,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         //std::cout << "-----------------------" << std::endl;
         int data_ind = -1;
         for (auto &j: data) {
+            //FORWARD
             data_ind += 1;
             clear_weights();
             std::vector<std::vector<float>> demi_res;
@@ -180,7 +181,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                //show_weights();
+                show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -204,11 +205,12 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
 
 
-                //show_weights();
+                show_weights();
 
             }
 
 
+            //BACK
 
             //errors
             std::vector<std::vector<float>> errors;
@@ -224,15 +226,36 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
             }
 
+            std::reverse(synapse.begin(), synapse.end());
+
+            std::vector<std::vector<float>> back_weights;
+
+            for (int lay = network.size() - 1; lay > 0; lay++) {
+                size_t k = network[lay - 1].size();
+                if (k == 1) {
+                    std::vector<std::vector<float>> semi = {{}};
+                    for (auto &h: synapse[lay])
+                        semi[0].push_back(h[0]);
+
+                    demi_res = divide(Matrix(semi).transpose(), errors).getData();
+                } else {
+                    demi_res = divide(Matrix(synapse[lay]).transpose(), errors).getData();
+                }
+
+                Matrix(demi_res).showMatrix("gggggg");
+            }
 
             //Matrix(errors).showMatrix("errors");
-//            for (int lay = 0; lay < layers - 1; lay++) {
-//                Matrix(synapse[lay]).showMatrix("Synapse");
-//            }
+
         }
 
 
     }
+
+
+    std::reverse(synapse.begin(), synapse.end());
+
+
     std::cout << "-----------------------" << std::endl;
     std::cout << "    FINISH TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
@@ -258,6 +281,13 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     return res;
 }
 
+Matrix Network::divide(const Matrix &weights, const std::vector<std::vector<float>> &input) {
+    Matrix inp(input);
+    Matrix res = weights * inp;
+    return res;
+}
+
+
 void Network::save(const char *filename) const {
     nlohmann::json output;
 
@@ -280,3 +310,4 @@ void Network::clear_weights() {
         }
     }
 }
+

@@ -50,5 +50,7 @@ private:
     void show_synapse();
 
     void clear_weights();
+
+    Matrix Network::divide(const Matrix &weights, const std::vector<std::vector<float>> &input);
 };
 
