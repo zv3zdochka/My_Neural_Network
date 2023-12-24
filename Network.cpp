@@ -270,7 +270,8 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 se_de.push_back(demi_mat);
                 collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("AGUGA1");
                 Matrix(convert(neu_out[lay - 1])).transpose().showMatrix("AGUGAGAGAGGAAG");
-                alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed), Matrix(convert(neu_out[lay - 1])).transpose());
+                alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
+                                 Matrix(convert(neu_out[lay - 1])).transpose());
                 alpha.showMatrix("ALPHA");
             }
 
@@ -358,28 +359,31 @@ Matrix Network::convert(std::vector<float> inp) {
     return Matrix(out);
 }
 
-Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
+Matrix
+Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
-    std::function<float(float)> using_func;
-    network[cur_lay][0].fn_type;
-    switch (network[cur_lay][0].fn_type) {
-        case FunctionType::sigmoid:
-            using_func = Derivatives::sigmoid_derivative;
-        case FunctionType::fast_sigmoid:
-            using_func = Derivatives::fast_sigmoid_derivative;
-        case FunctionType::silu:
-            using_func = Derivatives::silu_derivative;
-        case FunctionType::tanh:
-            using_func = Derivatives::tanh_derivative;
-    }
 
-    std::cout << speed << "speed" << std::endl;
+
+    std::cout << speed << " speed" << std::endl;
 
     for (int layer = 0; layer < input.getData().size(); layer++) {
-        std::cout << errors[layer][0] << "errros_layer" << std::endl;
-        std::cout << using_func(input[layer][0]) << "func_dermo" << std::endl;
-        out.push_back({speed * errors[layer][0] * using_func(input[layer][0])});
+        std::cout << errors[layer][0] << " errros_layer" << std::endl;
+        float using_func;
+        network[cur_lay][0].fn_type;
+        switch (network[cur_lay][0].fn_type) {
+            case FunctionType::sigmoid:
+                using_func = Derivatives::sigmoid_derivative(errors[layer][0]);
+            case FunctionType::fast_sigmoid:
+                using_func = Derivatives::fast_sigmoid_derivative(errors[layer][0]);
+            case FunctionType::silu:
+                using_func = Derivatives::silu_derivative(errors[layer][0]);
+            case FunctionType::tanh:
+                using_func = Derivatives::tanh_derivative(errors[layer][0]);
+        }
+        std::cout << std::fix << std;> << using_func << "THE SHIT" << std::endl;
+        std::cout << errors[layer][0] << "BPPPPPPP" << std::endl;
+        out.push_back({speed * errors[layer][0] * using_func});
 
     }
 
