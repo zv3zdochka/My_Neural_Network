@@ -5,7 +5,6 @@
 enum class FunctionType {
     sigmoid,
     fast_sigmoid,
-    relu,
     silu,
     tanh
 };
@@ -46,18 +45,6 @@ namespace activation {
      * Returns 0 if input is less than 0, otherwise returns the input itself.
      *
      * @param x Your number.
-     * @return Function value.
-     */
-    float relu(float x);
-
-    /**
-     * @brief Leaky Rectified Linear Unit (Leaky ReLU) function.
-     *
-     * This function computes the Leaky ReLU function for the given number.
-     * Returns 'x' if input is greater than or equal to 0, otherwise returns 'a * x', where 'a' is a small constant.
-     *
-     * @param x Your number.
-     * @param a The slope of the function for x < 0 (typically a small positive value).
      * @return Function value.
      */
 
