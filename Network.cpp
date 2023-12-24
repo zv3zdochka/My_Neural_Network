@@ -65,6 +65,7 @@ void Network::add_layer(LayerType type, int number_of_neurons, FunctionType af, 
                 network[network.size() - 1].emplace_back(layers + 1, 0, af);
             }
             break;
+
     }
 
     layers += 1;
