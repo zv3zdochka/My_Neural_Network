@@ -17,7 +17,7 @@ int main() {
     net.show_network();
     net.save("base.json");
     std::vector<std::vector<std::vector<float>>> input_data = {{{1.0f}, {2.0f}}, {{3.0f}, {4.0f}}};
-    std::vector<std::vector<float>> output_data = {{0.01f, 0.09f}, {0.07f, 0.078f}};
+    std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
 
     const int epochs = 1;
 

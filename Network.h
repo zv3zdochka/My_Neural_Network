@@ -52,7 +52,7 @@ private:
 
     void clear_weights();
 
-    static Matrix convert(std::vector<float> inp);
+    static Matrix convert(const std::vector<float>& inp);
 
     Matrix collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed);
 };

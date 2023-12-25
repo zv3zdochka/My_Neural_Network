@@ -125,7 +125,7 @@ void Matrix::showMatrix(const std::string& name) {
     std::cout << "-----------------------" << std::endl;
     for (auto & i : data){
         for (float j : i){
-            std::cout << j << std::setprecision(20) << ' ';
+            std::cout << j << std::setprecision(10) << ' ';
         }
         std::cout << std::endl;
     }

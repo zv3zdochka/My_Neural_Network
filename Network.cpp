@@ -4,6 +4,7 @@
 #include <chrono>
 #include "Activ_derivatives.h"
 #include <iomanip>
+#include <cmath>
 
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
@@ -125,7 +126,7 @@ void Network::show_synapse() {
         std::cout << "-----------------------" << std::endl;
         for (auto &j: synapse[i]) {
             for (float k: j) {
-                std::cout << k << ' ';
+                std::cout << k << std::setprecision(5) << ' ';
             }
             std::cout << '\n';
         }
@@ -143,7 +144,7 @@ void Network::show_weights() {
     for (size_t i = 0; i < max_neurons; ++i) {
         for (auto &j: network) {
             if (i < j.size()) {
-                std::cout << std::fixed << std::setprecision(1) << j[i].weight << " ";
+                std::cout << std::fixed << j[i].weight << " ";
             } else {
                 std::cout << "    ";
             }
@@ -182,7 +183,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     }
                 }
 
-                show_weights();
+                //show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -206,7 +207,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 }
 
 
-                show_weights();
+                //show_weights();
 
             }
 
@@ -266,10 +267,22 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             }
             // Updating of weights
+            std::reverse(d_synapse.begin(), d_synapse.end());
             for (int si = 0; si < d_synapse.size(); si++){
-                upd matr
-            }
 
+
+                if (!std::isnan(d_synapse[si][0][0])){
+                    Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
+                    Matrix(d_synapse[si]).showMatrix("UPD");
+                    (Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
+                    synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
+                } else{
+                    continue;
+                }
+
+
+            }
+            show_synapse();
 
 
 
@@ -287,8 +300,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
 }
 
-Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input,
-                              FunctionType af) {
+Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af) {
     Matrix inp(input);
 
     Matrix res = weights * inp;
@@ -308,7 +320,6 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     neu_out.push_back(edge);
     return updatedRes;
 }
-
 
 void Network::save(const char *filename) const {
     nlohmann::json output;
@@ -342,22 +353,20 @@ void Network::clear_weights() {
 }
 
 Matrix Network::multiply(const Matrix &weights, const Matrix &input) {
-
     Matrix res = weights * input;
     return res;
 }
 
-Matrix Network::convert(std::vector<float> inp) {
+Matrix Network::convert(const std::vector<float>& inp) {
     std::vector<std::vector<float>> out;
-    for (float &lene: inp) {
+    for (float lene: inp) {
         out.push_back({lene});
     }
 //    Matrix(out).showMatrix("LENA");
     return Matrix(out);
 }
 
-Matrix
-Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
+Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
 
