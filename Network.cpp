@@ -278,7 +278,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                 alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
                                  Matrix(convert(neu_out[lay - 1])).transpose());
                 d_synapse.push_back(alpha);
-                alpha.showMatrix("ALPHA");
+                //alpha.showMatrix("ALPHA");
 
             }
             // Updating of weights
@@ -287,9 +287,9 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
 
                 if (!std::isnan(d_synapse[si][0][0])){
-                    Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
-                    Matrix(d_synapse[si]).showMatrix("UPD");
-                    (Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
+                    //Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
+                    //Matrix(d_synapse[si]).showMatrix("UPD");
+                    //(Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
                     synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
                 } else{
                     continue;
@@ -310,8 +310,76 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
         std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
 
-
     }
+
+
+    // Testing
+    float res = 0.0f;
+    std::cout << "-----------------------" << std::endl;
+    std::cout << "    Start Testing" << std::endl;
+    std::cout << "-----------------------" << std::endl;
+
+
+    for (size_t data_ind = 0; data_ind < test_data.size(); ++data_ind) {
+        clear_weights();
+        std::vector<std::vector<float>> demi_res;
+
+        //Forward
+        for (int lay = 0; lay < layers - 1; lay++) {
+
+            for (int k = 0; k < network[lay].size(); k++) {
+                if (lay == 0) {
+                    network[lay][k].weight = test_data[data_ind][k][0];
+                } else {
+                    network[lay][k].weight = demi_res[k][0];
+                }
+            }
+
+            size_t k = network[lay + 1].size();
+            std::vector<std::vector<float>> local_inp = {};
+            for (auto &d: network[lay]) {
+                local_inp.push_back({d.weight});
+            }
+            if (k == 1) {
+                std::vector<std::vector<float>> semi = {{}};
+                for (auto &h: synapse[lay])
+                    semi[0].push_back(h[0]);
+
+                demi_res = through_layer(Matrix(semi), local_inp, network[lay][0].fn_type).getData();
+            } else {
+                demi_res = through_layer(Matrix(synapse[lay]), local_inp,
+                                         network[lay][0].fn_type).getData();
+            }
+
+            for (int neu = 0; neu < network[lay + 1].size(); neu++) {
+                network[lay + 1][neu].weight = demi_res[neu][0];
+            }
+
+        }
+
+
+        // Back
+        std::vector<std::vector<float>> errors;
+        std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec
+
+        if (answer[data_ind].size() >= 2) {
+            for (int len = 0; len < network[network.size() - 1].size(); len++) {
+                errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+            }
+        } else {
+            for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
+                errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+
+            }
+        }
+        errors_by_lay.push_back(errors);
+
+
+
+
+    std::cout << "-----------------------" << std::endl;
+    std::cout << "    FINISH Testing" << std::endl;
+    std::cout << "-----------------------" << std::endl;
 
 }
 
