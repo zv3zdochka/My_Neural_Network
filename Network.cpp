@@ -232,13 +232,13 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             std::vector<std::vector<float>> errors;
             std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec
 
-            if (answer[data_ind].size() >= 2) {
+            if (train_answer[data_ind].size() >= 2) {
                 for (int len = 0; len < network[network.size() - 1].size(); len++) {
-                    errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+                    errors.push_back({train_answer[data_ind][len] - network[network.size() - 1][len].weight});
                 }
             } else {
                 for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
-                    errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+                    errors.push_back({train_answer[data_ind][len] - network[network.size() - 1][len].weight});
 
                 }
             }
@@ -302,15 +302,15 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             neu_out.clear();
         }
-        std::cout << "-----------------------" << std::endl;
-        std::cout << "    FINISH TRAINING" << std::endl;
-        std::cout << "-----------------------" << std::endl;
-        auto end_time = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-        std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
+
 
     }
-
+    std::cout << "-----------------------" << std::endl;
+    std::cout << "    FINISH TRAINING" << std::endl;
+    std::cout << "-----------------------" << std::endl;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
 
     // Testing
     float res = 0.0f;
@@ -361,16 +361,17 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         std::vector<std::vector<float>> errors;
         std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec
 
-        if (answer[data_ind].size() >= 2) {
+        if (test_answer[data_ind].size() >= 2) {
             for (int len = 0; len < network[network.size() - 1].size(); len++) {
-                errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+                errors.push_back({test_answer[data_ind][len] - network[network.size() - 1][len].weight});
             }
         } else {
             for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
-                errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+                errors.push_back({test_answer[data_ind][len] - network[network.size() - 1][len].weight});
 
             }
         }
+        Matrix(errors).showMatrix("ERRORS");
         errors_by_lay.push_back(errors);
 
 

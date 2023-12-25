@@ -19,10 +19,10 @@ int main() {
     std::vector<std::vector<std::vector<float>>> input_data = {{{1.0f}, {2.0f}}, {{3.0f}, {4.0f}}};
     std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
 
-    const int epochs = 1;
+    const int epochs = 100;
 
 
-    net.train(input_data, output_data, epochs, 1, 0.02);
+    net.train(input_data, output_data, epochs, 1, 0.1);
 
 
 
