@@ -144,9 +144,9 @@ void Network::show_weights() {
     for (size_t i = 0; i < max_neurons; ++i) {
         for (auto &j: network) {
             if (i < j.size()) {
-                std::cout << std::fixed << j[i].weight << " ";
+                std::cout << std::fixed << std::setprecision(2) << j[i].weight << " ";
             } else {
-                std::cout << "    ";
+                std::cout << "     ";
             }
         }
         std::cout << std::endl;
@@ -172,7 +172,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         train_answer.push_back(answer[i]);
     }
 
-    for (size_t i = split_index; i < train_data.size(); ++i) {
+    for (size_t i = split_index; i < data.size(); ++i) {
         test_data.push_back(data[i]);
         test_answer.push_back(answer[i]);
     }
@@ -290,14 +290,14 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
                     //Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
                     //Matrix(d_synapse[si]).showMatrix("UPD");
                     //(Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
-                    synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
+                    synapse[si] = (Matrix(synapse[si]) - Matrix(d_synapse[si])).getData();
                 } else {
                     continue;
                 }
 
 
             }
-            show_synapse();
+            //show_synapse();
 
 
             neu_out.clear();
@@ -314,10 +314,10 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
     // Testing
     float res = 0.0f;
+    show_synapse();
     std::cout << "-----------------------" << std::endl;
     std::cout << "    Start Testing" << std::endl;
     std::cout << "-----------------------" << std::endl;
-
 
     for (size_t data_ind = 0; data_ind < test_data.size(); ++data_ind) {
         clear_weights();
@@ -371,7 +371,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
             }
         }
-        Matrix(errors).showMatrix("ERRORS");
+        Matrix(errors).showMatrix("ERRORS, %");
         errors_by_lay.push_back(errors);
 
 
