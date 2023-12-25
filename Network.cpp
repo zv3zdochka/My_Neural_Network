@@ -160,14 +160,29 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
+    std::vector<std::vector<std::vector<float>>> train_data;
+    std::vector<std::vector<std::vector<float>>> test_data;
+    std::vector<std::vector<float>> train_answer;
+    std::vector<std::vector<float>> test_answer;
+
+    auto split_index = static_cast<size_t>(data.size() * test_data_per);
+
+        for (size_t i = 0; i < split_index; ++i){
+            train_data.push_back(data[i]);
+            train_answer.push_back(answer[i]);
+        }
+
+        for (size_t i = split_index; i < train_data.size(); ++i){
+            test_data.push_back(data[i]);
+            test_answer.push_back(answer[i]);
+        }
+
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
 
     for (int epoch = 0; epoch < epochs; ++epoch) {
-        int data_ind = -1;
-        for (auto &j: data) {
-            data_ind += 1;
+        for (size_t data_ind = 0; data_ind < train_data.size(); ++data_ind) {
             clear_weights();
             std::vector<std::vector<float>> demi_res;
 
@@ -177,7 +192,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
                 for (int k = 0; k < network[lay].size(); k++) {
                     if (lay == 0) {
-                        network[lay][k].weight = j[k][0];
+                        network[lay][k].weight = train_data[data_ind][k][0];
                     } else {
                         network[lay][k].weight = demi_res[k][0];
                     }
