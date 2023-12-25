@@ -167,15 +167,15 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
     auto split_index = static_cast<size_t>(data.size() * test_data_per);
 
-        for (size_t i = 0; i < split_index; ++i){
-            train_data.push_back(data[i]);
-            train_answer.push_back(answer[i]);
-        }
+    for (size_t i = 0; i < split_index; ++i) {
+        train_data.push_back(data[i]);
+        train_answer.push_back(answer[i]);
+    }
 
-        for (size_t i = split_index; i < train_data.size(); ++i){
-            test_data.push_back(data[i]);
-            test_answer.push_back(answer[i]);
-        }
+    for (size_t i = split_index; i < train_data.size(); ++i) {
+        test_data.push_back(data[i]);
+        test_answer.push_back(answer[i]);
+    }
 
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
@@ -283,22 +283,21 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
             }
             // Updating of weights
             std::reverse(d_synapse.begin(), d_synapse.end());
-            for (int si = 0; si < d_synapse.size(); si++){
+            for (int si = 0; si < d_synapse.size(); si++) {
 
 
-                if (!std::isnan(d_synapse[si][0][0])){
+                if (!std::isnan(d_synapse[si][0][0])) {
                     //Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
                     //Matrix(d_synapse[si]).showMatrix("UPD");
                     //(Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
                     synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
-                } else{
+                } else {
                     continue;
                 }
 
 
             }
             show_synapse();
-
 
 
             neu_out.clear();
@@ -375,12 +374,11 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
         errors_by_lay.push_back(errors);
 
 
+        std::cout << "-----------------------" << std::endl;
+        std::cout << "    FINISH Testing" << std::endl;
+        std::cout << "-----------------------" << std::endl;
 
-
-    std::cout << "-----------------------" << std::endl;
-    std::cout << "    FINISH Testing" << std::endl;
-    std::cout << "-----------------------" << std::endl;
-
+    }
 }
 
 Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af) {
