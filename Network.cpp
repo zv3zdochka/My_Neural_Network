@@ -1,8 +1,9 @@
 #include "Matrix.h"
 #include "json.h"
 #include "Network.h"
-#include <chrono>
 #include "Activ_derivatives.h"
+#include "DataFunc.h"
+#include <chrono>
 #include <iomanip>
 #include <cmath>
 
@@ -182,6 +183,8 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
     std::cout << "-----------------------" << std::endl;
 
     for (int epoch = 0; epoch < epochs; ++epoch) {
+        DataLoader::shuffle_dataset(train_data, train_answer);
+
         for (size_t data_ind = 0; data_ind < train_data.size(); ++data_ind) {
             clear_weights();
             std::vector<std::vector<float>> demi_res;

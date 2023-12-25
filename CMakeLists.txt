@@ -21,6 +21,8 @@ add_executable(My_own_Neural_Network
 
         Activ_derivatives.h
         Activ_derivatives.cpp
+        DataFunc.cpp
+        DataFunc.h
 
 )
 
