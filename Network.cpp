@@ -2,7 +2,7 @@
 #include "json.h"
 #include "Network.h"
 #include <chrono>
-#include "Activ_derivatives.h"
+#include "Activation_derivatives.h"
 #include <iomanip>
 #include <cmath>
 
