@@ -4,6 +4,8 @@
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include "DataFunc.h"
+
 
 int main() {
     std::filesystem::current_path("..");
@@ -21,6 +23,8 @@ int main() {
 
     const int epochs = 1;
 
+//    DataLoader::readDataset("fruits_dataset.txt", input_data, output_data);
+//    DataLoader::normalize_dataset(input_data, output_data);
 
     net.train(input_data, output_data, epochs, 1, 0.02);
 
