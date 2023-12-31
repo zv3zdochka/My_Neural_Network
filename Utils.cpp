@@ -25,41 +25,54 @@ namespace Derivatives {
     }
 
 }
+void print_data(const std::vector<std::vector<float>>& data) {
+    for (const auto& row : data) {
+        for (const auto& val : row) {
+            std::cout << val << ' ';
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
 
 
-static std::vector<std::vector<std::vector<float>>> normalize_dataset(
-        std::vector<std::vector<float>> &input_data,
-        std::vector<std::vector<float>> &output_data) {
+std::vector<std::vector<std::vector<float>>> Data_Worker::min_max_normalisation(
+        std::vector<std::vector<float>> input_data,
+        std::vector<std::vector<float>> output_data) {
 
     std::vector<float> all_input_values;
     std::vector<float> all_output_values;
 
-    for (const auto &input_row: input_data) {
-        for (const auto &input: input_row) {
+    for (const auto &input_row : input_data) {
+        for (const auto &input : input_row) {
             all_input_values.push_back(input);
         }
     }
 
     float min_val = *std::min_element(all_input_values.begin(), all_input_values.end());
     float max_val = *std::max_element(all_input_values.begin(), all_input_values.end());
-
-    for (auto &input_row: input_data) {
-        for (auto &input: input_row) {
+    min_val /= 1.01;
+    max_val *= 1.01;
+    for (auto &input_row : input_data) {
+        for (auto &input : input_row) {
             input = (input - min_val) / (max_val - min_val);
         }
     }
 
-    for (const auto &output_row: output_data) {
-        for (const auto &output: output_row) {
+
+    for (const auto &output_row : output_data) {
+        for (const auto &output : output_row) {
             all_output_values.push_back(output);
         }
     }
 
     float min_va = *std::min_element(all_output_values.begin(), all_output_values.end());
     float max_va = *std::max_element(all_output_values.begin(), all_output_values.end());
+    min_va /= 1.01;
+    max_va *= 1.01;
 
-    for (auto &output_row: output_data) {
-        for (auto &val: output_row) {
+    for (auto &output_row : output_data) {
+        for (auto &val : output_row) {
             val = (val - min_va) / (max_va - min_va);
         }
     }
@@ -67,8 +80,11 @@ static std::vector<std::vector<std::vector<float>>> normalize_dataset(
     std::vector<std::vector<std::vector<float>>> ret = {};
     ret.push_back(input_data);
     ret.push_back(output_data);
+
     return ret;
 }
+
+
 
 void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                   std::vector<std::vector<float>> &output_data) {
@@ -77,35 +93,36 @@ void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &
         combined_data.push_back({input_data[i], output_data[i]});
     }
 
-    std::shuffle(combined_data.begin(), combined_data.end(), std::default_random_engine());
+    auto rng = std::default_random_engine {};
+    std::shuffle(std::begin(combined_data), std::end(combined_data), rng);
 
 
-//    std::cout << "Shuffled input data:" << std::endl;
-//    for (const auto &combined : combined_data) {
-//        for (const auto &input_row : combined.first) {
-//            for (const auto &input : input_row) {
-//                std::cout << input;
-//
-//                std::cout << "| ";
-//            }
-//            std::cout << "    ";
-//        }
-//        std::cout << std::endl;
-//    }
-//
-//    std::cout << "Shuffled output data:" << std::endl;
-//    for (const auto &combined : combined_data) {
-//        for (float val : combined.second) {
-//            std::cout << val << " ";
-//        }
-//        std::cout << "    ";
-//    }
-//    std::cout << std::endl;
-//
-//    for (size_t i = 0; i < combined_data.size(); ++i) {
-//        input_data[i] = combined_data[i].first;
-//        output_data[i] = combined_data[i].second;
-//    }
+    std::cout << "Shuffled input data:" << std::endl;
+    for (const auto &combined : combined_data) {
+        for (const auto &input_row : combined.first) {
+            for (const auto &input : input_row) {
+                std::cout << input;
+
+                std::cout << "| ";
+            }
+            std::cout << "    ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << "Shuffled output data:" << std::endl;
+    for (const auto &combined : combined_data) {
+        for (float val : combined.second) {
+            std::cout << val << " ";
+        }
+        std::cout << "    ";
+    }
+    std::cout << std::endl;
+
+    for (size_t i = 0; i < combined_data.size(); ++i) {
+        input_data[i] = combined_data[i].first;
+        output_data[i] = combined_data[i].second;
+    }
 }
 
 void Data_Worker::check_data(std::vector<std::vector<float>> input_data,

@@ -57,8 +57,8 @@ public:
      * @param input_data Input data to be normalized.
      * @param output_data Output data to be normalized.
      */
-    static std::vector<std::vector<std::vector<float>>> normalize_dataset(std::vector<std::vector<float>> &input_data,
-                                                                                std::vector<std::vector<float>> &output_data);
+    static std::vector<std::vector<std::vector<float>>> min_max_normalisation(std::vector<std::vector<float>> input_data,
+                                                                              std::vector<std::vector<float>> output_data);
 
     /**
      * @brief Shuffle a dataset randomly.

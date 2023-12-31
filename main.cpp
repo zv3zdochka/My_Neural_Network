@@ -20,12 +20,13 @@ int main() {
     net.show_network();
     //net.save("base.json");
     std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
-    std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
+    std::vector<std::vector<float>> output_data = {{3.4f, 5.7f}, {10.0f, 8.4f}};
 
     const int epochs = 1;
 
-    Data_Worker::normalize_dataset(input_data, output_data);
+    //Data_Worker::min_max_normalisation(input_data, output_data);
     //net.train(input_data, output_data, true, epochs, 1, 0.02);
+    Data_Worker::shuffle_dataset()
 
 
 

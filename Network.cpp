@@ -396,7 +396,7 @@ Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<
 void Network::process_data(std::vector<std::vector<float>> input_data, std::vector<std::vector<float>> output_data, bool norm) {
     Data_Worker::check_data(input_data, output_data, network);
 //    if (norm) {
-//        std::vector<std::vector<std::vector<float>> norm_data = Data_Worker::normalize_dataset(input_data, output_data);
+//        std::vector<std::vector<std::vector<float>> norm_data = Data_Worker::min_max_normalisation(input_data, output_data);
 //
 //
 //    } else {
