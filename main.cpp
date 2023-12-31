@@ -5,6 +5,7 @@
 #include <fstream>
 #include <filesystem>
 #include "Utils.h"
+#include "Utils.h"
 
 
 int main() {
@@ -18,15 +19,13 @@ int main() {
     net.build();
     net.show_network();
     //net.save("base.json");
-//    std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
-//    std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
-//
-//    const int epochs = 1;
-//
-////    DataLoader::readDataset("fruits_dataset.txt", input_data, output_data);
-////    DataLoader::normalize_dataset(input_data, output_data);
-//
-//    net.train(input_data, output_data, epochs, 1, 0.02);
+    std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
+    std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
+
+    const int epochs = 1;
+
+    Data_Worker::normalize_dataset(input_data, output_data);
+    //net.train(input_data, output_data, true, epochs, 1, 0.02);
 
 
 

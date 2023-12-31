@@ -155,11 +155,11 @@ void Network::show_weights() {
 }
 
 
-void Network::train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer,
+void Network::train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, bool normalisation,
                     int epochs, float test_data_per, float train_speed) {
 
     auto start_time = std::chrono::high_resolution_clock::now();
-
+    process_data(data,answer, normalisation);
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
@@ -177,7 +177,7 @@ void Network::train(std::vector<std::vector<std::vector<float>>> data, const std
 
                 for (int k = 0; k < network[lay].size(); k++) {
                     if (lay == 0) {
-                        network[lay][k].weight = j[k][0];
+                        network[lay][k].weight = j[k];
                     } else {
                         network[lay][k].weight = demi_res[k][0];
                     }
@@ -391,4 +391,16 @@ Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<
 
     std::reverse(out.begin(), out.end());
     return Matrix(out);
+}
+
+void Network::process_data(std::vector<std::vector<float>> input_data, std::vector<std::vector<float>> output_data, bool norm) {
+    Data_Worker::check_data(input_data, output_data, network);
+//    if (norm) {
+//        std::vector<std::vector<std::vector<float>> norm_data = Data_Worker::normalize_dataset(input_data, output_data);
+//
+//
+//    } else {
+//        input = input_data;
+//        output = output_data;
+//    }
 }

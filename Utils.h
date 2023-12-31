@@ -9,6 +9,7 @@
 #include <random>
 #include <sstream>
 #include <iterator>
+#include "Neurons.h"
 /**
  * @file DerivativeFunctions.h
  * @brief Header file containing functions to compute derivatives.
@@ -47,24 +48,17 @@ namespace Derivatives {
 }
 
 
+
+
 class Data_Worker {
 public:
-    /**
-     * @brief Read a dataset from a file.
-     * @param filename Path to the dataset file.
-     * @param input_data Vector to store input data.
-     * @param output_data Vector to store output data.
-     */
-    static void readDataset(const std::string &filename, std::vector<std::vector<std::vector<float>>> &input_data,
-                            std::vector<std::vector<float>> &output_data);
-
     /**
      * @brief Normalize a dataset.
      * @param input_data Input data to be normalized.
      * @param output_data Output data to be normalized.
      */
-    static void normalize_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
-                                  std::vector<std::vector<float>> &output_data);
+    static std::vector<std::vector<std::vector<float>>> normalize_dataset(std::vector<std::vector<float>> &input_data,
+                                                                                std::vector<std::vector<float>> &output_data);
 
     /**
      * @brief Shuffle a dataset randomly.
@@ -73,5 +67,9 @@ public:
      */
     static void shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                 std::vector<std::vector<float>> &output_data);
+
+    static void check_data(std::vector<std::vector<float>> input_data,
+                                 std::vector<std::vector<float>> output_data,
+                                 std::vector<std::vector<Neuron>> net);
 
 };

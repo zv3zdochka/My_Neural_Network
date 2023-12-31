@@ -26,6 +26,8 @@ public:
     std::vector<std::vector<Neuron>> network;
     std::vector<std::vector<std::vector<float>>> synapse;
     std::vector<std::vector<float>> neu_out;
+    std::vector<std::vector<float>> input;
+    std::vector<std::vector<float>> output;
 
     void add_layer(LayerType type, int number_of_neurons, FunctionType af, float b);
 
@@ -39,11 +41,14 @@ public:
     Matrix through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af);
 
     void
-    train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer, int epochs,
+    train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, bool normalisation, int epochs,
           float test_data_per, float train_speed);
 
 
 private:
+    void process_data(std::vector<std::vector<float>> input_data,
+                      std::vector<std::vector<float>> output_data, bool norm);
+
     static Matrix multiply(const Matrix &weights, const Matrix &input);
 
     void create_synapse();
@@ -54,7 +59,7 @@ private:
 
     void clear_weights();
 
-    static Matrix convert(const std::vector<float>& inp);
+    static Matrix convert(const std::vector<float> &inp);
 
     Matrix collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed);
 };

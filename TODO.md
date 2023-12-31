@@ -10,11 +10,11 @@ add the CORE
     
 normal network display
 
-////////////////////////////////////UPDATE
-to check
+redo train method
+
 ***********
-add layer
-saving/reading
+add layer ---- done
+saving/reading ---- done
 normalising data
 documentation
 forward

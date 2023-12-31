@@ -1,6 +1,6 @@
 #include <cmath>
 #include "Utils.h"
-
+#include "Neurons.h"
 
 namespace Derivatives {
 
@@ -27,45 +27,16 @@ namespace Derivatives {
 }
 
 
-
-
-void Data_Worker::readDataset(const std::string &filename, std::vector<std::vector<std::vector<float>>> &input_data,
-                             std::vector<std::vector<float>> &output_data) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        throw std::runtime_error("Unable to open dataset file");
-    }
-
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
-        std::vector<std::vector<float>> input_row;
-        float value;
-
-        while (iss >> value) {
-            input_row.push_back({value});
-        }
-
-        if (!input_row.empty()) {
-            float output_value = input_row.back().front();
-            input_row.pop_back();
-            std::vector<float> output_vector = {output_value};
-            output_data.push_back(output_vector);
-        }
-
-        input_data.push_back(input_row);
-    }
-}
-
-void Data_Worker::normalize_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
-                                   std::vector<std::vector<float>> &output_data) {
+static std::vector<std::vector<std::vector<float>>> normalize_dataset(
+        std::vector<std::vector<float>> &input_data,
+        std::vector<std::vector<float>> &output_data) {
 
     std::vector<float> all_input_values;
     std::vector<float> all_output_values;
 
     for (const auto &input_row: input_data) {
         for (const auto &input: input_row) {
-            all_input_values.insert(all_input_values.end(), input.begin(), input.end());
+            all_input_values.push_back(input);
         }
     }
 
@@ -74,15 +45,13 @@ void Data_Worker::normalize_dataset(std::vector<std::vector<std::vector<float>>>
 
     for (auto &input_row: input_data) {
         for (auto &input: input_row) {
-            for (float &val: input) {
-                val = (val - min_val) / (max_val - min_val);
-            }
+            input = (input - min_val) / (max_val - min_val);
         }
     }
 
-    for (const auto &input_row: input_data) {
-        for (const auto &input: input_row) {
-            all_output_values.insert(all_output_values.end(), input.begin(), input.end());
+    for (const auto &output_row: output_data) {
+        for (const auto &output: output_row) {
+            all_output_values.push_back(output);
         }
     }
 
@@ -90,34 +59,19 @@ void Data_Worker::normalize_dataset(std::vector<std::vector<std::vector<float>>>
     float max_va = *std::max_element(all_output_values.begin(), all_output_values.end());
 
     for (auto &output_row: output_data) {
-        for (float &val: output_row) {
+        for (auto &val: output_row) {
             val = (val - min_va) / (max_va - min_va);
         }
     }
 
-
-//    std::cout << "Normalized input data:" << std::endl;
-//    for (const auto &input_row : input_data) {
-//        for (const auto &input : input_row) {
-//            for (float val : input) {
-//                std::cout << val << " ";
-//            }
-//            std::cout << "| ";
-//        }
-//        std::cout << std::endl;
-//    }
-//
-//    std::cout << "Normalized output data:" << std::endl;
-//    for (const auto &output_row : output_data) {
-//        for (float val : output_row) {
-//            std::cout << val << " ";
-//        }
-//        std::cout << std::endl;
-//    }
+    std::vector<std::vector<std::vector<float>>> ret = {};
+    ret.push_back(input_data);
+    ret.push_back(output_data);
+    return ret;
 }
 
 void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
-                                 std::vector<std::vector<float>> &output_data) {
+                                  std::vector<std::vector<float>> &output_data) {
     std::vector<std::pair<std::vector<std::vector<float>>, std::vector<float>>> combined_data;
     for (size_t i = 0; i < input_data.size(); ++i) {
         combined_data.push_back({input_data[i], output_data[i]});
@@ -152,5 +106,18 @@ void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &
 //        input_data[i] = combined_data[i].first;
 //        output_data[i] = combined_data[i].second;
 //    }
+}
+
+void Data_Worker::check_data(std::vector<std::vector<float>> input_data,
+                             std::vector<std::vector<float>> output_data,
+                             std::vector<std::vector<Neuron>> net) {
+    for (int i = 0; i < input_data.size(); i++) {
+        if (input_data[i].size() != net[0].size()) {
+            throw std::invalid_argument("The number of neurons should match the number of elements in the input data.");
+        } else if (output_data[i].size() != net[net.size()-1].size()) {
+            throw std::invalid_argument(
+                    "The number of neurons in the output layer should match the number of elements in the output data.");
+        }
+    }
 }
 
