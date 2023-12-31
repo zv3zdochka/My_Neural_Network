@@ -4,35 +4,35 @@
 #include <vector>
 #include <fstream>
 #include <filesystem>
-#include "DataFunc.h"
+#include "Utils.h"
 
 
 int main() {
     std::filesystem::current_path("..");
 
     Network net;
-    net.add_layer(LayerType::input, 2, FunctionType::silu, 0.0f);
-    net.add_layer(LayerType::hidden, 4, FunctionType::sigmoid, 0.0f);
-    net.add_layer(LayerType::output, 2, FunctionType::tanh, 0.0f);
+    net.add_layer(LayerType::input, 2, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::hidden, 4, FunctionType::silu, 0.0f);
+    net.add_layer(LayerType::output, 2, FunctionType::sigmoid, 0.0f);
 
     net.build();
     net.show_network();
-    net.save("base.json");
-    std::vector<std::vector<std::vector<float>>> input_data = {{{1.0f}, {2.0f}}, {{3.0f}, {4.0f}}};
-    std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
-
-    const int epochs = 1;
-
-//    DataLoader::readDataset("fruits_dataset.txt", input_data, output_data);
-//    DataLoader::normalize_dataset(input_data, output_data);
-
-    net.train(input_data, output_data, epochs, 1, 0.02);
-
-
-
-    //std::cout << "--------------------------------" << std::endl;
+    //net.save("base.json");
+//    std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
+//    std::vector<std::vector<float>> output_data = {{1.3f, 9.4f}, {7.2f, 8.4f}};
+//
+//    const int epochs = 1;
+//
+////    DataLoader::readDataset("fruits_dataset.txt", input_data, output_data);
+////    DataLoader::normalize_dataset(input_data, output_data);
+//
+//    net.train(input_data, output_data, epochs, 1, 0.02);
 
 
+
+//    std::cout << "--------------------------------" << std::endl;
+//
+//
 //    Network loadedNetwork("base.json");
 //
 //    // Display the loaded network

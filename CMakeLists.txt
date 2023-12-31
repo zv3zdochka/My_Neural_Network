@@ -19,12 +19,8 @@ add_executable(My_own_Neural_Network
         main.cpp
         json.h
 
-        Activation_derivatives.h
-        Activation_derivatives.cpp
-        DataFunc.cpp
-        DataFunc.h
-        Dataset.cpp
-        Dataset.h
+        Utils.cpp
+        Utils.h
 
 )
 

@@ -41,9 +41,11 @@ public:
     void
     train(std::vector<std::vector<std::vector<float>>> data, const std::vector<std::vector<float>> &answer, int epochs,
           float test_data_per, float train_speed);
-    static Matrix multiply(const Matrix &weights, const Matrix &input);
+
 
 private:
+    static Matrix multiply(const Matrix &weights, const Matrix &input);
+
     void create_synapse();
 
     void show_weights();

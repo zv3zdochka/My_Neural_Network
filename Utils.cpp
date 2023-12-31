@@ -1,7 +1,35 @@
-#include "DataFunc.h"
+#include <cmath>
+#include "Utils.h"
 
 
-void DataLoader::readDataset(const std::string &filename, std::vector<std::vector<std::vector<float>>> &input_data,
+namespace Derivatives {
+
+    float sigmoid_derivative(float x) {
+        float exp_x = std::exp(x);
+        return static_cast<float>(exp_x / std::pow(exp_x + 1.0f, 2));
+    }
+
+    float fast_sigmoid_derivative(float x) {
+        return static_cast<float>(1.0f / (std::pow(1.0f + std::abs(x), 2)));
+    }
+
+
+    float silu_derivative(float x) {
+        float exp_x = std::exp(x);
+        return static_cast<float>((std::exp(2 * x) + exp_x + x * exp_x) / std::pow(exp_x + 1.0f, 2));
+    }
+
+    float tanh_derivative(float x) {
+        float exp_2x = std::exp(2 * x);
+        return static_cast<float>((4 * exp_2x) / std::pow(exp_2x, 2));
+    }
+
+}
+
+
+
+
+void Data_Worker::readDataset(const std::string &filename, std::vector<std::vector<std::vector<float>>> &input_data,
                              std::vector<std::vector<float>> &output_data) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -29,7 +57,7 @@ void DataLoader::readDataset(const std::string &filename, std::vector<std::vecto
     }
 }
 
-void DataLoader::normalize_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
+void Data_Worker::normalize_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                    std::vector<std::vector<float>> &output_data) {
 
     std::vector<float> all_input_values;
@@ -88,7 +116,7 @@ void DataLoader::normalize_dataset(std::vector<std::vector<std::vector<float>>> 
 //    }
 }
 
-void DataLoader::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
+void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                  std::vector<std::vector<float>> &output_data) {
     std::vector<std::pair<std::vector<std::vector<float>>, std::vector<float>>> combined_data;
     for (size_t i = 0; i < input_data.size(); ++i) {
@@ -125,3 +153,4 @@ void DataLoader::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &i
 //        output_data[i] = combined_data[i].second;
 //    }
 }
+
