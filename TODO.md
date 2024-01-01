@@ -1,27 +1,23 @@
+-----------------dataset
 add randoming dataset(shuffle) through epoch
-
 add dataset spliting
 
-add clock to count strings in project -> install choco -> choco install cloc
 
-add readme - check readme 
-
+-------------------global
 add the CORE
-    
-normal network display
-
 redo train method
 
-***********
-add layer ---- done
-saving/reading ---- done
+
+-----------------code
+add readme - check readme
+add documentations to new files
+normal network display
+
+
+------------------to check
 normalising data
-documentation
 forward
 backward
 errors
 weights update
-dataset spliting
-functions
-**************
-сделать в show network чтобы печатались не веса нейросети, а просто ее структура 
+derivates 
