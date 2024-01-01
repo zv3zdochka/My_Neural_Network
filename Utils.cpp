@@ -26,16 +26,6 @@ namespace Derivatives {
 
 }
 
-void print_data(const std::vector<std::vector<float>> &data) {
-    for (const auto &row: data) {
-        for (const auto &val: row) {
-            std::cout << val << ' ';
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-
 
 void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                   std::vector<std::vector<float>> &output_data) {
@@ -47,34 +37,12 @@ void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &
     auto rng = std::default_random_engine{};
     std::shuffle(std::begin(combined_data), std::end(combined_data), rng);
 
-
-    std::cout << "Shuffled input data:" << std::endl;
-    for (const auto &combined: combined_data) {
-        for (const auto &input_row: combined.first) {
-            for (const auto &input: input_row) {
-                std::cout << input;
-
-                std::cout << "| ";
-            }
-            std::cout << "    ";
-        }
-        std::cout << std::endl;
-    }
-
-    std::cout << "Shuffled output data:" << std::endl;
-    for (const auto &combined: combined_data) {
-        for (float val: combined.second) {
-            std::cout << val << " ";
-        }
-        std::cout << "    ";
-    }
-    std::cout << std::endl;
-
     for (size_t i = 0; i < combined_data.size(); ++i) {
         input_data[i] = combined_data[i].first;
         output_data[i] = combined_data[i].second;
     }
 }
+
 
 void Data_Worker::check_data(std::vector<std::vector<float>> input_data,
                              std::vector<std::vector<float>> output_data,
@@ -200,22 +168,34 @@ std::vector<std::vector<float>> Data_Worker::quantileNormalization(std::vector<s
 }
 
 std::vector<std::vector<std::vector<float>>>
-Data_Worker::call(Normalisation type, const std::vector<std::vector<float>>& inp, const std::vector<std::vector<float>>& out) {
+Data_Worker::call(Normalisation type, const std::vector<std::vector<float>> &inp,
+                  const std::vector<std::vector<float>> &out) {
+    std::vector<std::vector<std::vector<float>>> ret = {};
     switch (type) {
         case Normalisation::min_max_normalisation: {
-            return {min_max_normalisation(inp), min_max_normalisation(out)};
+            ret.push_back(min_max_normalisation(inp));
+            ret.push_back(min_max_normalisation(out));
+            return ret;
         }
         case Normalisation::z_normalisation: {
-            return {zScoreNormalization(inp), zScoreNormalization(out)};
+            ret.push_back(zScoreNormalization(inp));
+            ret.push_back(zScoreNormalization(out));
+            return ret;
         }
         case Normalisation::quantile_normalisation: {
-            return {quantileNormalization(inp), quantileNormalization(out)};
+            ret.push_back(quantileNormalization(inp));
+            ret.push_back(quantileNormalization(out));
+            return ret;
         }
         case Normalisation::max_abs_normalisation: {
-            return {maxAbsNormalization(inp), maxAbsNormalization(out)};
+            ret.push_back(maxAbsNormalization(inp));
+            ret.push_back(maxAbsNormalization(out));
+            return ret;
         }
         case Normalisation::without_normalisation: {
-            return {inp, out};
+            ret.push_back(inp);
+            ret.push_back(out);
+            return ret;
         }
 
     }

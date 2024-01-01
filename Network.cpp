@@ -177,7 +177,7 @@ void Network::train(const std::vector<std::vector<float>>& data, const std::vect
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
-
+    return;
     for (int epoch = 0; epoch < epochs; ++epoch) {
         int data_ind = -1;
         for (auto &j: data) {
@@ -409,5 +409,26 @@ Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<
 
 void Network::process_data(std::vector<std::vector<float>> input_data, std::vector<std::vector<float>> output_data, Normalisation norm) {
     Data_Worker::check_data(input_data, output_data, network);
-    Data_Worker::call()
+    std::vector<std::vector<std::vector<float>>> data = Data_Worker::call(norm, input_data, output_data);
+    input = data[0];
+    output = data[1];
+    std::cout << "data:" << std::endl;
+    for (int i = 0; i < input.size(); i++){
+        for (int j = 0; j < input[i].size(); j++){
+            std::cout << input[i][j] << " ";
+        }
+        std::cout << std::endl;
+
+    }
+
+    std::cout << "datas" << std::endl;
+    for (int i = 0; i < output.size(); i++){
+        for (int j = 0; j < output[i].size(); j++){
+            std::cout << output[i][j] << " ";
+        }
+        std::cout << std::endl;
+
+    }
+
+
 }
