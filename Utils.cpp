@@ -25,9 +25,10 @@ namespace Derivatives {
     }
 
 }
-void print_data(const std::vector<std::vector<float>>& data) {
-    for (const auto& row : data) {
-        for (const auto& val : row) {
+
+void print_data(const std::vector<std::vector<float>> &data) {
+    for (const auto &row: data) {
+        for (const auto &val: row) {
             std::cout << val << ' ';
         }
         std::cout << std::endl;
@@ -43,14 +44,14 @@ void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &
         combined_data.push_back({input_data[i], output_data[i]});
     }
 
-    auto rng = std::default_random_engine {};
+    auto rng = std::default_random_engine{};
     std::shuffle(std::begin(combined_data), std::end(combined_data), rng);
 
 
     std::cout << "Shuffled input data:" << std::endl;
-    for (const auto &combined : combined_data) {
-        for (const auto &input_row : combined.first) {
-            for (const auto &input : input_row) {
+    for (const auto &combined: combined_data) {
+        for (const auto &input_row: combined.first) {
+            for (const auto &input: input_row) {
                 std::cout << input;
 
                 std::cout << "| ";
@@ -61,8 +62,8 @@ void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &
     }
 
     std::cout << "Shuffled output data:" << std::endl;
-    for (const auto &combined : combined_data) {
-        for (float val : combined.second) {
+    for (const auto &combined: combined_data) {
+        for (float val: combined.second) {
             std::cout << val << " ";
         }
         std::cout << "    ";
@@ -81,7 +82,7 @@ void Data_Worker::check_data(std::vector<std::vector<float>> input_data,
     for (int i = 0; i < input_data.size(); i++) {
         if (input_data[i].size() != net[0].size()) {
             throw std::invalid_argument("The number of neurons should match the number of elements in the input data.");
-        } else if (output_data[i].size() != net[net.size()-1].size()) {
+        } else if (output_data[i].size() != net[net.size() - 1].size()) {
             throw std::invalid_argument(
                     "The number of neurons in the output layer should match the number of elements in the output data.");
         }
@@ -94,8 +95,8 @@ std::vector<std::vector<float>> Data_Worker::min_max_normalisation(
     std::vector<float> all_input_values;
     std::vector<float> all_output_values;
 
-    for (const auto &input_row : data) {
-        for (const auto &input : input_row) {
+    for (const auto &input_row: data) {
+        for (const auto &input: input_row) {
             all_input_values.push_back(input);
         }
     }
@@ -104,11 +105,93 @@ std::vector<std::vector<float>> Data_Worker::min_max_normalisation(
     float max_val = *std::max_element(all_input_values.begin(), all_input_values.end());
     min_val /= 1.01;
     max_val *= 1.01;
-    for (auto &input_row : data) {
-        for (auto &input : input_row) {
+    for (auto &input_row: data) {
+        for (auto &input: input_row) {
             input = (input - min_val) / (max_val - min_val);
         }
     }
 
     return data;
+}
+
+std::vector<std::vector<float>> Data_Worker::zScoreNormalization(std::vector<std::vector<float>> data) {
+
+    int rows = data.size();
+    int cols = data[0].size();
+    std::vector<double> mean(cols, 0.0);
+    std::vector<double> stdDev(cols, 0.0);
+
+    for (int j = 0; j < cols; ++j) {
+        double sum = 0.0;
+        for (int i = 0; i < rows; ++i) {
+            sum += data[i][j];
+        }
+        mean[j] = sum / rows;
+
+        double squaredSum = 0.0;
+        for (int i = 0; i < rows; ++i) {
+            squaredSum += pow(data[i][j] - mean[j], 2);
+        }
+        stdDev[j] = sqrt(squaredSum / rows);
+    }
+
+
+    std::vector<std::vector<float>> normalizedData(rows, std::vector<float>(cols, 0.0));
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            normalizedData[i][j] = (data[i][j] - mean[j]) / stdDev[j];
+        }
+    }
+
+    return normalizedData;
+}
+
+std::vector<std::vector<float>> Data_Worker::maxAbsNormalization(std::vector<std::vector<float>> data) {
+    int rows = data.size();
+    int cols = data[0].size();
+
+    std::vector<float> maxAbsValues(cols, 0.0);
+
+    for (int j = 0; j < cols; ++j) {
+        double maxAbs = 0.0;
+        for (int i = 0; i < rows; ++i) {
+            double absVal = std::abs(data[i][j]);
+            if (absVal > maxAbs) {
+                maxAbs = absVal;
+            }
+        }
+        maxAbsValues[j] = maxAbs;
+    }
+    std::vector<std::vector<float>> normalizedData(rows, std::vector<float>(cols, 0.0));
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            normalizedData[i][j] = data[i][j] / maxAbsValues[j];
+        }
+    }
+
+    return normalizedData;
+}
+
+
+std::vector<std::vector<std::vector<float>>> Data_Worker::call(Normalisation type, std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out) {
+    switch (type) {
+        case Normalisation::min_max_normalisation{
+                    return { min_max_normalisation(inp), min_max_normalisation(out) };
+            }
+        case Normalisation::z_normalisation{
+                    return { zScoreNormalization(inp), zScoreNormalization(out) };
+            }
+        case Normalisation::quantile_normalisation{
+                    return
+            }
+        case Normalisation::max_abs_normalisation: {
+            return {maxAbsNormalization(inp), maxAbsNormalization(out)}
+        }
+        case Normalisation::without_normalisation{
+                    return { inp, out };
+            }
+
+    }
 }

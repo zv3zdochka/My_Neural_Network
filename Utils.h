@@ -57,18 +57,15 @@ enum class Normalisation {
 
 class Data_Worker {
 public:
-    /**
-     * @brief Normalize a dataset.
-     * @param input_data Input data to be normalized.
-     * @param output_data Output data to be normalized.
-     */
+
     static std::vector<std::vector<float>> min_max_normalisation(std::vector<std::vector<float>> data);
 
-    /**
-     * @brief Shuffle a dataset randomly.
-     * @param input_data Input data to be shuffled.
-     * @param output_data Output data to be shuffled.
-     */
+
+    static std::vector<std::vector<float>> zScoreNormalization(std::vector<std::vector<float>> data);
+
+    static std::vector<std::vector<float>> maxAbsNormalization(std::vector<std::vector<float>> data);
+
+
     static void shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                 std::vector<std::vector<float>> &output_data);
 
@@ -77,24 +74,6 @@ public:
                            std::vector<std::vector<Neuron>> net);
 
     std::vector<std::vector<std::vector<float>>>
-    call(Normalisation type, std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out) {
-        switch (type) {
-            case Normalisation::min_max_normalisation{
-                        return { min_max_normalisation(inp), min_max_normalisation(out) };
-                }
-            case Normalisation::z_normalisation{
-
-                }
-            case Normalisation::quantile_normalisation{
-
-                }
-            case Normalisation::max_abs_normalisation: {
-
-            }
-            case Normalisation::without_normalisation{
-
-                }
-
-        }
+    call(Normalisation type, std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out);
     }
 };
