@@ -41,7 +41,7 @@ void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &
                                   std::vector<std::vector<float>> &output_data) {
     std::vector<std::pair<std::vector<std::vector<float>>, std::vector<float>>> combined_data;
     for (size_t i = 0; i < input_data.size(); ++i) {
-        combined_data.push_back({input_data[i], output_data[i]});
+        combined_data.emplace_back(input_data[i], output_data[i]);
     }
 
     auto rng = std::default_random_engine{};
@@ -174,24 +174,49 @@ std::vector<std::vector<float>> Data_Worker::maxAbsNormalization(std::vector<std
     return normalizedData;
 }
 
+std::vector<std::vector<float>> Data_Worker::quantileNormalization(std::vector<std::vector<float>> data) {
+    int rows = data.size();
+    int cols = data[0].size();
 
-std::vector<std::vector<std::vector<float>>> Data_Worker::call(Normalisation type, std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out) {
-    switch (type) {
-        case Normalisation::min_max_normalisation{
-                    return { min_max_normalisation(inp), min_max_normalisation(out) };
-            }
-        case Normalisation::z_normalisation{
-                    return { zScoreNormalization(inp), zScoreNormalization(out) };
-            }
-        case Normalisation::quantile_normalisation{
-                    return
-            }
-        case Normalisation::max_abs_normalisation: {
-            return {maxAbsNormalization(inp), maxAbsNormalization(out)}
+    std::vector<std::vector<float>> normalizedData(rows, std::vector<float>(cols, 0.0));
+
+    std::vector<std::vector<float>> tempData = data;
+
+    for (int j = 0; j < cols; ++j) {
+        std::sort(tempData.begin(), tempData.end(), [j](const std::vector<float> &a, const std::vector<float> &b) {
+            return a[j] < b[j];
+        });
+
+        for (int i = 0; i < rows; ++i) {
+            normalizedData[i][j] = (i + 1.0) / rows;
         }
-        case Normalisation::without_normalisation{
-                    return { inp, out };
-            }
+
+        for (int i = 0; i < rows; ++i) {
+            data[i][j] = normalizedData[i][j];
+        }
+    }
+
+    return data;
+}
+
+std::vector<std::vector<std::vector<float>>>
+Data_Worker::call(Normalisation type, const std::vector<std::vector<float>>& inp, const std::vector<std::vector<float>>& out) {
+    switch (type) {
+        case Normalisation::min_max_normalisation: {
+            return {min_max_normalisation(inp), min_max_normalisation(out)};
+        }
+        case Normalisation::z_normalisation: {
+            return {zScoreNormalization(inp), zScoreNormalization(out)};
+        }
+        case Normalisation::quantile_normalisation: {
+            return {quantileNormalization(inp), quantileNormalization(out)};
+        }
+        case Normalisation::max_abs_normalisation: {
+            return {maxAbsNormalization(inp), maxAbsNormalization(out)};
+        }
+        case Normalisation::without_normalisation: {
+            return {inp, out};
+        }
 
     }
 }

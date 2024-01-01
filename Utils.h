@@ -60,11 +60,11 @@ public:
 
     static std::vector<std::vector<float>> min_max_normalisation(std::vector<std::vector<float>> data);
 
-
     static std::vector<std::vector<float>> zScoreNormalization(std::vector<std::vector<float>> data);
 
     static std::vector<std::vector<float>> maxAbsNormalization(std::vector<std::vector<float>> data);
 
+    static std::vector<std::vector<float>> quantileNormalization(std::vector<std::vector<float>> data);
 
     static void shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
                                 std::vector<std::vector<float>> &output_data);
@@ -73,7 +73,6 @@ public:
                            std::vector<std::vector<float>> output_data,
                            std::vector<std::vector<Neuron>> net);
 
-    std::vector<std::vector<std::vector<float>>>
-    call(Normalisation type, std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out);
-    }
-};
+    static std::vector<std::vector<std::vector<float>>>
+    call(Normalisation type, const std::vector<std::vector<float>>& inp, const std::vector<std::vector<float>>& out);
+    };
