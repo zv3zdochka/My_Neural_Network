@@ -3,6 +3,7 @@
 #include "Neurons.h"
 #include "Matrix.h"
 #include "Activations.h"
+#include "Utils.h"
 #include <vector>
 #include <string>
 #include <random>
@@ -41,13 +42,13 @@ public:
     Matrix through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af);
 
     void
-    train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, bool normalisation, int epochs,
+    train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, Normalisation normalisation, int epochs,
           float test_data_per, float train_speed);
 
 
 private:
     void process_data(std::vector<std::vector<float>> input_data,
-                      std::vector<std::vector<float>> output_data, bool norm);
+                      std::vector<std::vector<float>> output_data, Normalisation norm);
 
     static Matrix multiply(const Matrix &weights, const Matrix &input);
 

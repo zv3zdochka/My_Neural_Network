@@ -10,6 +10,20 @@
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
 #define NETWORK_SYNAPSE_NAME        "Synapse"
 
+//float call(FunctionType type, float arg) {
+//    switch (type) {
+//        case FunctionType::sigmoid:
+//            return activation::sigmoid(arg);
+//        case FunctionType::fast_sigmoid:
+//            return activation::fast_sigmoid(arg);
+//        case FunctionType::silu:
+//            return activation::silu(arg);
+//        case FunctionType::tanh:
+//            return activation::tanh(arg);
+//
+//    }
+//}
+
 Network::Network() = default;
 
 Network::Network(const char *filename) {
@@ -155,7 +169,7 @@ void Network::show_weights() {
 }
 
 
-void Network::train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, bool normalisation,
+void Network::train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, Normalisation normalisation,
                     int epochs, float test_data_per, float train_speed) {
 
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -393,14 +407,7 @@ Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<
     return Matrix(out);
 }
 
-void Network::process_data(std::vector<std::vector<float>> input_data, std::vector<std::vector<float>> output_data, bool norm) {
+void Network::process_data(std::vector<std::vector<float>> input_data, std::vector<std::vector<float>> output_data, Normalisation norm) {
     Data_Worker::check_data(input_data, output_data, network);
-//    if (norm) {
-//        std::vector<std::vector<std::vector<float>> norm_data = Data_Worker::min_max_normalisation(input_data, output_data);
-//
-//
-//    } else {
-//        input = input_data;
-//        output = output_data;
-//    }
+    Data_Worker::call()
 }

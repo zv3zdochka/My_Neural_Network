@@ -5,7 +5,7 @@
 #include <fstream>
 #include <filesystem>
 #include "Utils.h"
-#include "Utils.h"
+
 
 
 int main() {
@@ -25,8 +25,8 @@ int main() {
     const int epochs = 1;
 
     //Data_Worker::min_max_normalisation(input_data, output_data);
-    //net.train(input_data, output_data, true, epochs, 1, 0.02);
-    Data_Worker::shuffle_dataset()
+    net.train(input_data, output_data, Normalisation::min_max_normalisation, epochs, 1, 0.02);
+
 
 
 
