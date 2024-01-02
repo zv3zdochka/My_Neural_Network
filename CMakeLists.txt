@@ -21,6 +21,7 @@ add_executable(My_own_Neural_Network
 
         Utils.cpp
         Utils.h
+        Core.h
 
 )
 
