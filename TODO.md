@@ -1,5 +1,4 @@
 -----------------dataset
-add randoming dataset(shuffle) through epoch
 add dataset spliting
 fix all normalising without min max
 
@@ -21,3 +20,4 @@ backward
 errors
 weights update
 derivates 
+training

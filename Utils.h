@@ -66,9 +66,6 @@ public:
 
     static std::vector<std::vector<float>> quantileNormalization(std::vector<std::vector<float>> data);
 
-    static void shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
-                                std::vector<std::vector<float>> &output_data);
-
     static void check_data(std::vector<std::vector<float>> input_data,
                            std::vector<std::vector<float>> output_data,
                            std::vector<std::vector<Neuron>> net);

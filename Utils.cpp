@@ -27,22 +27,6 @@ namespace Derivatives {
 }
 
 
-void Data_Worker::shuffle_dataset(std::vector<std::vector<std::vector<float>>> &input_data,
-                                  std::vector<std::vector<float>> &output_data) {
-    std::vector<std::pair<std::vector<std::vector<float>>, std::vector<float>>> combined_data;
-    for (size_t i = 0; i < input_data.size(); ++i) {
-        combined_data.emplace_back(input_data[i], output_data[i]);
-    }
-
-    auto rng = std::default_random_engine{};
-    std::shuffle(std::begin(combined_data), std::end(combined_data), rng);
-
-    for (size_t i = 0; i < combined_data.size(); ++i) {
-        input_data[i] = combined_data[i].first;
-        output_data[i] = combined_data[i].second;
-    }
-}
-
 
 void Data_Worker::check_data(std::vector<std::vector<float>> input_data,
                              std::vector<std::vector<float>> output_data,

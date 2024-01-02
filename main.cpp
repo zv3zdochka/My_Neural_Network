@@ -19,6 +19,8 @@ int main() {
     net.build();
     net.show_network();
     //net.save("base.json");
+
+
     std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
     std::vector<std::vector<float>> output_data = {{3.4f, 5.7f}, {10.0f, 8.4f}};
 
