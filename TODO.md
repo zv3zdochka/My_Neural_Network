@@ -1,7 +1,7 @@
 -----------------dataset
 add randoming dataset(shuffle) through epoch
 add dataset spliting
-
+fix all normalising without min max
 
 -------------------global
 add the CORE

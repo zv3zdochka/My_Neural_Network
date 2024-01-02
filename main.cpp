@@ -24,8 +24,7 @@ int main() {
 
     const int epochs = 1;
 
-    //Data_Worker::min_max_normalisation(input_data, output_data);
-    net.train(input_data, output_data, Normalisation::z_normalisation, epochs, 1, 0.02);
+    net.train(input_data, output_data, Normalisation::min_max_normalisation, epochs, 1, 0.02);
 
 
 

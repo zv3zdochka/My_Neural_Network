@@ -412,23 +412,23 @@ void Network::process_data(std::vector<std::vector<float>> input_data, std::vect
     std::vector<std::vector<std::vector<float>>> data = Data_Worker::call(norm, input_data, output_data);
     input = data[0];
     output = data[1];
-    std::cout << "data:" << std::endl;
-    for (int i = 0; i < input.size(); i++){
-        for (int j = 0; j < input[i].size(); j++){
-            std::cout << input[i][j] << " ";
-        }
-        std::cout << std::endl;
-
-    }
-
-    std::cout << "datas" << std::endl;
-    for (int i = 0; i < output.size(); i++){
-        for (int j = 0; j < output[i].size(); j++){
-            std::cout << output[i][j] << " ";
-        }
-        std::cout << std::endl;
-
-    }
+//    std::cout << "data:" << std::endl;
+//    for (int i = 0; i < input.size(); i++){
+//        for (int j = 0; j < input[i].size(); j++){
+//            std::cout << input[i][j] << " ";
+//        }
+//        std::cout << std::endl;
+//
+//    }
+//
+//    std::cout << "datas" << std::endl;
+//    for (int i = 0; i < output.size(); i++){
+//        for (int j = 0; j < output[i].size(); j++){
+//            std::cout << output[i][j] << " ";
+//        }
+//        std::cout << std::endl;
+//
+//    }
 
 
 }
