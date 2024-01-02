@@ -1,6 +1,6 @@
 -----------------dataset
 add dataset spliting
-fix all normalising without min max
+fix all normalising without min max(printing in process)
 
 -------------------global
 add the CORE

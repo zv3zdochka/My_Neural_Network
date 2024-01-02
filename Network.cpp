@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include <iomanip>
 #include <cmath>
+#include <utility>
 
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
@@ -169,18 +170,19 @@ void Network::show_weights() {
 }
 
 
-void Network::train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, Normalisation normalisation,
-                    int epochs, float test_data_per, float train_speed) {
+void Network::train(const std::vector<std::vector<float>> &inputData, const std::vector<std::vector<float>> &outputData,
+                    Normalisation normalisation, int epochs, float test_data_per, float train_speed) {
 
     auto start_time = std::chrono::high_resolution_clock::now();
-    process_data(data,answer, normalisation);
+    process_data(inputData, outputData, normalisation, test_data_per);
+    std::vector<std::vector<std::vector<std::vector<float>>>> data;
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
     return;
     for (int epoch = 0; epoch < epochs; ++epoch) {
         int data_ind = -1;
-        for (auto &j: data) {
+        for (auto &j: inputData) {
             data_ind += 1;
             clear_weights();
             std::vector<std::vector<float>> demi_res;
@@ -231,13 +233,13 @@ void Network::train(const std::vector<std::vector<float>>& data, const std::vect
             std::vector<std::vector<float>> errors;
             std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec
 
-            if (answer[data_ind].size() >= 2) {
+            if (outputData[data_ind].size() >= 2) {
                 for (int len = 0; len < network[network.size() - 1].size(); len++) {
-                    errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+                    errors.push_back({outputData[data_ind][len] - network[network.size() - 1][len].weight});
                 }
             } else {
                 for (int len = 0; len < network[network.size() - 1].size() - 1; len++) {
-                    errors.push_back({answer[data_ind][len] - network[network.size() - 1][len].weight});
+                    errors.push_back({outputData[data_ind][len] - network[network.size() - 1][len].weight});
 
                 }
             }
@@ -282,22 +284,21 @@ void Network::train(const std::vector<std::vector<float>>& data, const std::vect
             }
             // Updating of weights
             std::reverse(d_synapse.begin(), d_synapse.end());
-            for (int si = 0; si < d_synapse.size(); si++){
+            for (int si = 0; si < d_synapse.size(); si++) {
 
 
-                if (!std::isnan(d_synapse[si][0][0])){
+                if (!std::isnan(d_synapse[si][0][0])) {
                     Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
                     Matrix(d_synapse[si]).showMatrix("UPD");
                     (Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
                     synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
-                } else{
+                } else {
                     continue;
                 }
 
 
             }
             show_synapse();
-
 
 
             neu_out.clear();
@@ -371,7 +372,7 @@ Matrix Network::multiply(const Matrix &weights, const Matrix &input) {
     return res;
 }
 
-Matrix Network::convert(const std::vector<float>& inp) {
+Matrix Network::convert(const std::vector<float> &inp) {
     std::vector<std::vector<float>> out;
     for (float lene: inp) {
         out.push_back({lene});
@@ -380,7 +381,8 @@ Matrix Network::convert(const std::vector<float>& inp) {
     return Matrix(out);
 }
 
-Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
+Matrix
+Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
 
@@ -407,28 +409,37 @@ Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<
     return Matrix(out);
 }
 
-void Network::process_data(std::vector<std::vector<float>> input_data, std::vector<std::vector<float>> output_data, Normalisation norm) {
-    Data_Worker::check_data(input_data, output_data, network);
-    std::vector<std::vector<std::vector<float>>> data = Data_Worker::call(norm, input_data, output_data);
-    input = data[0];
-    output = data[1];
-//    std::cout << "data:" << std::endl;
-//    for (int i = 0; i < input.size(); i++){
-//        for (int j = 0; j < input[i].size(); j++){
-//            std::cout << input[i][j] << " ";
-//        }
-//        std::cout << std::endl;
-//
-//    }
-//
-//    std::cout << "datas" << std::endl;
-//    for (int i = 0; i < output.size(); i++){
-//        for (int j = 0; j < output[i].size(); j++){
-//            std::cout << output[i][j] << " ";
-//        }
-//        std::cout << std::endl;
-//
-//    }
+void Network::process_data(std::vector<std::vector<float>> input_t, std::vector<std::vector<float>> output_t,
+                           Normalisation norm, float spliting) {
+    Data_Worker::check_data(input_t, output_t, network);
+    std::vector<std::vector<std::vector<float>>> norm_data = Data_Worker::call(norm, input_t, output_t);
+    std::vector<std::vector<std::vector<float>>> shuf_data = Data_Worker::shuffle_data(norm_data[0], norm_data[1]);
+    std::vector<std::vector<std::vector<float>>> data = Data_Worker::split_data(shuf_data[0], shuf_data[1], spliting);
+
+    input_train = data[0];
+    output_train = data[1];
+    input_test = data[2];
+    output_test = data[3];
+
+
+    std::cout << "inp:" << std::endl;
+    for (int i = 0; i < input_train.size(); i++) {
+        for (int j = 0; j < input_train[i].size(); j++) {
+            std::cout << input_train[i][j] << " ";
+        }
+        std::cout << std::endl;
+
+    }
+
+    std::cout << "out" << std::endl;
+    for (int i = 0; i < output_train.size(); i++) {
+        for (int j = 0; j < output_train[i].size(); j++) {
+            std::cout << output_train[i][j] << " ";
+        }
+        std::cout << std::endl;
+
+    }
 
 
 }
+

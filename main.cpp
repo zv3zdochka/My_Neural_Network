@@ -21,12 +21,12 @@ int main() {
     //net.save("base.json");
 
 
-    std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}};
-    std::vector<std::vector<float>> output_data = {{3.4f, 5.7f}, {10.0f, 8.4f}};
+    std::vector<std::vector<float>> input_data = {{1.0f, 2.0f}, {3.0f, 4.0f}, {5.0f, 6.0f}, {7.0f, 8.0f}, {9.0f, 10.0f}};
+    std::vector<std::vector<float>> output_data = {{3.4f, 5.7f}, {10.0f, 8.4f}, {35.0f, 43.0f},{1.0f, 4.0f},{23.0f, 14.0f}};
 
     const int epochs = 1;
 
-    net.train(input_data, output_data, Normalisation::min_max_normalisation, epochs, 1, 0.02);
+    net.train(input_data, output_data, Normalisation::min_max_normalisation, epochs, 0.2, 0.02);
 
 
 

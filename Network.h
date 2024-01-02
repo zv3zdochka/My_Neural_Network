@@ -27,8 +27,11 @@ public:
     std::vector<std::vector<Neuron>> network;
     std::vector<std::vector<std::vector<float>>> synapse;
     std::vector<std::vector<float>> neu_out;
-    std::vector<std::vector<float>> input;
-    std::vector<std::vector<float>> output;
+
+    std::vector<std::vector<float>> input_train;
+    std::vector<std::vector<float>> output_train;
+    std::vector<std::vector<float>> input_test;
+    std::vector<std::vector<float>> output_test;
 
     void add_layer(LayerType type, int number_of_neurons, FunctionType af, float b);
 
@@ -42,13 +45,13 @@ public:
     Matrix through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af);
 
     void
-    train(const std::vector<std::vector<float>>& data, const std::vector<std::vector<float>> &answer, Normalisation normalisation, int epochs,
+    train(const std::vector<std::vector<float>>& inputData, const std::vector<std::vector<float>> &outputData, Normalisation normalisation, int epochs,
           float test_data_per, float train_speed);
 
 
 private:
-    void process_data(std::vector<std::vector<float>> input_data,
-                      std::vector<std::vector<float>> output_data, Normalisation norm);
+    void process_data(std::vector<std::vector<float>> input_train,
+                      std::vector<std::vector<float>> output_train, Normalisation norm, float spliting);
 
     static Matrix multiply(const Matrix &weights, const Matrix &input);
 
@@ -62,6 +65,8 @@ private:
 
     static Matrix convert(const std::vector<float> &inp);
 
+    std::vector<std::vector<std::vector<float>>> split_data(std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out, float tpd) ;
     Matrix collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed);
+
 };
 

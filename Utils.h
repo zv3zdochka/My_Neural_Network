@@ -58,6 +58,9 @@ enum class Normalisation {
 class Data_Worker {
 public:
 
+    static std::vector<std::vector<std::vector<float>>>
+    shuffle_data(std::vector<std::vector<float>> input_d, std::vector<std::vector<float>> out_d);
+
     static std::vector<std::vector<float>> min_max_normalisation(std::vector<std::vector<float>> data);
 
     static std::vector<std::vector<float>> zScoreNormalization(std::vector<std::vector<float>> data);
@@ -71,5 +74,8 @@ public:
                            std::vector<std::vector<Neuron>> net);
 
     static std::vector<std::vector<std::vector<float>>>
-    call(Normalisation type, const std::vector<std::vector<float>>& inp, const std::vector<std::vector<float>>& out);
-    };
+    call(Normalisation type, const std::vector<std::vector<float>> &inp, const std::vector<std::vector<float>> &out);
+
+    static std::vector<std::vector<std::vector<float>>>
+    split_data(std::vector<std::vector<float>> input_d, std::vector<std::vector<float>> out_d, float coe);
+};

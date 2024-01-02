@@ -27,7 +27,6 @@ namespace Derivatives {
 }
 
 
-
 void Data_Worker::check_data(std::vector<std::vector<float>> input_data,
                              std::vector<std::vector<float>> output_data,
                              std::vector<std::vector<Neuron>> net) {
@@ -184,3 +183,53 @@ Data_Worker::call(Normalisation type, const std::vector<std::vector<float>> &inp
 
     }
 }
+
+std::vector<std::vector<std::vector<float>>>
+Data_Worker::shuffle_data(std::vector<std::vector<float>> input_d, std::vector<std::vector<float>> out_d) {
+    std::vector<std::vector<std::vector<float>>> data = {};
+    for (int i = 0; i < input_d.size(); i++) {
+        std::vector<std::vector<float>> de_data = {};
+        de_data.push_back(input_d[i]);
+        de_data.push_back(out_d[i]);
+        data.push_back(de_data);
+    }
+    auto rd = std::random_device{};
+    auto rng = std::default_random_engine{rd()};
+    std::shuffle(std::begin(data), std::end(data), rng);
+    std::vector<std::vector<float>> input_u;
+    std::vector<std::vector<float>> out_u;
+    for (auto &j: data) {
+        input_u.push_back(j[0]);
+        out_u.push_back(j[1]);
+    }
+    return {input_u, out_u};
+}
+
+std::vector<std::vector<std::vector<float>>>
+Data_Worker::split_data(std::vector<std::vector<float>> input_d, std::vector<std::vector<float>> out_d, float coe) {
+    int split_size = input_d.size() * coe;
+    std::cout << split_size << std::endl;
+    std::vector<std::vector<std::vector<float>>> ret_data;
+
+    std::vector<std::vector<float>> inp_train;
+    std::vector<std::vector<float>> out_train;
+    std::vector<std::vector<float>> inp_test;
+    std::vector<std::vector<float>> out_test;
+
+    for (int i = 0; i < input_d.size(); i++) {
+        if (i < split_size) {
+            inp_test.push_back(input_d[i]);
+            out_test.push_back(out_d[i]);
+
+        } else {
+            inp_train.push_back(input_d[i]);
+            out_train.push_back(out_d[i]);
+        }
+    }
+    ret_data.push_back(inp_train);
+    ret_data.push_back(out_train);
+    ret_data.push_back(inp_test);
+    ret_data.push_back(out_test);
+    return ret_data;
+}
+
