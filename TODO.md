@@ -1,5 +1,5 @@
 -----------------dataset
-add dataset spliting
+
 fix all normalising without min max(printing in process)
 
 -------------------global
@@ -15,6 +15,7 @@ normal network display
 
 ------------------to check
 normalising data
+dataset spliting
 forward
 backward
 errors

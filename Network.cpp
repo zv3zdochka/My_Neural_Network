@@ -421,24 +421,24 @@ void Network::process_data(std::vector<std::vector<float>> input_t, std::vector<
     input_test = data[2];
     output_test = data[3];
 
-
-    std::cout << "inp:" << std::endl;
-    for (int i = 0; i < input_train.size(); i++) {
-        for (int j = 0; j < input_train[i].size(); j++) {
-            std::cout << input_train[i][j] << " ";
-        }
-        std::cout << std::endl;
-
-    }
-
-    std::cout << "out" << std::endl;
-    for (int i = 0; i < output_train.size(); i++) {
-        for (int j = 0; j < output_train[i].size(); j++) {
-            std::cout << output_train[i][j] << " ";
-        }
-        std::cout << std::endl;
-
-    }
+//
+//    std::cout << "inp:" << std::endl;
+//    for (int i = 0; i < input_train.size(); i++) {
+//        for (int j = 0; j < input_train[i].size(); j++) {
+//            std::cout << input_train[i][j] << " ";
+//        }
+//        std::cout << std::endl;
+//
+//    }
+//
+//    std::cout << "out" << std::endl;
+//    for (int i = 0; i < output_train.size(); i++) {
+//        for (int j = 0; j < output_train[i].size(); j++) {
+//            std::cout << output_train[i][j] << " ";
+//        }
+//        std::cout << std::endl;
+//
+//    }
 
 
 }
