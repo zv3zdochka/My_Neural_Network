@@ -16,14 +16,15 @@ add_executable(My_own_Neural_Network
         Network/Matrix.h
         Network/Matrix.cpp
 
-        main.cpp
-        Network/json.h
-
         Network/Utils.cpp
         Network/Utils.h
+
         Core.h
+        Network/json.h
+
+        main.cpp
 
 )
 
-add_executable(try try.cpp)
-add_executable(create_dataset create_dataset.cpp)
+add_executable(create_dataset
+        dataset.cpp)
