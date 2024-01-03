@@ -1,11 +1,5 @@
-#include "Network.h"
-#include "Activations.h"
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <filesystem>
-#include "Utils.h"
 
+#include "Core.h"
 
 
 int main() {

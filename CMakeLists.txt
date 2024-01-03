@@ -4,26 +4,27 @@ project(My_own_Neural_Network)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(My_own_Neural_Network
-        Neurons.cpp
-        Neurons.h
+        Network/Neurons.cpp
+        Network/Neurons.h
 
-        Activations.h
-        Activations.cpp
+        Network/Activations.h
+        Network/Activations.cpp
 
-        Network.h
-        Network.cpp
+        Network/Network.h
+        Network/Network.cpp
 
-        Matrix.h
-        Matrix.cpp
+        Network/Matrix.h
+        Network/Matrix.cpp
+
+        Network/Utils.cpp
+        Network/Utils.h
+
+        Core.h
+        Network/json.h
 
         main.cpp
-        json.h
-
-        Utils.cpp
-        Utils.h
-        Core.h
 
 )
 
-add_executable(try try.cpp)
-add_executable(create_dataset create_dataset.cpp)
+add_executable(create_dataset
+        dataset.cpp)
