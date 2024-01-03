@@ -7,23 +7,12 @@
 #include <cmath>
 #include <utility>
 
+
 #define NETWORK_NUM_NEURONS_NAME    "Num_of_neurons"
 #define NETWORK_ACTIVATION_FN_NAME  "Activation_function"
 #define NETWORK_SYNAPSE_NAME        "Synapse"
 
-//float call(FunctionType type, float arg) {
-//    switch (type) {
-//        case FunctionType::sigmoid:
-//            return activation::sigmoid(arg);
-//        case FunctionType::fast_sigmoid:
-//            return activation::fast_sigmoid(arg);
-//        case FunctionType::silu:
-//            return activation::silu(arg);
-//        case FunctionType::tanh:
-//            return activation::tanh(arg);
-//
-//    }
-//}
+
 
 Network::Network() = default;
 
@@ -179,7 +168,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
     std::cout << "-----------------------" << std::endl;
     std::cout << "    START TRAINING" << std::endl;
     std::cout << "-----------------------" << std::endl;
-    return;
+
     for (int epoch = 0; epoch < epochs; ++epoch) {
         int data_ind = -1;
         for (auto &j: inputData) {
@@ -199,7 +188,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
                     }
                 }
 
-                //show_weights();
+                show_weights();
 
                 size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
@@ -223,12 +212,12 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
                 }
 
 
-                //show_weights();
+                show_weights();
 
             }
 
 
-
+            return;
             // Back
             std::vector<std::vector<float>> errors;
             std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec

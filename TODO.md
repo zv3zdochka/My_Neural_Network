@@ -3,7 +3,6 @@
 fix all normalising without min max(printing in process) --- dima
 
 -------------------global
-add the CORE
 redo train method
 
 
@@ -22,3 +21,5 @@ errors
 weights update
 derivates 
 training
+-----------------------end
+fix clion wants

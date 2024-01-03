@@ -208,7 +208,6 @@ Data_Worker::shuffle_data(std::vector<std::vector<float>> input_d, std::vector<s
 std::vector<std::vector<std::vector<float>>>
 Data_Worker::split_data(std::vector<std::vector<float>> input_d, std::vector<std::vector<float>> out_d, float coe) {
     int split_size = input_d.size() * coe;
-    std::cout << split_size << std::endl;
     std::vector<std::vector<std::vector<float>>> ret_data;
 
     std::vector<std::vector<float>> inp_train;
