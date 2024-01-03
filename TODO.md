@@ -1,21 +1,21 @@
 -----------------dataset
 
-fix all normalising without min max(printing in process)
+fix all normalising without min max(printing in process) --- dima
 
 -------------------global
 add the CORE
 redo train method
 
 
------------------code
+-----------------code 
 add readme - check readme
 add documentations to new files
 normal network display
 
 
 ------------------to check
-normalising data
-dataset spliting
+normalising data ---dima
+dataset spliting ---dima
 forward
 backward
 errors
