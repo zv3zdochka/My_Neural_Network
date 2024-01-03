@@ -454,3 +454,9 @@ cython_debug/
 !/.gitignore
 !/base.json
 /base.json
+!/try.cpp
+!/try.cpp
+!/train.cpp
+!/matrix_test.cpp
+!/create_dataset.cpp
+!/fruits_dataset.txt

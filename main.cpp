@@ -1,10 +1,10 @@
-#include "Network.h"
-#include "Activations.h"
+#include "Network/Network.h"
+#include "Network/Activations.h"
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <filesystem>
-#include "Utils.h"
+#include "Network/Utils.h"
 
 
 

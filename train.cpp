@@ -1,6 +1,6 @@
-#include "Neurons.h"
+#include "Network/Neurons.h"
 #include <vector>
-#include "Activations.h"
+#include "Network/Activations.h"
 #include <iostream>
 #include <random>
 
