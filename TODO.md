@@ -15,7 +15,7 @@ normal network display
 ------------------to check
 normalising data ---dima
 dataset spliting ---dima
-forward
+
 backward
 errors
 weights update
@@ -23,3 +23,5 @@ derivates
 training
 -----------------------end
 fix clion wants
+
+
