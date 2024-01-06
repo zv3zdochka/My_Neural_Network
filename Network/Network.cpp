@@ -96,16 +96,14 @@ void Network::create_synapse() {
                 synapse[i].emplace_back(std::move(demi_synapse));
             }
         } else {
+            std::vector<float> demi_synapse;
             for (size_t j = 0; j < network[i].size(); ++j) {
-                std::vector<float> demi_synapse;
+                float c_weight = dis2(gen2);
+                demi_synapse.push_back(c_weight);
 
-                for (size_t k = 0; k < network[i + 1].size(); ++k) {
-                    float c_weight = dis2(gen2);
-                    demi_synapse.push_back(c_weight);
-                }
-
-                synapse[i].emplace_back(std::move(demi_synapse));
             }
+            synapse[i].emplace_back(std::move(demi_synapse));
+
         }
     }
 }
@@ -225,13 +223,11 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
             }
             Matrix(errors).showMatrix("er");
             errors_by_lay.push_back(errors);
-            // here
-            errors = {{0.8f},
-                      {0.5f}};
+
 
             for (int lay = layers - 1; lay > 0; lay--) {
 
-                size_t k = network[lay - 1].size();
+                size_t k = network[lay].size();
 
                 if (k == 1) {
                     std::vector<std::vector<float>> semi = {{}};
@@ -250,7 +246,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
             }
             std::cout << "-----------------------" << std::endl;
-            std::cout << "    FINISH LAY" << std::endl;
+            std::cout << "    FINISH DATA" << std::endl;
             std::cout << "-----------------------" << std::endl;
             //weights update
 

@@ -1,0 +1,28 @@
+[
+    {
+        "Activation_function": "sigmoid",
+        "Num_of_neurons": 1,
+        "Synapse": [
+            [
+                0.7350345253944397
+            ],
+            [
+                0.924899160861969
+            ]
+        ]
+    },
+    {
+        "Activation_function": "sigmoid",
+        "Num_of_neurons": 2,
+        "Synapse": [
+            [
+                0.5804159045219421,
+                0.5507090091705322
+            ]
+        ]
+    },
+    {
+        "Activation_function": "sigmoid",
+        "Num_of_neurons": 1
+    }
+]
