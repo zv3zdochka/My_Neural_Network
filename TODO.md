@@ -23,5 +23,6 @@ derivates
 training
 -----------------------end
 fix clion wants
+прописать что если неправильное имя функции в base.json то он показывал где 
 
 

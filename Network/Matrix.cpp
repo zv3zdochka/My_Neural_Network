@@ -128,3 +128,24 @@ void Matrix::showMatrix(const std::string &name) {
     }
     std::cout << "-----------------------" << std::endl;
 }
+
+Matrix Matrix::calculate_errors() {
+    Matrix transposed = this->transpose();
+    Matrix result(rows, cols);
+    float totalSum = 0.0f;
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            totalSum += data[i][j];
+        }
+    }
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result[i][j] = data[i][j] / totalSum;
+        }
+    }
+
+    return result;
+}
+

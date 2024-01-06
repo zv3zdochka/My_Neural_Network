@@ -65,7 +65,6 @@ private:
 
     static Matrix convert(const std::vector<float> &inp);
 
-    std::vector<std::vector<std::vector<float>>> split_data(std::vector<std::vector<float>> inp, std::vector<std::vector<float>> out, float tpd) ;
     Matrix collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed);
 
 };

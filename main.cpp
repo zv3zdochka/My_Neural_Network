@@ -5,13 +5,15 @@
 int main() {
     std::filesystem::current_path("..");
 
-    Network net;
-    net.add_layer(LayerType::input, 2, FunctionType::silu, 0.0f);
-    net.add_layer(LayerType::hidden, 3, FunctionType::fast_sigmoid, 0.0f);
-    net.add_layer(LayerType::output, 2, FunctionType::tanh, 0.0f);
+//    Network net;
+//    net.add_layer(LayerType::input, 2, FunctionType::sigmoid, 0.0f);
+//    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
+//    net.add_layer(LayerType::output, 2, FunctionType::sigmoid, 0.0f);
+//    net.build();
+//    net.show_network();
+//    net.save("base.json");
 
-    net.build();
-    //Network net("base.json");
+    Network net("base.json");
     net.show_network();
     net.save("base.json");
 
