@@ -211,12 +211,10 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
                 }
 
 
-
-
             }
             // FORWARD WORKS PERFECT
 
-            
+
             show_weights();
             // Back
             std::vector<std::vector<float>> errors;
@@ -228,25 +226,26 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
             Matrix(errors).showMatrix("er");
             errors_by_lay.push_back(errors);
             // here
-            errors = {{0.8f}, {0.5f}};
+            errors = {{0.8f},
+                      {0.5f}};
 
-//            for (int lay = layers - 1; lay > 0; lay--) {
-//
-//                size_t k = network[lay - 1].size();
-//
-//                if (k == 1) {
-//                    std::vector<std::vector<float>> semi = {{}};
-//                    for (auto &h: synapse[lay - 1])
-//                        semi[0].push_back(h[0]);
-//
-//                    demi_res = multiply(Matrix(semi).transpose(), Matrix(errors)).getData();
-//                } else {
-//
-//                    demi_res = multiply(Matrix(synapse[lay - 1]).transpose(), Matrix(errors)).getData();
-//                }
-//                errors = demi_res;
-//                Matrix(demi_res).showMatrix("rerererer");
-//                errors_by_lay.push_back(demi_res);
+            for (int lay = layers - 1; lay > 0; lay--) {
+
+                size_t k = network[lay - 1].size();
+
+                if (k == 1) {
+                    std::vector<std::vector<float>> semi = {{}};
+                    for (auto &h: synapse[lay - 1])
+                        semi[0].push_back(h[0]);
+
+                    demi_res = multiply(Matrix(semi).calculate_errors(), Matrix(errors)).getData();
+                } else {
+
+                    demi_res = multiply(Matrix(synapse[lay - 1]).calculate_errors(), Matrix(errors)).getData();
+                }
+                errors = demi_res;
+                Matrix(demi_res).showMatrix("rerererer");
+                errors_by_lay.push_back(demi_res);
 
 
             }
@@ -265,7 +264,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
     }
-
+}
 
 
 Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af) {

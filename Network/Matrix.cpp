@@ -130,27 +130,24 @@ void Matrix::showMatrix(const std::string &name) {
 }
 
 Matrix Matrix::calculate_errors() {
-    std::vector<float> summa = {};
+    std::vector<float> summa(rows, 0.0f);
 
-    std::vector<std::vector<float>> matr = this->getData();
-    for (int i = 0; i < data.size(); i++) {
-        float mi_s = 0.0f;
-        for (int j = 0; j < data[i].size(); j++)
-            mi_s += matr[i][j];
-        summa.push_back(mi_s);
-    }
-    Matrix transposed = this->transpose();
-
-    std::vector<std::vector<float>> error_matrix = {};
-
-    for (int i = 0; i < data.size(); i++) {
-        std::vector<float> semi_data = {};
-        for (int j = 0; j < data[i].size(); j++) {
-            semi_data.push_back(data[i][j] / summa[i]);
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            summa[i] += data[i][j];
         }
-        error_matrix.push_back(semi_data);
     }
-    return Matrix(error_matrix).transpose();
+
+    std::vector<std::vector<float>> error_matrix(cols, std::vector<float>(rows, 0.0f));
+
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            error_matrix[j][i] = data[i][j] / summa[i];
+        }
+    }
+
+    return Matrix(error_matrix);
 }
+
 
 
