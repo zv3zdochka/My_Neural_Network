@@ -6,22 +6,54 @@ int main() {
     std::filesystem::current_path("..");
 
 //    Network net;
-//    net.add_layer(LayerType::input, 3, FunctionType::sigmoid, 0.0f);
-//    net.add_layer(LayerType::hidden, 3, FunctionType::sigmoid, 0.0f);
-//    net.add_layer(LayerType::output, 3, FunctionType::sigmoid, 0.0f);
-//
+//    net.add_layer(LayerType::input, 1, FunctionType::sigmoid, 0.0f);
+//    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
+//    net.add_layer(LayerType::output, 1, FunctionType::sigmoid, 0.0f);
 //    net.build();
+//    net.show_network();
+//    net.save("base1.json");
+
     Network net("base.json");
     net.show_network();
-    net.save("base.json");
+    //net.save("base.json");
 
 
-    std::vector<std::vector<float>> input_data = {{0.9, 0.1f, 0.8f}};
-    std::vector<std::vector<float>> output_data = {{3.4f, 5.7f, 6.0f}};
+//    std::vector<std::vector<float>> input_data = {{0.9, 0.1f, 0.8f}};
+//    std::vector<std::vector<float>> output_data = {{3.4f, 5.7f, 6.0f}};
+//    std::vector<std::vector<float>> input_data = {
+//            {0.6f, 0.2f},
+//            {0.4f, 0.8f},
+//            {0.3f, 0.7f},
+//            {0.9f, 0.1f},
+//            {0.5f, 0.5f}
+//    };
+//
+//    std::vector<std::vector<float>> output_data = {
+//            {0.9f, 0.3f},
+//            {0.5f, 0.9f},
+//            {0.4f, 0.8f},
+//            {1.0f, 0.0f},
+//            {0.6f, 0.6f}
+//    };
+    std::vector<std::vector<float>> input_data = {
+            {0.6f},
+            {0.4f},
+            {0.3f},
+            {0.9f},
+            {0.5f}
+    };
+
+    std::vector<std::vector<float>> output_data = {
+            {0.9f},
+            {0.5f},
+            {0.4f},
+            {1.0f},
+            {0.6f}
+    };
 
     const int epochs = 1;
 
-    net.train(input_data, output_data, Normalisation::min_max_normalisation, epochs, 1, 0.02);
+    net.train(input_data, output_data, Normalisation::without_normalisation, epochs, 1, 0.02);
 
 
 
@@ -40,7 +72,7 @@ int main() {
 //
 //
 //    loadedNetwork.train(input_data, output_data, epochs, 1, 0.02);
-    
+
     // (->)
 //    std::vector<std::vector<std::vector<float>>> input_data = {{{0.0f}, {0.0f}}, {{0.0f}, {1.0f}}, {{1.0f}, {0.0f}}, {{1.0f}, {1.0f}}};
 //    std::vector<std::vector<float>> output_data = {{1.0f}, {1.0f}, {0.0f}, {1.0f}};

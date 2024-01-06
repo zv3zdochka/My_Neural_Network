@@ -24,7 +24,11 @@ add_executable(My_own_Neural_Network
 
         main.cpp
 
+
 )
 
-add_executable(create_dataset
-        dataset.cpp)
+add_executable(test
+        test.cpp
+        Network/Matrix.h
+        Network/Matrix.cpp
+)

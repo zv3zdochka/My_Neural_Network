@@ -128,3 +128,31 @@ void Matrix::showMatrix(const std::string &name) {
     }
     std::cout << "-----------------------" << std::endl;
 }
+
+Matrix Matrix::calculate_errors() {
+    if (cols == 1){
+        return Matrix(data).transpose();
+    } else{
+        std::vector<float> summa(rows, 0.0f);
+
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
+                summa[i] += data[i][j];
+            }
+        }
+
+        std::vector<std::vector<float>> error_matrix(cols, std::vector<float>(rows, 0.0f));
+
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
+                error_matrix[j][i] = data[i][j] / summa[i];
+            }
+        }
+
+        return Matrix(error_matrix);
+    }
+
+}
+
+
+

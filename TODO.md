@@ -15,7 +15,7 @@ normal network display
 ------------------to check
 normalising data ---dima
 dataset spliting ---dima
-forward
+
 backward
 errors
 weights update
@@ -23,3 +23,7 @@ derivates
 training
 -----------------------end
 fix clion wants
+прописать что если неправильное имя функции в base.json то он показывал где 
+layer_type должны быть именно посередине
+
+
