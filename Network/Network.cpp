@@ -13,7 +13,6 @@
 #define NETWORK_SYNAPSE_NAME        "Synapse"
 
 
-
 Network::Network() = default;
 
 Network::Network(const char *filename) {
@@ -185,23 +184,12 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
                         network[lay][k].weight = demi_res[k][0];
                     }
                 }
-
-
-                size_t k = network[lay + 1].size();
                 std::vector<std::vector<float>> local_inp = {};
                 for (auto &d: network[lay]) {
                     local_inp.push_back({d.weight});
                 }
-                if (k == 1) {
-                    std::vector<std::vector<float>> semi = {{}};
-                    for (auto &h: synapse[lay])
-                        semi[0].push_back(h[0]);
-
-                    demi_res = through_layer(Matrix(semi), local_inp, network[lay][0].fn_type).getData();
-                } else {
-                    demi_res = through_layer(Matrix(synapse[lay]), local_inp,
-                                             network[lay][0].fn_type).getData();
-                }
+                demi_res = through_layer(Matrix(synapse[lay]), local_inp,
+                                         network[lay][0].fn_type).getData();
 
 
                 for (int neu = 0; neu < network[lay + 1].size(); neu++) {
@@ -210,14 +198,14 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
             }
-            // FORWARD WORKS PERFECT FUUUUUUUUUUUUUUUUUUUUCK
+            // FORWARD WORKS PERFECT
 
 
             show_weights();
             // Back
             std::vector<std::vector<float>> errors;
             std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec
-            //last lay mistakes
+
             for (int len = 0; len < network[network.size() - 1].size(); len++) {
                 errors.push_back({outputData[data_ind][len] - network[network.size() - 1][len].weight});
             }
@@ -226,19 +214,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
             for (int lay = layers - 1; lay > 0; lay--) {
-
-                size_t k = network[lay].size();
-
-                if (k == 1) {
-                    std::vector<std::vector<float>> semi = {{}};
-                    for (auto &h: synapse[lay - 1])
-                        semi[0].push_back(h[0]);
-
-                    demi_res = multiply(Matrix(semi).calculate_errors(), Matrix(errors)).getData();
-                } else {
-
-                    demi_res = multiply(Matrix(synapse[lay - 1]).calculate_errors(), Matrix(errors)).getData();
-                }
+                demi_res = multiply(Matrix(synapse[lay - 1]).calculate_errors(), Matrix(errors)).getData();
                 errors = demi_res;
                 Matrix(demi_res).showMatrix("rerererer");
                 errors_by_lay.push_back(demi_res);
