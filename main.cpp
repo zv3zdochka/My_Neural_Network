@@ -5,17 +5,17 @@
 int main() {
     std::filesystem::current_path("..");
 
-    Network net;
-    net.add_layer(LayerType::input, 1, FunctionType::sigmoid, 0.0f);
-    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
-    net.add_layer(LayerType::output, 1, FunctionType::sigmoid, 0.0f);
-    net.build();
-    net.show_network();
-    net.save("base1.json");
-
-//    Network net("base.json");
+//    Network net;
+//    net.add_layer(LayerType::input, 1, FunctionType::sigmoid, 0.0f);
+//    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
+//    net.add_layer(LayerType::output, 1, FunctionType::sigmoid, 0.0f);
+//    net.build();
 //    net.show_network();
-//    net.save("base.json");
+//    net.save("base1.json");
+
+    Network net("base.json");
+    net.show_network();
+    //net.save("base.json");
 
 
 //    std::vector<std::vector<float>> input_data = {{0.9, 0.1f, 0.8f}};
