@@ -76,14 +76,14 @@ public:
      */
     [[nodiscard]] Matrix transpose() const;
 
-    /**
- * @brief Computes the error in a neural network layer based on the sum of elements in the weight matrix.
- *
- * This function accepts the weight matrix of a neural network layer and calculates the error in the layer
- * based on the sum of all elements in the matrix. It does not perform division by zero.
- *
- * @return Matrix A matrix containing the calculated error values based on the sum of elements.
- */
+        /**
+     * @brief Computes the error in a neural network layer based on the sum of elements in the weight matrix.
+     *
+     * This function accepts the weight matrix of a neural network layer and calculates the error in the layer
+     * based on the sum of all elements in the matrix. It does not perform division by zero.
+     *
+     * @return Matrix A matrix containing the calculated error values based on the sum of elements.
+     */
     Matrix calculate_errors();
 
     /**
