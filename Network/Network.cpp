@@ -210,7 +210,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
             }
-            // FORWARD WORKS PERFECT
+            // FORWARD WORKS PERFECT FUUUUUUUUUUUUUUUUUUUUCK
 
 
             show_weights();
