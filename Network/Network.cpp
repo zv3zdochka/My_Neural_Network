@@ -219,30 +219,31 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
             }
+            //Weights update
 
-            ////////////////////////////////////////////////////////////////////
+
             for (int er = 0; er < errors_by_lay.size(); er++){
                 Matrix(errors_by_lay[er]).showMatrix("ERROR");
             }
-            //Weights update
-            std::reverse(neu_out.begin(), neu_out.end());
-            for (int i =0; i < neu_out.size(); i++) {
-                Matrix(neu_out[i]).showMatrix("LAY");
-            }
-            //////////////////////////////////////////////////////////////////////
-            std::vector<Matrix> d_synapse;
 
-            std::vector<Matrix> se_de;
+            std::vector<Matrix> d_synapse;
+            std::reverse(errors_by_lay.begin(), errors_by_lay.end());
             for (int lay = layers - 1; lay > 0; lay--) {
                 Matrix demi_mat;
                 Matrix alpha;
-
-                demi_mat = Matrix(neu_out[lay - 1]);
+                Matrix(errors_by_lay[lay]).showMatrix("ERROr");
+                demi_mat = Matrix(neu_out[lay-1]);
                 Matrix(demi_mat).showMatrix("DEDEDE");
-                se_de.push_back(demi_mat);
+                std::vector<std::vector<float>> weights = {};
+                for (auto & neu : network[lay-1]){
+                    weights.push_back({neu.weight});
+                }
+                Matrix(weights).showMatrix("WEIGHTS");
 
                 alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
                                  Matrix((neu_out[lay - 1])).transpose());
+                collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("CAL");
+                Matrix((neu_out[lay - 1])).transpose().showMatrix("OJK");
                 d_synapse.push_back(alpha);
                 alpha.showMatrix("ALPHA");
 
@@ -264,7 +265,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
 
-//
+
 //             //Updating of weights
 //            std::reverse(d_synapse.begin(), d_synapse.end());
 //            for (int si = 0; si < d_synapse.size(); si++) {
@@ -314,6 +315,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
     }
 }
+
 
 
 Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af) {
@@ -389,16 +391,19 @@ Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::ve
 
     for (int layer = 0; layer < input.getData().size(); layer++) {
         float using_func;
-        network[cur_lay][0].fn_type;
         switch (network[cur_lay][0].fn_type) {
             case FunctionType::sigmoid:
                 using_func = Derivatives::sigmoid_derivative(errors[layer][0]);
+                break;
             case FunctionType::fast_sigmoid:
                 using_func = Derivatives::fast_sigmoid_derivative(errors[layer][0]);
-            case FunctionType::silu:
-                using_func = Derivatives::silu_derivative(errors[layer][0]);
+                break;
             case FunctionType::tanh:
                 using_func = Derivatives::tanh_derivative(errors[layer][0]);
+                break;
+            case FunctionType::silu:
+                using_func = Derivatives::silu_derivative(errors[layer][0]);
+                break;
         }
 
         out.push_back({-1 * speed * errors[layer][0] * using_func});
@@ -443,4 +448,5 @@ void Network::process_data(std::vector<std::vector<float>> input_t, std::vector<
 
 
 }
+
 
