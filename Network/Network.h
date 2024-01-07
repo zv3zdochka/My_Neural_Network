@@ -26,7 +26,7 @@ public:
     int layers = 0;
     std::vector<std::vector<Neuron>> network;
     std::vector<std::vector<std::vector<float>>> synapse;
-    std::vector<std::vector<float>> neu_out;
+    std::vector<std::vector<std::vector<float>>> neu_out;
 
     std::vector<std::vector<float>> input_train;
     std::vector<std::vector<float>> output_train;
@@ -48,7 +48,7 @@ public:
     train(const std::vector<std::vector<float>>& inputData, const std::vector<std::vector<float>> &outputData, Normalisation normalisation, int epochs,
           float test_data_per, float train_speed);
 
-
+    void work(std::vector<std::vector<float>> input);
 private:
     void process_data(std::vector<std::vector<float>> input_train,
                       std::vector<std::vector<float>> output_train, Normalisation norm, float spliting);
@@ -66,6 +66,7 @@ private:
     static Matrix convert(const std::vector<float> &inp);
 
     Matrix collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed);
+
 
 };
 
