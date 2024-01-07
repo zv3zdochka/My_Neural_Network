@@ -5,16 +5,20 @@
 int main() {
     std::filesystem::current_path("..");
 
-//    Network net;
-//    net.add_layer(LayerType::input, 2, FunctionType::sigmoid, 0.0f);
-//    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
-//    net.add_layer(LayerType::output, 2, FunctionType::sigmoid, 0.0f);
-//    net.build();
-//    net.show_network();
-//    net.save("base3.json");
+    Network net;
+    net.add_layer(LayerType::input, 2, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
+    net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
 
-    Network net("base2.json");
+    net.add_layer(LayerType::output, 2, FunctionType::sigmoid, 0.0f);
+    net.build();
     net.show_network();
+    //net.save("base3.json");
+
+//    Network net("base2.json");
+//    net.show_network();
     //net.save("base.json");
 
 //
@@ -51,10 +55,10 @@ int main() {
 //            {0.6f}
 //    };
 
-    const int epochs = 1000;
+    const int epochs = 900;
 
     net.train(input_data, output_data, Normalisation::without_normalisation, epochs, 1, 0.02);
-
+    net.work(input_data);
 
     return 0;
 }

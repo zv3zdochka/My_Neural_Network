@@ -32,3 +32,4 @@ add_executable(test
         Network/Matrix.h
         Network/Matrix.cpp
 )
+add_executable(dataset dataset.cpp)
