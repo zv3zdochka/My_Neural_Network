@@ -26,7 +26,7 @@ public:
     int layers = 0;
     std::vector<std::vector<Neuron>> network;
     std::vector<std::vector<std::vector<float>>> synapse;
-    std::vector<std::vector<float>> neu_out;
+    std::vector<std::vector<std::vector<float>>> neu_out;
 
     std::vector<std::vector<float>> input_train;
     std::vector<std::vector<float>> output_train;

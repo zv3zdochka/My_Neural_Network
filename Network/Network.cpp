@@ -204,7 +204,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
             show_weights();
             // Back
             std::vector<std::vector<float>> errors;
-            std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first errors vec is last in this vec
+            std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first lay errors is last in this vec
 
             for (int len = 0; len < network[network.size() - 1].size(); len++) {
                 errors.push_back({outputData[data_ind][len] - network[network.size() - 1][len].weight});
@@ -219,86 +219,90 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
             }
+
+            ////////////////////////////////////////////////////////////////////
             for (int er = 0; er < errors_by_lay.size(); er++){
                 Matrix(errors_by_lay[er]).showMatrix("ERROR");
             }
             //Weights update
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            std::reverse(neu_out.begin(), neu_out.end());
+            for (int i =0; i < neu_out.size(); i++) {
+                Matrix(neu_out[i]).showMatrix("LAY");
+            }
+            //////////////////////////////////////////////////////////////////////
             std::vector<Matrix> d_synapse;
 
-            std::reverse(neu_out.begin(), neu_out.end());
             std::vector<Matrix> se_de;
             for (int lay = layers - 1; lay > 0; lay--) {
                 Matrix demi_mat;
                 Matrix alpha;
 
-                demi_mat = multiply(Matrix(synapse[lay - 1]), convert(neu_out[lay - 1]));
+                demi_mat = Matrix(neu_out[lay - 1]);
+                Matrix(demi_mat).showMatrix("DEDEDE");
                 se_de.push_back(demi_mat);
 
                 alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
-                                 Matrix(convert(neu_out[lay - 1])).transpose());
+                                 Matrix((neu_out[lay - 1])).transpose());
                 d_synapse.push_back(alpha);
                 alpha.showMatrix("ALPHA");
 
             }
-             //Updating of weights
-            std::reverse(d_synapse.begin(), d_synapse.end());
-            for (int si = 0; si < d_synapse.size(); si++) {
 
 
-                if (!std::isnan(d_synapse[si][0][0])) {
-//                    Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
-//                    Matrix(d_synapse[si]).showMatrix("UPD");
-//                    (Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
-                    synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
-                } else {
-                    continue;
-                }
 
 
-            }
-            show_synapse();
 
 
-            neu_out.clear();
 
 
-            // Quality
-            float qua = 0.0f;
-            std::vector<float> mis;
 
-            for (int len = 0; len < network[network.size() - 1].size(); len++) {
-                mis.push_back(network[network.size() - 1][len].weight / outputData[data_ind][len]);
-            }
-            float s = 0;
-            for (int j = 0; j < mis.size(); j++){
-                s += mis[j];
-            }
-            std::cout << "-----------------------" << std::endl;
-            std::cout << "         Quality       " << std::endl;
-            std::cout << "-----------------------" << std::endl;
-            std::cout << s / mis.size() << std::endl;
-            std::cout << "-----------------------" << std::endl;
+
+
+
+
+
+
+
+
+//
+//             //Updating of weights
+//            std::reverse(d_synapse.begin(), d_synapse.end());
+//            for (int si = 0; si < d_synapse.size(); si++) {
+//
+//
+//                if (!std::isnan(d_synapse[si][0][0])) {
+////                    Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
+////                    Matrix(d_synapse[si]).showMatrix("UPD");
+////                    (Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
+//                    synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
+//                } else {
+//                    continue;
+//                }
+//
+//
+//            }
+//            show_synapse();
+//
+//
+//            neu_out.clear();
+//
+//
+//            // Quality
+//            float qua = 0.0f;
+//            std::vector<float> mis;
+//
+//            for (int len = 0; len < network[network.size() - 1].size(); len++) {
+//                mis.push_back(network[network.size() - 1][len].weight / outputData[data_ind][len]);
+//            }
+//            float s = 0;
+//            for (int j = 0; j < mis.size(); j++){
+//                s += mis[j];
+//            }
+//            std::cout << "-----------------------" << std::endl;
+//            std::cout << "         Quality       " << std::endl;
+//            std::cout << "-----------------------" << std::endl;
+//            std::cout << s / mis.size() << std::endl;
+//            std::cout << "-----------------------" << std::endl;
         }
         std::cout << "-----------------------" << std::endl;
         std::cout << "    FINISH TRAINING" << std::endl;
@@ -320,9 +324,9 @@ Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vect
     std::vector<std::vector<float>> out = res.getData();
     std::vector<std::vector<float>> updatedData = res.getData();
 
-    std::vector<float> edge = {};
+    std::vector<std::vector<float>> edge = {};
     for (auto &i: updatedData) {
-        edge.push_back(i[0]);
+        edge.push_back(i);
         i[0] = call(af, i[0]);
     }
 
