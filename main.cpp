@@ -51,7 +51,7 @@ int main() {
 //            {0.6f}
 //    };
 
-    const int epochs = 1;
+    const int epochs = 1000;
 
     net.train(input_data, output_data, Normalisation::without_normalisation, epochs, 1, 0.02);
 

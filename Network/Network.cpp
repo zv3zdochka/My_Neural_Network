@@ -199,9 +199,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
             }
 
-
-
-            show_weights();
+            //show_weights();
             // Back
             std::vector<std::vector<float>> errors;
             std::vector<std::vector<std::vector<float>>> errors_by_lay = {}; //first lay errors is last in this vec
@@ -219,36 +217,45 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
             }
+
+
             //Weights update
 
 
-            for (int er = 0; er < errors_by_lay.size(); er++){
-                Matrix(errors_by_lay[er]).showMatrix("ERROR");
-            }
+//            for (const auto & er : errors_by_lay) {
+//                Matrix(er).showMatrix("ERROR");
+//            }
 
             std::vector<Matrix> d_synapse;
             std::reverse(errors_by_lay.begin(), errors_by_lay.end());
             for (int lay = layers - 1; lay > 0; lay--) {
                 Matrix demi_mat;
                 Matrix alpha;
-                Matrix(errors_by_lay[lay]).showMatrix("ERROr");
-                demi_mat = Matrix(neu_out[lay-1]);
-                Matrix(demi_mat).showMatrix("DEDEDE");
+                //Matrix(errors_by_lay[lay]).showMatrix("ERROr");
+                demi_mat = Matrix(neu_out[lay - 1]);
+                //Matrix(demi_mat).showMatrix("DEDEDE");
                 std::vector<std::vector<float>> weights = {};
-                for (auto & neu : network[lay-1]){
+                for (auto &neu: network[lay - 1]) {
                     weights.push_back({neu.weight});
                 }
-                Matrix(weights).showMatrix("WEIGHTS");
+                //Matrix(weights).showMatrix("WEIGHTS");
 
-                //alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),Matrix((neu_out[lay - 1])).transpose());
-                collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("CAL");
+                alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
+                                 Matrix((neu_out[lay - 1])).transpose());
+                //collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("CAL");
                 //Matrix((neu_out[lay - 1])).transpose().showMatrix("OJK");
                 d_synapse.push_back(alpha);
-                alpha.showMatrix("ALPHA");
+                //alpha.showMatrix("ALPHA");
 
+            }
+            //Updating of weights
+            std::reverse(d_synapse.begin(), d_synapse.end());
+            for (int si = 0; si < d_synapse.size(); si++) {
+                synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
             }
 
 
+            neu_out.clear();
 
 
 
@@ -265,26 +272,8 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
 
 
-//             //Updating of weights
-//            std::reverse(d_synapse.begin(), d_synapse.end());
-//            for (int si = 0; si < d_synapse.size(); si++) {
-//
-//
-//                if (!std::isnan(d_synapse[si][0][0])) {
-////                    Matrix(synapse[si]).showMatrix("SYNAPSE_BEFORE");
-////                    Matrix(d_synapse[si]).showMatrix("UPD");
-////                    (Matrix(synapse[si]) + Matrix(d_synapse[si])).showMatrix("WAIT_SYNAPSE");
-//                    synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
-//                } else {
-//                    continue;
-//                }
-//
-//
-//            }
-//            show_synapse();
-//
-//
-//            neu_out.clear();
+
+
 //
 //
 //            // Quality
@@ -304,17 +293,15 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 //            std::cout << s / mis.size() << std::endl;
 //            std::cout << "-----------------------" << std::endl;
         }
-        std::cout << "-----------------------" << std::endl;
-        std::cout << "    FINISH TRAINING" << std::endl;
-        std::cout << "-----------------------" << std::endl;
-        auto end_time = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-        std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
-
-
     }
+    std::cout << "-----------------------" << std::endl;
+    std::cout << "    FINISH TRAINING" << std::endl;
+    std::cout << "-----------------------" << std::endl;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
+    show_synapse();
 }
-
 
 
 Matrix Network::through_layer(const Matrix &weights, const std::vector<std::vector<float>> &input, FunctionType af) {
@@ -379,39 +366,34 @@ Matrix Network::convert(const std::vector<float> &inp) {
     for (float lene: inp) {
         out.push_back({lene});
     }
-//    Matrix(out).showMatrix("LENA");
+    //Matrix(out).showMatrix("LENA");
     return Matrix(out);
 }
 
-Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
+Matrix
+Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
     float using_func;
-    for (int neu = 0; neu < input.getData().size(); neu++){
+    for (int neu = 0; neu < input.getData().size(); neu++) {
         if (network[cur_lay][0].fn_type == FunctionType::sigmoid) {
             using_func = Derivatives::sigmoid_derivative(input[neu][0]);
-        }
-        else if (network[cur_lay][0].fn_type == FunctionType::fast_sigmoid) {
+        } else if (network[cur_lay][0].fn_type == FunctionType::fast_sigmoid) {
             using_func = Derivatives::fast_sigmoid_derivative(input[neu][0]);
-        }
-        else if (network[cur_lay][0].fn_type == FunctionType::tanh) {
+        } else if (network[cur_lay][0].fn_type == FunctionType::tanh) {
             using_func = Derivatives::tanh_derivative(input[neu][0]);
-        }
-        else if (network[cur_lay][0].fn_type == FunctionType::silu) {
+        } else if (network[cur_lay][0].fn_type == FunctionType::silu) {
             using_func = Derivatives::silu_derivative(input[neu][0]);
         }
 
         out.push_back({speed * errors[neu][0] * using_func});
     }
-
-
-
-    }
-
-
     std::reverse(out.begin(), out.end());
     return Matrix(out);
+
+
 }
+
 
 void Network::process_data(std::vector<std::vector<float>> input_t, std::vector<std::vector<float>> output_t,
                            Normalisation norm, float spliting) {
@@ -447,4 +429,35 @@ void Network::process_data(std::vector<std::vector<float>> input_t, std::vector<
 
 }
 
+void Network::work(std::vector<std::vector<float>> input) {
+    for (auto &j: input) {
+        std::vector<std::vector<float>> demi_res;
+        for (int lay = 0; lay < layers - 1; lay++) {
 
+            for (int k = 0; k < network[lay].size(); k++) {
+                if (lay == 0) {
+                    network[lay][k].weight = j[k];
+                } else {
+                    network[lay][k].weight = demi_res[k][0];
+                }
+            }
+            std::vector<std::vector<float>> local_inp = {};
+            for (auto &d: network[lay]) {
+                local_inp.push_back({d.weight});
+            }
+            demi_res = through_layer(Matrix(synapse[lay]), local_inp,
+                                     network[lay][0].fn_type).getData();
+
+
+            for (int neu = 0; neu < network[lay + 1].size(); neu++) {
+                network[lay + 1][neu].weight = demi_res[neu][0];
+            }
+
+
+        }
+
+        show_weights();
+    }
+
+
+}

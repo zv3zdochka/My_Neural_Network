@@ -48,7 +48,7 @@ public:
     train(const std::vector<std::vector<float>>& inputData, const std::vector<std::vector<float>> &outputData, Normalisation normalisation, int epochs,
           float test_data_per, float train_speed);
 
-
+    void work(std::vector<std::vector<float>> input);
 private:
     void process_data(std::vector<std::vector<float>> input_train,
                       std::vector<std::vector<float>> output_train, Normalisation norm, float spliting);
