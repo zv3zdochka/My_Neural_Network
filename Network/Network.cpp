@@ -240,10 +240,9 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
                 }
                 Matrix(weights).showMatrix("WEIGHTS");
 
-                alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
-                                 Matrix((neu_out[lay - 1])).transpose());
+                //alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),Matrix((neu_out[lay - 1])).transpose());
                 collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("CAL");
-                Matrix((neu_out[lay - 1])).transpose().showMatrix("OJK");
+                //Matrix((neu_out[lay - 1])).transpose().showMatrix("OJK");
                 d_synapse.push_back(alpha);
                 alpha.showMatrix("ALPHA");
 
@@ -384,29 +383,28 @@ Matrix Network::convert(const std::vector<float> &inp) {
     return Matrix(out);
 }
 
-Matrix
-Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
+Matrix Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
     using namespace Derivatives;
     std::vector<std::vector<float>> out;
-
-    for (int layer = 0; layer < input.getData().size(); layer++) {
-        float using_func;
-        switch (network[cur_lay][0].fn_type) {
-            case FunctionType::sigmoid:
-                using_func = Derivatives::sigmoid_derivative(errors[layer][0]);
-                break;
-            case FunctionType::fast_sigmoid:
-                using_func = Derivatives::fast_sigmoid_derivative(errors[layer][0]);
-                break;
-            case FunctionType::tanh:
-                using_func = Derivatives::tanh_derivative(errors[layer][0]);
-                break;
-            case FunctionType::silu:
-                using_func = Derivatives::silu_derivative(errors[layer][0]);
-                break;
+    float using_func;
+    for (int neu = 0; neu < input.getData().size(); neu++){
+        if (network[cur_lay][0].fn_type == FunctionType::sigmoid) {
+            using_func = Derivatives::sigmoid_derivative(input[neu][0]);
+        }
+        else if (network[cur_lay][0].fn_type == FunctionType::fast_sigmoid) {
+            using_func = Derivatives::fast_sigmoid_derivative(input[neu][0]);
+        }
+        else if (network[cur_lay][0].fn_type == FunctionType::tanh) {
+            using_func = Derivatives::tanh_derivative(input[neu][0]);
+        }
+        else if (network[cur_lay][0].fn_type == FunctionType::silu) {
+            using_func = Derivatives::silu_derivative(input[neu][0]);
         }
 
-        out.push_back({-1 * speed * errors[layer][0] * using_func});
+        out.push_back({speed * errors[neu][0] * using_func});
+    }
+
+
 
     }
 
