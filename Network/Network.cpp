@@ -226,48 +226,31 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
             for (int lay = layers - 1; lay > 0; lay--) {
                 Matrix demi_mat;
                 Matrix alpha;
-                //Matrix(errors_by_lay[lay]).showMatrix("ERROr");
+                Matrix(errors_by_lay[lay]).showMatrix("ERROr");
                 demi_mat = Matrix(neu_out[lay - 1]);
-                //Matrix(demi_mat).showMatrix("DEDEDE");
+                Matrix(demi_mat).showMatrix("DEDEDE");
                 std::vector<std::vector<float>> weights = {};
                 for (auto &neu: network[lay - 1]) {
                     weights.push_back({neu.weight});
                 }
-                //Matrix(weights).showMatrix("WEIGHTS");
+                Matrix(weights).showMatrix("WEIGHTS");
 
                 alpha = multiply(collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed),
                                  Matrix((neu_out[lay - 1])).transpose());
-                //collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("CAL");
-                //Matrix((neu_out[lay - 1])).transpose().showMatrix("OJK");
+                collect_with_derivatives(lay, demi_mat, (errors_by_lay[lay]), train_speed).showMatrix("CAL");
+                Matrix((neu_out[lay - 1])).transpose().showMatrix("OJK");
                 d_synapse.push_back(alpha);
-                //alpha.showMatrix("ALPHA");
+                alpha.showMatrix("ALPHA");
 
             }
-            //Updating of weights
-            std::reverse(d_synapse.begin(), d_synapse.end());
-            for (int si = 0; si < d_synapse.size(); si++) {
-                synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
-            }
+//            //Updating of weights
+//            std::reverse(d_synapse.begin(), d_synapse.end());
+//            for (int si = 0; si < d_synapse.size(); si++) {
+//                synapse[si] = (Matrix(synapse[si]) + Matrix(d_synapse[si])).getData();
+//            }
 
 
             neu_out.clear();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //
 //
