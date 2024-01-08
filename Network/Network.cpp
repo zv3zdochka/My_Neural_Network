@@ -221,11 +221,6 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
 
             //Weights update
 
-
-//            for (const auto & er : errors_by_lay) {
-//                Matrix(er).showMatrix("ERROR");
-//            }
-
             std::vector<Matrix> d_synapse;
             std::reverse(errors_by_lay.begin(), errors_by_lay.end());
             for (int lay = layers - 1; lay > 0; lay--) {
@@ -388,7 +383,7 @@ Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::ve
 
         out.push_back({speed * errors[neu][0] * using_func});
     }
-    std::reverse(out.begin(), out.end());
+    //std::reverse(out.begin(), out.end());
     return Matrix(out);
 
 

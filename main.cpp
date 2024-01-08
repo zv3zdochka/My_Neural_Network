@@ -11,7 +11,6 @@ int main() {
     net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
     net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
     net.add_layer(LayerType::hidden, 2, FunctionType::sigmoid, 0.0f);
-
     net.add_layer(LayerType::output, 2, FunctionType::sigmoid, 0.0f);
     net.build();
     net.show_network();
@@ -55,9 +54,9 @@ int main() {
 //            {0.6f}
 //    };
 
-    const int epochs = 900;
+    const int epochs = 3000;
 
-    net.train(input_data, output_data, Normalisation::without_normalisation, epochs, 1, 0.02);
+    net.train(input_data, output_data, Normalisation::without_normalisation, epochs, 1, 0.1);
     net.work(input_data);
 
     return 0;
