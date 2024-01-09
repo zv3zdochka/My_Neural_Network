@@ -34,15 +34,14 @@ Network::Network(const char *filename) {
         const auto &fn_name = layer_data.at(NETWORK_ACTIVATION_FN_NAME).get_ref<const std::string &>();
         FunctionType ft = function_type_from_string(fn_name);
 
-        float b = 0.0f;
 
         if (network.empty()) {
-            add_layer(LayerType::input, num_neurons, ft, b);
+            add_layer(LayerType::input, num_neurons, ft);
         } else if (i == input.size() - 1) {
-            add_layer(LayerType::output, num_neurons, ft, b);
+            add_layer(LayerType::output, num_neurons, ft);
             continue;
         } else {
-            add_layer(LayerType::hidden, num_neurons, ft, b);
+            add_layer(LayerType::hidden, num_neurons, ft);
         }
 
         auto &synapse_data = layer_data.at(NETWORK_SYNAPSE_NAME);
@@ -51,7 +50,7 @@ Network::Network(const char *filename) {
     }
 }
 
-void Network::add_layer(LayerType type, int number_of_neurons, FunctionType af, float b) {
+void Network::add_layer(LayerType type, int number_of_neurons, FunctionType af) {
     network.emplace_back();
 
     switch (type) {
@@ -316,14 +315,6 @@ Matrix Network::multiply(const Matrix &weights, const Matrix &input) {
     return res;
 }
 
-Matrix Network::convert(const std::vector<float> &inp) {
-    std::vector<std::vector<float>> out;
-    for (float lene: inp) {
-        out.push_back({lene});
-    }
-    //Matrix(out).showMatrix("LENA");
-    return Matrix(out);
-}
 
 Matrix
 Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::vector<float>> errors, float speed) {
@@ -343,19 +334,19 @@ Network::collect_with_derivatives(int cur_lay, Matrix input, std::vector<std::ve
 
         out.push_back({speed * errors[neu][0] * using_func});
     }
-    //std::reverse(out.begin(), out.end());
     return Matrix(out);
 
 
 }
 
 
-void Network::process_data(std::vector<std::vector<float>> input_t, std::vector<std::vector<float>> output_t,
-                           Normalisation norm, float spliting) {
+void
+Network::process_data(const std::vector<std::vector<float>> &input_t, const std::vector<std::vector<float>> &output_t,
+                      Normalisation norm, float coe) {
     Data_Worker::check_data(input_t, output_t, network);
     std::vector<std::vector<std::vector<float>>> norm_data = Data_Worker::call(norm, input_t, output_t);
-    std::vector<std::vector<std::vector<float>>> shuf_data = Data_Worker::shuffle_data(norm_data[0], norm_data[1]);
-    std::vector<std::vector<std::vector<float>>> data = Data_Worker::split_data(shuf_data[0], shuf_data[1], spliting);
+    std::vector<std::vector<std::vector<float>>> shufData = Data_Worker::shuffle_data(norm_data[0], norm_data[1]);
+    std::vector<std::vector<std::vector<float>>> data = Data_Worker::split_data(shufData[0], shufData[1], coe);
 
     input_train = data[0];
     output_train = data[1];
