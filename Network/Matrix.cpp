@@ -37,6 +37,8 @@ const std::vector<float> &Matrix::operator[](size_t index) const {
     return data[index];
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "ArgumentSelectionDefects"
 Matrix Matrix::transpose() const {
     Matrix result(cols, rows);
     for (size_t i = 0; i < rows; ++i) {
@@ -46,6 +48,7 @@ Matrix Matrix::transpose() const {
     }
     return result;
 }
+#pragma clang diagnostic pop
 
 Matrix Matrix::operator*(const Matrix &other) const {
     if (cols != other.getRows()) {
@@ -117,7 +120,7 @@ std::vector<std::vector<float>> Matrix::getData() {
     return data;
 }
 
-void Matrix::showMatrix(const std::string &name) {
+[[maybe_unused]] void Matrix::showMatrix(const std::string &name) {
     std::cout << "Result Matrix " << name << ": " << std::endl;
     std::cout << "-----------------------" << std::endl;
     for (auto &i: data) {

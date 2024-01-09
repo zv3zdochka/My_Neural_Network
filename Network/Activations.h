@@ -2,11 +2,14 @@
 
 #include <string_view>
 
+/**
+ * @brief Enum representing various activation functions.
+ */
 enum class FunctionType {
-    sigmoid,
-    fast_sigmoid,
-    silu,
-    tanh
+    sigmoid,    ///< Sigmoid activation function
+    fast_sigmoid,   ///< Fast sigmoid approximation
+    silu,   ///< SiLU (Sigmoid-weighted linear unit) activation function
+    tanh    ///< Hyperbolic Tangent (Tanh) activation function
 };
 
 

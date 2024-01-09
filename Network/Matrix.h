@@ -134,7 +134,7 @@ public:
      * @brief Display the matrix elements in the console.
      * @param name Name to identify the matrix (optional)
      */
-    void showMatrix(const std::string &name = "");
+    [[maybe_unused]] void showMatrix(const std::string &name = "");
 
 
 
