@@ -28,7 +28,6 @@ add_executable(My_own_Neural_Network
 )
 
 add_executable(test
-        test.cpp
         Network/Matrix.h
         Network/Matrix.cpp
 )

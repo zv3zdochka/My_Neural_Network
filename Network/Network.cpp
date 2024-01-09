@@ -166,6 +166,7 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
     std::cout << "-----------------------" << std::endl;
 
     for (int epoch = 0; epoch < epochs; ++epoch) {
+        std::cout << epoch << std::endl;
         int data_ind = -1;
         for (auto &j: inputData) {
             data_ind += 1;
@@ -254,7 +255,6 @@ void Network::train(const std::vector<std::vector<float>> &inputData, const std:
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     std::cout << "Training Time: " << duration.count() << " ms" << std::endl;
-    show_synapse();
 }
 
 
