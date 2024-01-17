@@ -1,14 +1,14 @@
 
 ---
 
-# NeuralNetwork++: Library for Neural Network Operations in C++
 
-This project is a C++ library designed for working with neural networks. The implementation focuses on creating and training simple neural networks for classification and prediction tasks.
+# NeuralNetwork++: Library for Perceptron Implementation in C++
+
+This project is a C++ library designed for implementing a simple perceptron capable of solving classification and prediction tasks. The implementation focuses on creating and training straightforward perceptrons for these purposes.
 
 ## Description
 
-NeuralNetwork++ consists of a set of header files organizing the functionality for working with neural networks at the library level:
-
+NeuralNetwork++ consists of a set of header files organizing the functionality for working with perceptrons at the library level:
 ### Modules:
 
 - **Neurons**: Describes neurons, their weights, and activation functions.
