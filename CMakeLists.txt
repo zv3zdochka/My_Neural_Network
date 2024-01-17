@@ -24,6 +24,5 @@ add_executable(My_own_Neural_Network
 
         main.cpp
 
-
 )
 
