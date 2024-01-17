@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 
-// Функция для преобразования текстовых классов в числовые значения
+// тАЭ├г┬н┬к├ж┬и├п ┬д┬л├п ┬п├а┬е┬о┬б├а┬а┬з┬о┬в┬а┬н┬и├п ├в┬е┬к├б├в┬о┬в├л├е ┬к┬л┬а├б├б┬о┬в ┬в ├з┬и├б┬л┬о┬в├л┬е ┬з┬н┬а├з┬е┬н┬и├п
 int getClassNumber(const std::string &className) {
     static std::map<std::string, float> classMap = {
             {"Iris-setosa",     0.33},
@@ -18,29 +18,74 @@ int getClassNumber(const std::string &className) {
     if (it != classMap.end()) {
         return it->second;
     } else {
-        return -1; // Возвращаем -1 в случае неопределенного класса
+        return -1; // тАЪ┬о┬з┬в├а┬а├й┬а┬е┬м -1 ┬в ├б┬л├г├з┬а┬е ┬н┬е┬о┬п├а┬е┬д┬е┬л┬е┬н┬н┬о┬г┬о ┬к┬л┬а├б├б┬а
     }
 }
 
 int main() {
-    std::filesystem::current_path("..");
-    std::ifstream file(
-            R"(C:\Users\batsi\OneDrive\Documents\CLionProjects\My_own_Neural_Network\Iris.csv)"); // Замените "example.csv" на имя вашего CSV файла
+    std::ifstream file(R"(C:\Users\batsi\OneDrive\Documents\CLionProjects\My_own_Neural_Network\Iris.csv)");
 
     if (!file.is_open()) {
-        std::cout << "Не удалось открыть файл." << std::endl;
+        std::cerr << "Unable to open the file.\n";
         return 1;
     }
 
-    std::vector<std::vector<float>> input; // Вектор для хранения числовых данных
-    std::vector<float> output; // Вектор для хранения числовых значений классов
+    std::vector<std::vector<float>> input;
+    std::vector<std::vector<float>> output;
+
+    std::string line;
+
+    // Read the header line
+    std::getline(file, line);
+
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string token;
+
+        std::vector<float> row_input;
+        std::vector<float> row_output(3, 0.0);
+
+        // Read Id and Species
+        std::getline(iss, token, ','); // Id
+        std::getline(iss, token, ','); // SepalLengthCm
+        row_input.push_back(std::stof(token));
+        std::getline(iss, token, ','); // SepalWidthCm
+        row_input.push_back(std::stof(token));
+        std::getline(iss, token, ','); // PetalLengthCm
+        row_input.push_back(std::stof(token));
+        std::getline(iss, token, ','); // PetalWidthCm
+        row_input.push_back(std::stof(token));
+        std::getline(iss, token, ','); // Species
+
+        if (token == "Iris-setosa") {
+            row_output[0] = 1.0;
+        } else if (token == "Iris-versicolor") {
+            row_output[1] = 1.0;
+        } else if (token == "Iris-virginica") {
+            row_output[2] = 1.0;
+        }
+
+        input.push_back(row_input);
+        output.push_back(row_output);
+    }
+    std::filesystem::current_path("..");
+    std::ifstream file(
+            R"(C:\Users\batsi\OneDrive\Documents\CLionProjects\My_own_Neural_Network\Iris.csv)"); // тАб┬а┬м┬е┬н┬и├в┬е "example.csv" ┬н┬а ┬и┬м├п ┬в┬а├и┬е┬г┬о CSV ├д┬а┬й┬л┬а
+
+    if (!file.is_open()) {
+        std::cout << "┬Н┬е ├г┬д┬а┬л┬о├б├м ┬о├в┬к├а├л├в├м ├д┬а┬й┬л." << std::endl;
+        return 1;
+    }
+
+    std::vector<std::vector<float>> input; // тАЪ┬е┬к├в┬о├а ┬д┬л├п ├е├а┬а┬н┬е┬н┬и├п ├з┬и├б┬л┬о┬в├л├е ┬д┬а┬н┬н├л├е
+    std::vector<float> output; // тАЪ┬е┬к├в┬о├а ┬д┬л├п ├е├а┬а┬н┬е┬н┬и├п ├з┬и├б┬л┬о┬в├л├е ┬з┬н┬а├з┬е┬н┬и┬й ┬к┬л┬а├б├б┬о┬в
 
     std::string line;
     bool headerSkipped = false;
     while (std::getline(file, line)) {
         if (!headerSkipped) {
             headerSkipped = true;
-            continue; // Пропустить первую строку с заголовками
+            continue; // ┬П├а┬о┬п├г├б├в┬и├в├м ┬п┬е├а┬в├г├о ├б├в├а┬о┬к├г ├б ┬з┬а┬г┬о┬л┬о┬в┬к┬а┬м┬и
         }
 
         std::vector<float> rowInput;
@@ -50,9 +95,9 @@ int main() {
 
         int col = 0;
         while (std::getline(ss, cell, ',')) {
-            if (col < 4) { // Первые четыре столбца содержат числовые данные
+            if (col < 4) { // ┬П┬е├а┬в├л┬е ├з┬е├в├л├а┬е ├б├в┬о┬л┬б├ж┬а ├б┬о┬д┬е├а┬ж┬а├в ├з┬и├б┬л┬о┬в├л┬е ┬д┬а┬н┬н├л┬е
                 rowInput.push_back(std::stod(cell));
-            } else if (col == 4) { // Пятый столбец содержит текстовый класс
+            } else if (col == 4) { // ┬П├п├в├л┬й ├б├в┬о┬л┬б┬е├ж ├б┬о┬д┬е├а┬ж┬и├в ├в┬е┬к├б├в┬о┬в├л┬й ┬к┬л┬а├б├б
                 classNumber = getClassNumber(cell);
             }
             col++;
@@ -66,7 +111,7 @@ int main() {
 
     file.close();
 
-    // Вывод значений для проверки
+    // тАЪ├л┬в┬о┬д ┬з┬н┬а├з┬е┬н┬и┬й ┬д┬л├п ┬п├а┬о┬в┬е├а┬к┬и
     std::cout << "Input:" << std::endl;
     for (const auto &row: input) {
         for (const auto &value: row) {
@@ -89,22 +134,31 @@ int main() {
 
     Network net;
     net.add_layer(LayerType::input, 4, FunctionType::sigmoid);
-    net.add_layer(LayerType::hidden, 3, FunctionType::fast_sigmoid);
-    net.add_layer(LayerType::hidden, 5, FunctionType::silu);
-    net.add_layer(LayerType::hidden, 7, FunctionType::sigmoid);
-    net.add_layer(LayerType::hidden, 3, FunctionType::tanh);
-    net.add_layer(LayerType::output, 1, FunctionType::sigmoid);
+
     net.build();
     net.save("base.json");
 
-    std::vector<std::vector<float>> input_data = {{0.6f, 0.2f}};
-    std::vector<std::vector<float>> output_data = {{1.0f, 0.3f}};
+//    std::vector<std::vector<float>> input_data = {
+//            {1.0f, 0.0f},
+//            {1.0f, 1.0f},
+//            {0.0f, 1.0f},
+//            {0.0f, 0.0f},
+//    };
+//
+//
+//    std::vector<std::vector<float>> output_data = {
+//            {0.0f},
+//            {1.0f},
+//            {1.0f},
+//            {1.0f},
+//    };
 
-    const int epochs = 1000;
+    const int epochs = 3000;
 
-    net.train(input, out, Normalisation::min_max_normalisation, epochs, 1, 0.1);
-//    net.work(input_data);
-    net.work({{7.6, 3.0, 6.6, 2.1}});
+
+    net.train(input, output, Normalisation::without_normalisation, epochs, 1, 0.1);
+
+
 
     return 0;
 }
